@@ -1,2 +1,2 @@
 administer, 87iJk4;
-adeputy, 007uvp;
+deputy, 007uvp;
