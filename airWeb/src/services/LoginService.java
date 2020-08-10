@@ -1,5 +1,7 @@
 package services;
 
+import java.io.File;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.log4j.PropertyConfigurator;
+
+
 
 import beans.User;
 import dao.UserDAO;
@@ -30,6 +36,9 @@ public class LoginService {
 	public void init() {
 		// Ovaj objekat se instancira vi�e puta u toku rada aplikacije
 		// Inicijalizacija treba da se obavi samo jednom
+		String log4jConfigFile = System.getProperty("user.dir")
+				+ File.separator + "log4j.properties";
+		PropertyConfigurator.configure(log4jConfigFile);
 		if (ctx.getAttribute("userDAO") == null) {
 	    	String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("userDAO", new UserDAO(contextPath));

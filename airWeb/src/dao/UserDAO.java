@@ -1,8 +1,13 @@
 package dao;
+
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
  
+
+
+
 
 
 
@@ -17,7 +22,13 @@ import java.util.Map;
 
 import beans.User;
 
+
+
+
 public class UserDAO {
+	
+	static Logger logger = Logger.getLogger(UserDAO.class);
+	
 	private Map<String, User> users = new HashMap<>();
 	
 	
@@ -52,6 +63,8 @@ public class UserDAO {
 	 
 				JSONArray usersList = (JSONArray) obj;
 				usersList.forEach( user -> parseUserObject( (JSONObject) user ) );
+				logger.info("we got into dao"); 
+				
 			
 			} catch (Exception e) {
 				e.printStackTrace();
