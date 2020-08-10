@@ -1,0 +1,17 @@
+[
+{ "user": {
+"username": "administer",
+"password": "58fk4d",
+"firstName" : "John",
+"lastName" : "Doe",
+"sex" : "male",
+"role" : "admin"}
+},
+{"user" :{
+"username": "deputy",
+"password": "58884d",
+"firstName" : "John",
+"lastName" : "Foe",
+"sex" : "male",
+"role" : "admin"}}
+]
