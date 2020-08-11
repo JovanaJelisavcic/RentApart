@@ -1,8 +1,8 @@
 $(document).ready(function() {
 	$('#login-form').submit(function(event) {
 		event.preventDefault();
-		let name = $('input[name="username"]').val();
-		let pass = $('input[name="password"]').val();
+		let username = $('input[name="username"]').val();
+		let password = $('input[name="password"]').val();
 		$('#error').hide();
 		$.post({
 			url: 'rest/login',

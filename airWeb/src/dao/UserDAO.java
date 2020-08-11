@@ -1,18 +1,13 @@
 package dao;
 
-import org.apache.log4j.Logger;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
- 
-
-
-
-
-
-
 
 import java.io.FileReader;
+
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -27,10 +22,11 @@ import beans.User;
 
 public class UserDAO {
 	
-	static Logger logger = Logger.getLogger(UserDAO.class);
+	
 	
 	private Map<String, User> users = new HashMap<>();
 	
+
 	
 	public UserDAO() {
 		
@@ -63,9 +59,7 @@ public class UserDAO {
 	 
 				JSONArray usersList = (JSONArray) obj;
 				usersList.forEach( user -> parseUserObject( (JSONObject) user ) );
-				logger.info("we got into dao"); 
-				
-			
+	
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -73,26 +67,19 @@ public class UserDAO {
 	
 	 private  void parseUserObject(JSONObject user) 
 	    {
-	        //Get employee object within list
-	        JSONObject userObject = (JSONObject) user.get("user");
-	      
-	        //Get employee first name
-	        String firstName = (String) userObject.get("firstName");    
-
-	        //Get employee last name
-	        String lastName = (String) userObject.get("lastName");  
-
-	        //Get employee website name
-	        String sex = (String) userObject.get("sex");  
-	        //Get employee first name
-	        String username = (String) userObject.get("username");    
-
-	        //Get employee last name
-	        String password = (String) userObject.get("password");  
-
-	        //Get employee website name
+	        
+	        JSONObject userObject = (JSONObject) user.get("user");	
+	        String firstName = (String) userObject.get("firstName");    	        
+	        String lastName = (String) userObject.get("lastName");  	       
+	        String sex = (String) userObject.get("sex");  	        
+	        String username = (String) userObject.get("username");    	        
+	        String password = (String) userObject.get("password");          
 	        String role = (String) userObject.get("role"); 
 	        users.put(username, new User(firstName, lastName, sex, username, password, role));
 	    }
+
+	
+	
+	
 }
 

@@ -49,8 +49,8 @@ public class User implements Serializable {
 		return sex;
 	}
 
-	public void setSex(String email) {
-		this.sex = email;
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 	public String getUsername() {
@@ -133,14 +133,15 @@ public class User implements Serializable {
 		
 	}
 
+	//in json format
 	@Override
 	public String toString() {
-		return new StringBuffer(" firstName : ").append(this.firstName)
-                .append(" lastName : ").append(this.lastName)
-                .append(" sex : ").append(this.sex)
-                .append(" username : ").append(this.username)
-                .append(" password : ").append(this.password)
-                .append(" role : ").append(this.role).toString();
+		return new StringBuffer("{ \"firstName\" : ").append("\""+this.firstName+"\"")
+                .append(", \"lastName\" : ").append("\""+this.lastName+"\"")
+                .append(", \"sex\" : ").append("\""+this.sex+"\"")
+                .append(", \"username\" : ").append("\""+this.username+"\"")
+                .append(", \"password\" : ").append("\""+this.password+"\"")
+                .append(", \"role\" : ").append("\""+this.role+ "\"").append("}").toString();
 	}
 
 }
