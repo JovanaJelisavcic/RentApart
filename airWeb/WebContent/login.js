@@ -9,11 +9,12 @@ $(document).ready(function() {
 			data : JSON.stringify({ username: username, password : password}),
 			contentType: 'application/json',
 			success: function (response) {
-				$("#resp").html(response);
 				location.replace("http://localhost:8080/airWeb/app.html")
 		    },
-		    error: function (response) {
-		    	$("#resp").html(response);
+		    error: function (xhr, status, error) {
+		    	 $("#errorLab").css("color","#cf180e");
+		    	 $("#errorLab").text("Invalid password and/or username.");
+		    	 
 		    }
 	});
 });
