@@ -47,6 +47,25 @@ public class UserDAO {
 		return user;
 	}
 	
+	public boolean checkUnique(String username) {
+		if (!users.containsKey(username)) {
+			return true;
+		}
+		else
+		return false;
+	}
+	
+	public  boolean saveUser(User user) 
+    {
+        //ovde ce biti mozda dodavanje u txt fajl i plus u users collection
+		//takodje sve hendlovanje treba da ide u posebne fje
+       //user.writeInFile();
+       users.put(user.getUsername(), user);
+       if(users.containsKey(user.getUsername())){
+       return true;
+       }else return false;
+    }
+	
 	public Collection<User> findAll() {
 		return users.values();
 	}
@@ -77,7 +96,9 @@ public class UserDAO {
 	        String role = (String) userObject.get("role"); 
 	        users.put(username, new User(firstName, lastName, sex, username, password, role));
 	    }
-
+	 
+	 
+	 
 	
 	
 	

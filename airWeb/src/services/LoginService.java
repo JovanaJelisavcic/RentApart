@@ -19,12 +19,6 @@ import javax.ws.rs.core.Response;
 
 
 
-
-
-
-
-
-
 import beans.User;
 import dao.UserDAO;
 
@@ -82,6 +76,25 @@ public class LoginService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public User login(@Context HttpServletRequest request) {
 		return (User) request.getSession().getAttribute("user");
+	}
+	
+	//left to change to user bean
+	@POST
+	@Path("/register")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response register(@QueryParam("username") String username,@QueryParam("password") String password,
+			@QueryParam("firstName") String firstName,@QueryParam("lastName") String lastName,
+			@QueryParam("sex") String sex,
+			@Context HttpServletRequest request) {
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");		
+		if (!userDao.checkUnique(username)) {
+			return Response.status(400).entity("Username must be unique!").build();
+		}
+		User user = new User(firstName,  lastName, sex,  username,  password, "guest");
+		if(!userDao.saveUser(user)) {
+			return Response.status(400).entity("Registration unsuccessful").build();			
+		}
+		return Response.status(200).build();
 	}
 }
 
