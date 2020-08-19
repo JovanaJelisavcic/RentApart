@@ -5,6 +5,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 
 
@@ -74,12 +76,12 @@ public class UserDAO {
 	private void loadUsers(String contextPath) {
 			JSONParser parser = new JSONParser();
 			try {
-				Object obj = parser.parse(new FileReader(contextPath + "/adminsinfo.json"));
-	 
+				Object obj = parser.parse(new FileReader(contextPath + "/WEB-INF/files/adminsinfo.json"));
+				System.out.println("first reading:"+contextPath + "/WEB-INF/files/adminsinfo.json");
 				JSONArray usersList = (JSONArray) obj;
 				usersList.forEach( user -> parseUserObject( (JSONObject) user ) );
 				
-	
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -102,14 +104,17 @@ public class UserDAO {
 		   JSONParser parser = new JSONParser();
 		   JSONArray usersList = new JSONArray();
 			try {
-				Object obj = parser.parse(new FileReader(ctx + "/adminsinfo.json"));
-	 
-				 usersList = (JSONArray) obj;				 
+				
+				Object obj = parser.parse(new FileReader(ctx+"/WEB-INF/files/adminsinfo.json"));
+				System.out.println("read to change:" +ctx + "/WEB-INF/files/adminsinfo.json");
+				 usersList = (JSONArray) obj;	
+				 
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
+			
 			if(usersList!=null){
 		   writeNoob(usersList, user);
 		   return true;
@@ -136,10 +141,13 @@ public class UserDAO {
         usersList.add(obj);
         
         try {
-
-        	file = new FileWriter(ctx+"\\adminsinfo.json", false);
+        	
+        	file = new FileWriter(ctx+"/WEB-INF/files/adminsinfo.json", false);
+        	System.out.println("write here:"+ctx + "/WEB-INF/files/adminsinfo.json");
             file.write(usersList.toJSONString());
-            
+           usersList.forEach(v->System.out.println(v));
+        	
+        	  
  
         } catch (IOException e) {
             e.printStackTrace();

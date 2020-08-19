@@ -39,7 +39,7 @@ public class LoginService {
 		// Inicijalizacija treba da se obavi samo jednom
 		
 		if (ctx.getAttribute("userDAO") == null) {
-	    	String contextPath = ctx.getRealPath("");
+	    	String contextPath = ctx.getRealPath("/");
 			ctx.setAttribute("userDAO", new UserDAO(contextPath));
 		}
 	}
