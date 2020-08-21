@@ -5,11 +5,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.BufferedWriter;
-import java.io.File;
+
 import java.io.FileReader;
-
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
@@ -18,16 +15,16 @@ import java.util.Map;
 
 import beans.User;
 
-
-
-
 public class UserDAO {
 	
 	private String ctx;
 	
 	private Map<String, User> users = new HashMap<>();
 
-	static private FileWriter file;
+	private static FileWriter fileWrite;
+	private static FileReader fileReader;	
+
+	
 	
 	public UserDAO() {
 		
@@ -75,15 +72,17 @@ public class UserDAO {
 	@SuppressWarnings("unchecked")
 	private void loadUsers(String contextPath) {
 			JSONParser parser = new JSONParser();
-			try {
-				Object obj = parser.parse(new FileReader(contextPath + "/WEB-INF/files/adminsinfo.json"));
-				System.out.println("first reading:"+contextPath + "/WEB-INF/files/adminsinfo.json");
+			try {				
+				Object obj = parser.parse(new FileReader(contextPath + "\\adminsinfo.json"));
+				System.out.println("first reading:"+contextPath + "\\adminsinfo.json");
 				JSONArray usersList = (JSONArray) obj;
 				usersList.forEach( user -> parseUserObject( (JSONObject) user ) );
 				
 				
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally{
+				 if (fileReader != null) try { fileReader.close(); } catch (IOException ignore) {ignore.printStackTrace();}
 			}
 	}
 	
@@ -105,14 +104,17 @@ public class UserDAO {
 		   JSONArray usersList = new JSONArray();
 			try {
 				
-				Object obj = parser.parse(new FileReader(ctx+"/WEB-INF/files/adminsinfo.json"));
-				System.out.println("read to change:" +ctx + "/WEB-INF/files/adminsinfo.json");
+				Object obj = parser.parse(new FileReader(ctx+"\\adminsinfo.json"));
+				System.out.println("read to change:" +ctx + "\\adminsinfo.json");
 				 usersList = (JSONArray) obj;	
 				 
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
+			}finally{
+				 if (fileReader != null) try { fileReader.close(); } catch (IOException ignore) {ignore.printStackTrace();}
+				
 			}
 			
 			if(usersList!=null){
@@ -142,9 +144,12 @@ public class UserDAO {
         
         try {
         	
-        	file = new FileWriter(ctx+"/WEB-INF/files/adminsinfo.json", false);
-        	System.out.println("write here:"+ctx + "/WEB-INF/files/adminsinfo.json");
-            file.write(usersList.toJSONString());
+        	
+   
+        	
+        	fileWrite = new FileWriter(ctx+"\\adminsinfo.json", false);
+        	System.out.println("write here:"+ctx + "\\adminsinfo.json");
+        	fileWrite.write(usersList.toJSONString());
            usersList.forEach(v->System.out.println(v));
         	
         	  
@@ -153,8 +158,16 @@ public class UserDAO {
             e.printStackTrace();
  
         } finally {
-            if (file != null) try { file.close(); } catch (IOException ignore) {}
+            if (fileWrite != null) try { fileWrite.close(); } catch (IOException ignore) {ignore.printStackTrace();}
         }
+        
+        copyToPermanent();
+        
+	}
+
+	private void copyToPermanent() {
+		// TODO Auto-generated method stub
+		
 	}
 	 	
 	
