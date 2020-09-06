@@ -83,7 +83,7 @@ public class LoginService {
 			@Context HttpServletRequest request) {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");		
 		if (!userDao.checkUnique(user.getUsername())) {
-			return Response.status(400).entity("Username must be unique!").build();
+			return Response.status(400).entity("Username already taken!").build();
 		}
 		user.setRole("guest");
 		if(!userDao.saveUser(user)) {

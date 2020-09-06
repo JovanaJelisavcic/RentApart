@@ -3,17 +3,21 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Registration</title>
-<!-- 
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
- <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-  -->
+
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
- 
+ <script src="http://malsup.github.com/jquery.form.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" ></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ></script>
+    <script> 
+        // wait for the DOM to be loaded 
+        $(document).ready(function() { 
+            // bind 'myForm' and provide a simple callback function 
+            $('#registerForm').ajaxForm(function() { 
+            }); 
+        }); 
+    </script> 
 <style>
 .register{
     background: -webkit-linear-gradient(left, #3931af, #00c6ff);
@@ -129,11 +133,11 @@ form .error {
                          <button type="button" class="close" aria-label="Close">
           <span aria-hidden="true">×</span>
                      </button>                                        
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <h3 class="register-heading">Apply as a Guest</h3>
-                                <div class="row register-form">
-                                <form id="registerForm" name="registerForm">
+                     <!--   <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"> -->
+                                <h3 class="register-heading">Apply as a Guest</h3>  
+                                <form id="registerForm" name="registerForm">                             
+                                <div class="row register-form">                                                                                        
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name *" value="" />
@@ -141,20 +145,20 @@ form .error {
                                         <div class="form-group">
                                             <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name *" value="" />
                                         </div>
-					<div class="form-group">
+										<div class="form-group">
                                             <input type="text" class="form-control" id="username" name="username" placeholder="Your Username *" value="" />
-                                        </div>
-                                       
-                                        
+                                        </div> 
+                                        <p id="uniqueError" style="color:red;"></p>                                     
                                     </div>
+                                    
                                     <div class="col-md-6">
                                          <div class="form-group">
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Password *" value="" />
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="confirmPassword" class="form-control"  placeholder="Confirm Password *" value="" />
+                                            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control"  placeholder="Confirm Password *" value="" />
                                         </div>
-  <div class="form-group">
+  										<div class="form-group">
                                             <div class="maxl">
                                                 <label class="radio inline"> 
                                                     <input type="radio" name="gender" id="male" value="male" >
@@ -167,14 +171,15 @@ form .error {
                                             </div>
                                         </div>
                                         <input type="submit" class="btnRegister"  value="Register"/>
-                                    </div>
-                                </form>
-                                </div>       
+                                    </div>                               
+                                </div>
+                
+                                </form>      
                             </div>                            
                         </div>
                     </div>
-                </div>
-            </div>
+              <!--   </div>
+            </div> --> 
 
  <script src="registerValid.js"></script>
 </body>
