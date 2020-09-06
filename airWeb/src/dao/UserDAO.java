@@ -73,8 +73,8 @@ public class UserDAO {
 	private void loadUsers(String contextPath) {
 			JSONParser parser = new JSONParser();
 			try {				
-				Object obj = parser.parse(new FileReader(contextPath + "\\adminsinfo.json"));
-				System.out.println("first reading:"+contextPath + "\\adminsinfo.json");
+				Object obj = parser.parse(new FileReader(contextPath + "/adminsinfo.json"));
+				System.out.println("first reading:"+contextPath + "/adminsinfo.json");
 				JSONArray usersList = (JSONArray) obj;
 				usersList.forEach( user -> parseUserObject( (JSONObject) user ) );
 				
@@ -104,18 +104,19 @@ public class UserDAO {
 		   JSONArray usersList = new JSONArray();
 			try {
 				
-				Object obj = parser.parse(new FileReader(ctx+"\\adminsinfo.json"));
-				System.out.println("read to change:" +ctx + "\\adminsinfo.json");
+				Object obj = parser.parse(new FileReader(ctx+"/adminsinfo.json"));
+				System.out.println("read to change:" +ctx + "/adminsinfo.json");
 				 usersList = (JSONArray) obj;	
 				 
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
-			}finally{
+			}
+			
 				 if (fileReader != null) try { fileReader.close(); } catch (IOException ignore) {ignore.printStackTrace();}
 				
-			}
+			
 			
 			if(usersList!=null){
 		   writeNoob(usersList, user);
@@ -147,8 +148,8 @@ public class UserDAO {
         	
    
         	
-        	fileWrite = new FileWriter(ctx+"\\adminsinfo.json", false);
-        	System.out.println("write here:"+ctx + "\\adminsinfo.json");
+        	fileWrite = new FileWriter(ctx+"/adminsinfo.json", false);
+        	System.out.println("write here:"+ctx + "/adminsinfo.json");
         	fileWrite.write(usersList.toJSONString());
            usersList.forEach(v->System.out.println(v));
         	
@@ -161,14 +162,9 @@ public class UserDAO {
             if (fileWrite != null) try { fileWrite.close(); } catch (IOException ignore) {ignore.printStackTrace();}
         }
         
-        copyToPermanent();
-        
+      
 	}
 
-	private void copyToPermanent() {
-		// TODO Auto-generated method stub
-		
-	}
 	 	
 	
 }

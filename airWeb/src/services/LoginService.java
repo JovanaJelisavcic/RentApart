@@ -6,15 +6,12 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 
@@ -78,19 +75,17 @@ public class LoginService {
 		return (User) request.getSession().getAttribute("user");
 	}
 	
-	//left to change to user bean
+
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response register(@QueryParam("username") String username,@QueryParam("password") String password,
-			@QueryParam("firstName") String firstName,@QueryParam("lastName") String lastName,
-			@QueryParam("sex") String sex,
+	public Response register(User user,
 			@Context HttpServletRequest request) {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");		
-		if (!userDao.checkUnique(username)) {
+		if (!userDao.checkUnique(user.getUsername())) {
 			return Response.status(400).entity("Username must be unique!").build();
 		}
-		User user = new User(firstName,  lastName, sex,  username,  password, "guest");
+		user.setRole("guest");
 		if(!userDao.saveUser(user)) {
 			return Response.status(400).entity("Registration unsuccessful").build();			
 		}
