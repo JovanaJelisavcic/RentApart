@@ -3,7 +3,9 @@
 <head>
 <title>My Profile</title>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+ <script src="http://malsup.github.com/jquery.form.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" ></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -12,6 +14,9 @@
 body{
     margin-top:20px;
     background:#f8f8f8
+}
+form .error {
+  color: #ff0000;
 }
 </style>
 </head>
@@ -47,20 +52,20 @@ body{
               </ul>
               <div class="tab-content pt-3">
                 <div class="tab-pane active">
-                  <form class="form" novalidate="">
+                  <form class="form" name="changeProfile" novalidate="">
                     <div class="row">
                       <div class="col">
                         <div class="row">
                           <div class="col">
                             <div class="form-group">
                               <label>Name</label>
-                              <input class="form-control" type="text" name="name" placeholder="John" value="John">
+                              <input class="form-control" type="text" name="firstname" id="firstname" value="John">
                             </div>
                           </div>
                           <div class="col">
                             <div class="form-group">
                               <label>Surname</label>
-                              <input class="form-control" type="text" name="username" placeholder="Smith" value="Smith">
+                              <input class="form-control" type="text" name="lastname" id="lastname" value="Smith">
                             </div>
                           </div>
                         </div>
@@ -87,7 +92,7 @@ body{
                           <div class="col">
                             <div class="form-group">
                               <label>Current Password</label>
-                              <input class="form-control" type="password" placeholder="••••••">
+                              <input class="form-control" type="password" id="password" name="password" placeholder="••••••">
                             </div>
                           </div>
                         </div>
@@ -95,7 +100,7 @@ body{
                           <div class="col">
                             <div class="form-group">
                               <label>New Password</label>
-                              <input class="form-control" type="password" placeholder="••••••">
+                              <input class="form-control" type="password" id="newpassword" name="newpassword" placeholder="••••••">
                             </div>
                           </div>
                         </div>
@@ -103,14 +108,14 @@ body{
                           <div class="col">
                             <div class="form-group">
                               <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
-                              <input class="form-control" type="password" placeholder="••••••"></div>
+                              <input class="form-control" type="password" id="confirmpassword" name="confirmpassword" placeholder="••••••"></div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col d-flex justify-content-end">
-                        <button class="btn btn-primary" style="margin:5px;" type="submit">Go Back</button>
+                        <button class="btn btn-primary" style="margin:5px; background-color:#D3D3D3; border-color:#D3D3D3 " type="button" onclick="location.href = 'app.html';">Go Back</button>
                         <button class="btn btn-primary" style="margin:5px;" type="submit">Save Changes</button>
                       </div>
                     </div>
@@ -126,5 +131,6 @@ body{
   </div>
 </div>
 </div>
+<script src="profileValid.js"></script>
 </body>
 </html>
