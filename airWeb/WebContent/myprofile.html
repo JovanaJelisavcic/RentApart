@@ -10,6 +10,29 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ></script>
+<script type="text/javascript">
+$(document).ready(function() {
+$.ajax({
+	url : "rest/currentUser",
+	type: "GET",
+	contentType: 'application/json',
+	success: function (response) {
+	    $('#username').text("@"+response.username);
+	    $('#fullname').text(response.firstName+" "+response.lastName);
+	    $('#role').text(response.role);
+	    $('#firstname').attr('value', response.firstName);
+	    $('#lastname').attr('value', response.lastName);
+	    if(response.sex == "male"){
+	    	$("[name=gender]").val(["male"]);}
+	    else {$("[name=gender]").val(["female"]);}
+    },
+    error: function (response) {
+    	alert("Unsuccessful load of personal data. Check your connection!");
+    }
+});
+});
+</script>
+<!-- this might be a place to put a call for data  -->
 <style>
 body{
     margin-top:20px;
@@ -39,11 +62,11 @@ form .error {
                 </div>
                 <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
                   <div class="text-center text-sm-left mb-2 mb-sm-0">
-                    <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">John Smith</h4>
-                    <p class="mb-0">@johnny.s</p>
+                    <h4 id="fullname" class="pt-sm-2 pb-1 mb-0 text-nowrap">John Smith</h4>
+                    <p id="username" class="mb-0">@johnny.s</p>
                   </div>
                   <div class="text-center text-sm-right">
-                    <span class="badge badge-secondary">administrator</span>
+                    <span id="role" class="badge badge-secondary">administrator</span>
                   </div>
                 </div>
               </div>
@@ -59,13 +82,13 @@ form .error {
                           <div class="col">
                             <div class="form-group">
                               <label>Name</label>
-                              <input class="form-control" type="text" name="firstname" id="firstname" value="John">
+                              <input class="form-control" type="text" name="firstname" id="firstname" >
                             </div>
                           </div>
                           <div class="col">
                             <div class="form-group">
                               <label>Surname</label>
-                              <input class="form-control" type="text" name="lastname" id="lastname" value="Smith">
+                              <input class="form-control" type="text" name="lastname" id="lastname" >
                             </div>
                           </div>
                         </div>
