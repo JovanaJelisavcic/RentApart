@@ -50,7 +50,35 @@ $(document).ready(function() {
     },
   
     submitHandler: function(form) {
-      form.submit();
+    	// event.preventDefault(); //prevent default action 
+        var username = $('input[name="username"]').val();
+        var password = $('input[name="password"]').val();
+        var firstName = $('input[name="firstname"]').val();
+        var lastName = $('input[name="lastname"]').val();
+        var sex = $('input[type=radio][name=gender]:checked').val();
+
+        $.ajax({
+          url: "rest/changeProfile",
+          type: "POST",
+          data: JSON.stringify({
+            username: username,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            sex: sex
+          }),
+          contentType: 'application/json',
+          success: function(response) {
+        	 alert("Success - changed profile info");
+            location.replace("http://localhost:8080/airWeb/app.html");
+          },
+          error: function(data, textStatus, xhr) {
+        	  alert(data.responseText);
+          	/*var text = data.responseText;
+          	 $("#uniqueError").text(text);
+          	 $("#uniqueError").show();   */    	 
+          }
+        }); 
     }
   });
 

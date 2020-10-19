@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 
 
+
 import beans.User;
 import dao.UserDAO;
 
@@ -90,6 +91,23 @@ public class LoginService {
 			return Response.status(400).entity("Registration unsuccessful").build();			
 		}
 		return Response.status(200).build();
+	}
+	
+	@POST
+	@Path("/changeProfile")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response changeProfile(User userNew,
+			@Context HttpServletRequest request) {
+		User oldInfo =(User) request.getSession().getAttribute("user");	
+		System.out.println("logged user :"+userNew.getPassword() + "typed : "+ oldInfo.getPassword() );
+		if (userNew.getPassword()!= oldInfo.getPassword()) {
+			return Response.status(400).entity("Wrong password!").build();
+		}else
+		return Response.status(200).build();
+		/*if(!userDao.saveUser(user)) {
+			return Response.status(400).entity("Registration unsuccessful").build();			
+		}*/
+		
 	}
 }
 
