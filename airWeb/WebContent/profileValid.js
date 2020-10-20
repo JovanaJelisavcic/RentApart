@@ -73,10 +73,8 @@ $(document).ready(function() {
             location.replace("http://localhost:8080/airWeb/app.html");
           },
           error: function(data, textStatus, xhr) {
-        	  alert(data.responseText);
-          	/*var text = data.responseText;
-          	 $("#uniqueError").text(text);
-          	 $("#uniqueError").show();   */    	 
+        	  $("#errorLab").css("color","#cf180e");
+		      $("#errorLab").text(data.responseText);  	 
           }
         }); 
     }
