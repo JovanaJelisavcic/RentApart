@@ -56,21 +56,23 @@ $(document).ready(function() {
         var firstName = $('input[name="firstname"]').val();
         var lastName = $('input[name="lastname"]').val();
         var sex = $('input[type=radio][name=gender]:checked').val();
+        var newPassword = $('input[name="newpassword"]').val();
 
         $.ajax({
           url: "rest/changeProfile",
           type: "POST",
           data: JSON.stringify({
-            username: username,
-            password: password,
-            firstName: firstName,
-            lastName: lastName,
-            sex: sex
+            	username: username,
+            	password: password,
+                firstName: firstName,
+                lastName: lastName,
+                sex: sex,
+                newPass : newPassword
           }),
           contentType: 'application/json',
           success: function(response) {
-        	 alert("Success - changed profile info");
-            location.replace("http://localhost:8080/airWeb/app.html");
+        	  $("#successLab").css("color","#2da873");
+		      $("#successLab").text("Successfully changed your profile!"); 
           },
           error: function(data, textStatus, xhr) {
         	  $("#errorLab").css("color","#cf180e");

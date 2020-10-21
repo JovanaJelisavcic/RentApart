@@ -6,15 +6,16 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+
+
 
 
 
@@ -101,18 +102,17 @@ public class LoginService {
 	@POST
 	@Path("/changeProfile")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response changeProfile(User user,
-			@Context HttpServletRequest request) {
+	public Response changeProfile(User user, @Context HttpServletRequest request) {
 		User oldInfo =(User) request.getSession().getAttribute("user");	
-		System.out.println("request : " + request.getRequestURI());
-		System.out.println("typed : "+user.getPassword() + " logged user : "+ oldInfo.getPassword() );
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		System.out.println("typed : "+user.getPassword() + " logged user : "+ oldInfo.getPassword() + " newPass : " + user.getNewPass());
 		if (user.getPassword().equals(oldInfo.getPassword())) { 
+			if(!userDao.changeUser(user)) {
+				return Response.status(400).entity("Saving changes unsuccessful").build();			
+			}
 			return Response.status(200).build();			
 		}else
 			return Response.status(400).entity("Wrong password!").build();
-		/*if(!userDao.saveUser(user)) {
-			return Response.status(400).entity("Registration unsuccessful").build();			
-		}*/
 		
 	}
 }

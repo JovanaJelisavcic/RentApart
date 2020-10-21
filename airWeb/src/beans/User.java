@@ -12,11 +12,23 @@ public class User implements Serializable {
 	private String username;
 	private String password;
 	private String role;
+	private String newPass;
 	
 	
 	public User() {
 	}
 
+	public User(String firstName, String lastName, String sex, String username, String password, String role, String newPass) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.sex = sex;
+		this.username = username;
+		this.password = password;
+		this.role = role;
+		this.newPass = newPass;
+	}
+	
 	public User(String firstName, String lastName, String sex, String username, String password, String role) {
 		super();
 		this.firstName = firstName;
@@ -28,9 +40,16 @@ public class User implements Serializable {
 	}
 
 
-
 	public String getFirstName() {
 		return firstName;
+	}
+
+	public String getNewPass() {
+		return newPass;
+	}
+
+	public void setNewPass(String newPass) {
+		this.newPass = newPass;
 	}
 
 	public void setFirstName(String firstName) {
