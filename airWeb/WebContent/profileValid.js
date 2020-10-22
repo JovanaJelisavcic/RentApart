@@ -57,6 +57,9 @@ $(document).ready(function() {
         var lastName = $('input[name="lastname"]').val();
         var sex = $('input[type=radio][name=gender]:checked').val();
         var newPassword = $('input[name="newpassword"]').val();
+        
+        
+        
 
         $.ajax({
           url: "rest/changeProfile",
@@ -71,12 +74,37 @@ $(document).ready(function() {
           }),
           contentType: 'application/json',
           success: function(response) {
+        	  $("#errorLab").hide();
         	  $("#successLab").css("color","#2da873");
-		      $("#successLab").text("Successfully changed your profile!"); 
+        	  $("#successLab").css("margin","5px");
+        	  $("#successLab").css("border-style","solid");
+        	  $("#successLab").css("border-width","2px");
+        	  $("#successLab").css("border-radius","5px");
+        	  $("#successLab").css("border-color","#2da873");
+        	  $("#successLab").css("font-size","larger");
+		      $("#successLab").text("Successfully changed your profile info");
+		      $("#successLab").show();
           },
           error: function(data, textStatus, xhr) {
-        	  $("#errorLab").css("color","#cf180e");
-		      $("#errorLab").text(data.responseText);  	 
+        	  
+        	  if(data.responseText.includes("password")){
+        	  $("#successLab").hide();
+        	  $("#errorLab").css("color","#ff0000");
+		      $("#errorLab").text(data.responseText); 
+		      $("#errorLab").show();
+        	  }else {
+        		  $("#errorLab").hide();
+        		  $("#successLab").css("color","#ff0000");
+            	  $("#successLab").css("margin","5px");
+            	  $("#successLab").css("padding","5px");
+            	  $("#successLab").css("border-style","solid");
+            	  $("#successLab").css("border-width","2px");
+            	  $("#successLab").css("border-radius","5px");
+            	  $("#successLab").css("border-color","#ff0000");
+            	  $("#successLab").css("font-size","larger");
+    		      $("#successLab").text(data.responseText); 
+    		      $("#successLab").show();
+        	  }
           }
         }); 
     }

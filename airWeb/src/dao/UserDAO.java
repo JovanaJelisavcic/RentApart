@@ -168,7 +168,7 @@ public class UserDAO {
 	public boolean changeUser(User user) {
 		// TODO Auto-generated method stub
 		//Here I'll write the code for saving changes in user data
-		return true;
+		return false;
 	}
 
 	 	
