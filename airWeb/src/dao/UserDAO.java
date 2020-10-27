@@ -6,6 +6,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 
+
+
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +23,7 @@ public class UserDAO {
 	private String ctx;
 	
 	private Map<String, User> users = new HashMap<>();
+	
 
 	private static FileWriter fileWrite;
 	private static FileReader fileReader;	
@@ -33,6 +37,8 @@ public class UserDAO {
 	public UserDAO(String contextPath) {
 		ctx=contextPath;
 		loadUsers(contextPath);
+		System.out.println("loaded");
+		users.forEach((username,user) -> System.out.println(username+" : "+user));
 	}
 	
 	public User find(String username, String password) {
@@ -55,13 +61,12 @@ public class UserDAO {
 	}
 	
 	public  boolean saveUser(User user) 
-    {      		   
+    {  	
     	   users.put(user.getUsername(), user);
-    	   if(!makeRoomForNoob(user)){
-    		   return false;
-    		  
-    	   }else return true;
-    	   
+    	   if(writeDown(convertUsers())){
+    		   return true;}
+    	   else return false;
+    	      	   
 
     }
 	
@@ -99,78 +104,73 @@ public class UserDAO {
 	        users.put(username, new User(firstName, lastName, sex, username, password, role));
 	    }
 	 
-	   private boolean makeRoomForNoob(User user){
-		   JSONParser parser = new JSONParser();
-		   JSONArray usersList = new JSONArray();
-			try {
-				
-				Object obj = parser.parse(new FileReader(ctx+"/adminsinfo.json"));
-				System.out.println("read to change:" +ctx + "/adminsinfo.json");
-				 usersList = (JSONArray) obj;	
-				 
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-			
-				 if (fileReader != null) try { fileReader.close(); } catch (IOException ignore) {ignore.printStackTrace();}
-				
-			
-			
-			if(usersList!=null){
-		   writeNoob(usersList, user);
-		   return true;
-			}else return false;		   
-	    }
 
-	@SuppressWarnings({ "unchecked" })
-	private void writeNoob(JSONArray usersList, User user) {
-		// TODO Auto-generated method stub
-		//final way object should look
-        JSONObject obj = new JSONObject();
-        //here I'll put the info about the user
-        JSONObject userOb=new JSONObject();
+	public boolean changeUser(User user) {
 
-        userOb.put("username", user.getUsername());
-        userOb.put("password", user.getPassword());
-        userOb.put("firstName", user.getFirstName());
-        userOb.put("lastName", user.getLastName());
-        userOb.put("sex", user.getSex());
-        userOb.put("role", user.getRole());
-        
-        obj.put("user", userOb);
-        
-        usersList.add(obj);
-        
+		if(user.getNewPass().isEmpty()){
+			users.remove(user.getUsername());
+			if(saveUser(user)){
+			return true;
+			} else return false;
+		}else {
+			user.setPassword(user.getNewPass());
+			users.remove(user.getUsername());
+			if(saveUser(user)){
+				return true;
+				} else return false;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean writeDown(JSONArray users){
         try {
-        	
-        	
-   
-        	
+
         	fileWrite = new FileWriter(ctx+"/adminsinfo.json", false);
         	System.out.println("write here:"+ctx + "/adminsinfo.json");
-        	fileWrite.write(usersList.toJSONString());
-           usersList.forEach(v->System.out.println(v));
+        	fileWrite.write(users.toJSONString());
+        	users.forEach(v->System.out.println(v));
         	
         	  
  
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
  
         } finally {
             if (fileWrite != null) try { fileWrite.close(); } catch (IOException ignore) {ignore.printStackTrace();}
         }
+		return true;
         
-      
+		
 	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONArray convertUsers(){
+		JSONArray convertedUsers = new JSONArray();
+		
+		 users.forEach((username,user) ->{
+		 
+		//final way object should look
+	        JSONObject obj = new JSONObject();
+	        //here I'll put the info about the user
+	        JSONObject userOb=new JSONObject();
 
-	public boolean changeUser(User user) {
-		// TODO Auto-generated method stub
-		//Here I'll write the code for saving changes in user data
-		return false;
+	        userOb.put("username", user.getUsername());
+	        userOb.put("password", user.getPassword());
+	        userOb.put("firstName", user.getFirstName());
+	        userOb.put("lastName", user.getLastName());
+	        userOb.put("sex", user.getSex());
+	        userOb.put("role", user.getRole());
+	        
+	        obj.put("user", userOb);
+	        convertedUsers.add(obj);
+	        
+		 }); 
+		
+		return convertedUsers;
+		
+		
 	}
-
 	 	
 	
 }

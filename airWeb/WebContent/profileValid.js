@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+		
 	$("#showPass").click(function(){
 	    $("#passchange").show();
 	  });
@@ -51,12 +51,14 @@ $(document).ready(function() {
   
     submitHandler: function(form) {
     	// event.preventDefault(); //prevent default action 
-        var username = $('input[name="username"]').val();
+        var uname = $("#username").text();
+        var username = uname.replace('@','');
         var password = $('input[name="password"]').val();
         var firstName = $('input[name="firstname"]').val();
         var lastName = $('input[name="lastname"]').val();
         var sex = $('input[type=radio][name=gender]:checked').val();
         var newPassword = $('input[name="newpassword"]').val();
+        var role = $("#role").text();
         
         
         
@@ -70,11 +72,14 @@ $(document).ready(function() {
                 firstName: firstName,
                 lastName: lastName,
                 sex: sex,
-                newPass : newPassword
+                newPass : newPassword,
+                role : role
           }),
           contentType: 'application/json',
           success: function(response) {
         	  $("#errorLab").hide();
+        	  $("#passchange").hide();
+        	  $('input[name=password').val('');
         	  $("#successLab").css("color","#2da873");
         	  $("#successLab").css("margin","5px");
         	  $("#successLab").css("border-style","solid");
@@ -89,11 +94,15 @@ $(document).ready(function() {
         	  
         	  if(data.responseText.includes("password")){
         	  $("#successLab").hide();
+        	  $("#passchange").hide();
+        	  $('input[name=password').val('');
         	  $("#errorLab").css("color","#ff0000");
 		      $("#errorLab").text(data.responseText); 
 		      $("#errorLab").show();
         	  }else {
         		  $("#errorLab").hide();
+        		  $("#passchange").hide();
+        		  $('input[name=password').val('');
         		  $("#successLab").css("color","#ff0000");
             	  $("#successLab").css("margin","5px");
             	  $("#successLab").css("padding","5px");
