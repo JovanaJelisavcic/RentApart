@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
 <title>Registration</title>
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -20,13 +19,13 @@
     </script> 
 <style>
 .register{
-    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    background: -webkit-linear-gradient(left, #17a2b8, #00c6ff);
     margin-top: 3%;
     padding: 3%;
 }
 .register-left{
     text-align: center;
-    color: #fff;
+    color: #17a2b8;
     margin-top: 4%;
 }
 .register-left input{
@@ -42,7 +41,7 @@
     cursor: pointer;
 }
 .register-right{
-    background: #f8f9fa;
+    background: #cbf1f7;
     border-top-left-radius: 10% 50%;
     border-bottom-left-radius: 10% 50%;
 }
@@ -125,16 +124,11 @@ form .error {
                 <div class="row">
                     <div class="col-md-3 register-left">
                         <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
-                        <h3>Welcome</h3>
-                        <p>Love thy neighbor but chose your neighborhood</p>
+                        <h3 style='color:#495057;'>Welcome</h3>
+                        <p style='color:#495057;'>Love thy neighbor but chose your neighborhood</p>
                         <input type="button" onClick="location.href='login.html'" name="Login" value="Login"/><br/>
                     </div>
-                    <div class="col-md-9 register-right">
-                         <button type="button" class="close" aria-label="Close">
-          <span aria-hidden="true">×</span>
-                     </button>                                        
-                     <!--   <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"> -->
+                    <div class="col-md-9 register-right">                                   
                                 <h3 class="register-heading">Apply as a Guest</h3>  
                                 <form id="registerForm" name="registerForm">                             
                                 <div class="row register-form">                                                                                        
@@ -178,9 +172,6 @@ form .error {
                             </div>                            
                         </div>
                     </div>
-              <!--   </div>
-            </div> --> 
-
  <script src="registerValid.js"></script>
 </body>
 </html>
