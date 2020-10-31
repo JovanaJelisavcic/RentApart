@@ -16,11 +16,10 @@ public class Apartment implements Serializable{
 	private static final long serialVersionUID = -5317933952482460532L;
 	private String type;
 	private String roomCap;
-	private String guestsCap;
+	private int guestsCap;
 	private Location location;
 	private Date[] freeDates;
 	private Map<Date,Boolean> availability;
-	private String newPass="";
 	private User host;
 	private Comment[] comments;
 	private Image[] images;
@@ -28,7 +27,7 @@ public class Apartment implements Serializable{
 	private LocalTime checkin;
 	private LocalTime checkout;
 	private boolean status;
-	private Map<Integer, String> amenities;
+	private Amenitie[] amenities;
 	private Reservation[] reservations;
 	
 	
@@ -45,10 +44,10 @@ public class Apartment implements Serializable{
 	public void setRoomCap(String roomCap) {
 		this.roomCap = roomCap;
 	}
-	public String getGuestsCap() {
+	public int getGuestsCap() {
 		return guestsCap;
 	}
-	public void setGuestsCap(String guestsCap) {
+	public void setGuestsCap(int guestsCap) {
 		this.guestsCap = guestsCap;
 	}
 	public Location getLocation() {
@@ -68,12 +67,6 @@ public class Apartment implements Serializable{
 	}
 	public void setAvailability(Map<Date, Boolean> availability) {
 		this.availability = availability;
-	}
-	public String getNewPass() {
-		return newPass;
-	}
-	public void setNewPass(String newPass) {
-		this.newPass = newPass;
 	}
 	public User getHost() {
 		return host;
@@ -117,10 +110,10 @@ public class Apartment implements Serializable{
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	public Map<Integer, String> getAmenities() {
+	public Amenitie[] getAmenities() {
 		return amenities;
 	}
-	public void setAmenities(Map<Integer, String> amenities) {
+	public void setAmenities(Amenitie[] amenities) {
 		this.amenities = amenities;
 	}
 	public Reservation[] getReservations() {

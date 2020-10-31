@@ -12,6 +12,7 @@ public class Comment implements Serializable{
 	private Apartment apartment;
 	private String comment;
 	private int stars;
+	private boolean status;
 	
 	
 	public User getGuest() {
@@ -37,6 +38,12 @@ public class Comment implements Serializable{
 	}
 	public void setStars(int stars) {
 		this.stars = stars;
+	}
+	public boolean isStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 
