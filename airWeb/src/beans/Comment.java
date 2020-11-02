@@ -15,6 +15,17 @@ public class Comment implements Serializable{
 	private boolean status;
 	
 	
+	
+	public Comment(User guest, Apartment apartment, String comment, int stars,
+			boolean status) {
+		super();
+		this.guest = guest;
+		this.apartment = apartment;
+		this.comment = comment;
+		this.stars = stars;
+		this.status = status;
+	}
+	
 	public User getGuest() {
 		return guest;
 	}

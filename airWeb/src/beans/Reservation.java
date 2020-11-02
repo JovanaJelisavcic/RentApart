@@ -26,6 +26,21 @@ public class Reservation implements Serializable{
 	private Status status;
 	
 
+	
+	
+	public Reservation(Apartment apartment, Date beginDate, int numOfNights,
+			float totalPrice, String message, User guest, Status status) {
+		super();
+		this.apartment = apartment;
+		this.beginDate = beginDate;
+		this.numOfNights = numOfNights;
+		this.totalPrice = totalPrice;
+		this.message = message;
+		this.guest = guest;
+		this.status = status;
+	}
+	
+	
 	public Apartment getApartment() {
 		return apartment;
 	}

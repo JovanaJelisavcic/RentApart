@@ -78,8 +78,8 @@ public class UserDAO {
 	private void loadUsers(String contextPath) {
 			JSONParser parser = new JSONParser();
 			try {				
-				Object obj = parser.parse(new FileReader(contextPath + "/adminsinfo.json"));
-				System.out.println("first reading:"+contextPath + "/adminsinfo.json");
+				Object obj = parser.parse(new FileReader(contextPath + "/jsons/adminsinfo.json"));
+				System.out.println("first reading:"+contextPath + "/jsons/adminsinfo.json");
 				JSONArray usersList = (JSONArray) obj;
 				usersList.forEach( user -> parseUserObject( (JSONObject) user ) );
 				
@@ -125,8 +125,8 @@ public class UserDAO {
 	private boolean writeDown(JSONArray users){
         try {
 
-        	fileWrite = new FileWriter(ctx+"/adminsinfo.json", false);
-        	System.out.println("write here:"+ctx + "/adminsinfo.json");
+        	fileWrite = new FileWriter(ctx+"/jsons/adminsinfo.json", false);
+        	System.out.println("write here:"+ctx + "/jsons/adminsinfo.json");
         	fileWrite.write(users.toJSONString());
         	users.forEach(v->System.out.println(v));
         	

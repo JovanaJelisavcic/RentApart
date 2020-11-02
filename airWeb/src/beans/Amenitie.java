@@ -11,6 +11,14 @@ public class Amenitie implements Serializable{
 	private int id;
 	private String amenitie;
 	
+	
+	
+	public Amenitie(int id, String amenitie) {
+		super();
+		this.id = id;
+		this.amenitie = amenitie;
+	}
+	
 	public int getId() {
 		return id;
 	}

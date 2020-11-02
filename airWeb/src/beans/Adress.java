@@ -12,6 +12,13 @@ public class Adress implements Serializable {
 		private int postalCode;
 		
 		
+		public Adress(String street, String place, int postalCode) {
+			super();
+			this.street = street;
+			this.place = place;
+			this.postalCode = postalCode;
+		}
+		
 		public String getStreet() {
 			return street;
 		}

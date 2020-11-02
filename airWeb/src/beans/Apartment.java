@@ -14,6 +14,7 @@ public class Apartment implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -5317933952482460532L;
+	private int id;
 	private String type;
 	private String roomCap;
 	private int guestsCap;
@@ -31,6 +32,30 @@ public class Apartment implements Serializable{
 	private Reservation[] reservations;
 	
 	
+	
+	public Apartment(int id, String type, String roomCap, int guestsCap,
+			Location location, Date[] freeDates,
+			Map<Date, Boolean> availability, User host, Comment[] comments,
+			Image[] images, float price, LocalTime checkin, LocalTime checkout,
+			boolean status, Amenitie[] amenities, Reservation[] reservations) {
+		super();
+		this.id = id;
+		this.type = type;
+		this.roomCap = roomCap;
+		this.guestsCap = guestsCap;
+		this.location = location;
+		this.freeDates = freeDates;
+		this.availability = availability;
+		this.host = host;
+		this.comments = comments;
+		this.images = images;
+		this.price = price;
+		this.checkin = checkin;
+		this.checkout = checkout;
+		this.status = status;
+		this.amenities = amenities;
+		this.reservations = reservations;
+	}
 	
 	public String getType() {
 		return type;
@@ -121,6 +146,12 @@ public class Apartment implements Serializable{
 	}
 	public void setReservations(Reservation[] reservations) {
 		this.reservations = reservations;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

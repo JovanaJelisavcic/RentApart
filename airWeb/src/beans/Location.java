@@ -7,17 +7,27 @@ public class Location implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6052383492925395031L;
-	private int gWidth;
-	private int gLength;
+	private float gWidth;
+	private float gLength;
 	private Adress adress;
 	
-	public int getgWidth() {
+	
+	
+	public Location(int gWidth, int gLength, Adress adress) {
+		super();
+		this.gWidth = gWidth;
+		this.gLength = gLength;
+		this.adress = adress;
+	}
+	
+	
+	public float getgWidth() {
 		return gWidth;
 	}
 	public void setgWidth(int gWidth) {
 		this.gWidth = gWidth;
 	}
-	public int getgLength() {
+	public float getgLength() {
 		return gLength;
 	}
 	public void setgLength(int gLength) {
