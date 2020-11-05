@@ -9,10 +9,10 @@ public class Adress implements Serializable {
 	private static final long serialVersionUID = -1732379327787863647L;
 		private String street;
 		private String place;
-		private int postalCode;
+		private String postalCode;
 		
 		
-		public Adress(String street, String place, int postalCode) {
+		public Adress(String street, String place, String postalCode) {
 			super();
 			this.street = street;
 			this.place = place;
@@ -31,10 +31,10 @@ public class Adress implements Serializable {
 		public void setPlace(String place) {
 			this.place = place;
 		}
-		public int getPostalCode() {
+		public String getPostalCode() {
 			return postalCode;
 		}
-		public void setPostalCode(int postalCode) {
+		public void setPostalCode(String postalCode) {
 			this.postalCode = postalCode;
 		}
 }

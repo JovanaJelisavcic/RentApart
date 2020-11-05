@@ -35,4 +35,6 @@
 {"amenity":{"numId":"18",
 "name":"Hair dryer"}},
 {"amenity":{"numId":"19",
-"name":"Refrigerator"}}]
+"name":"Refrigerator"}},
+{"amenity":{"numId":"20",
+"name":"Pet friendly"}}]

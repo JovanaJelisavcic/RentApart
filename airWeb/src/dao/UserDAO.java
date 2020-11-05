@@ -9,6 +9,7 @@ import org.json.simple.parser.JSONParser;
 
 
 
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class UserDAO {
 	public UserDAO(String contextPath) {
 		ctx=contextPath;
 		loadUsers(contextPath);
-		System.out.println("loaded");
+		System.out.println("loaded users");
 		users.forEach((username,user) -> System.out.println(username+" : "+user));
 	}
 	
@@ -169,6 +170,12 @@ public class UserDAO {
 		
 		return convertedUsers;
 		
+		
+	}
+
+	public User findUser(String username) {
+		User user = users.get(username);
+		return user;
 		
 	}
 	 	

@@ -13,7 +13,7 @@ public class Location implements Serializable {
 	
 	
 	
-	public Location(int gWidth, int gLength, Adress adress) {
+	public Location(float gWidth, float gLength, Adress adress) {
 		super();
 		this.gWidth = gWidth;
 		this.gLength = gLength;

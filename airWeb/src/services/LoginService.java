@@ -22,7 +22,9 @@ import javax.ws.rs.core.Response;
 
 
 
+
 import beans.User;
+import dao.ApartmentDAO;
 import dao.UserDAO;
 
 @Path("")
@@ -44,6 +46,10 @@ public class LoginService {
 		if (ctx.getAttribute("userDAO") == null) {
 	    	String contextPath = ctx.getRealPath("/");
 			ctx.setAttribute("userDAO", new UserDAO(contextPath));
+		}
+		if (ctx.getAttribute("apartmentDAO") == null) {
+	    	String contextPath = ctx.getRealPath("/");
+			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath));
 		}
 	}
 	
