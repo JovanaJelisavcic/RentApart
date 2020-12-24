@@ -52,8 +52,8 @@ public class ApartmentDAO {
 	private void loadApartments(String contextPath) {
 			JSONParser parser = new JSONParser();
 			try {				
-				Object obj = parser.parse(new FileReader(contextPath + "/jsons/apartments.json"));
-				System.out.println("first reading:"+contextPath + "/jsons/apartments.json");
+				Object obj = parser.parse(new FileReader(contextPath + "/assets/jsons/apartments.json"));
+				System.out.println("first reading:"+contextPath + "/assets/jsons/apartments.json");
 				JSONArray apartmentList = (JSONArray) obj;
 				apartmentList.forEach( apartment -> parseUserObject( (JSONObject) apartment ) );
 				
