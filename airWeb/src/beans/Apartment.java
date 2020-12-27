@@ -153,6 +153,17 @@ public class Apartment implements Serializable{
 		this.id = id;
 	}
 	
-	
+	//in json format
+		@Override
+		public String toString() {
+			return new StringBuffer("{ \"id\" : ").append("\""+this.id+"\"")
+	                .append(", \"type\" : ").append("\""+this.type+"\"")
+	                .append(", \"roomCap\" : ").append("\""+this.roomCap+"\"")
+	                .append(", \"guestsCap\" : ").append("\""+this.guestsCap+"\"")
+	                .append(", \"location\" : ").append("\""+this.location+"\"")
+	                .append(", \"user\" : ").append("\""+this.host+"\"")
+	                .append(", \"status\" : ").append("\""+this.status+"\"")
+	                .append(", \"price\" : ").append("\""+this.price+ "\"").append("}").toString();
+		}
 	
 }

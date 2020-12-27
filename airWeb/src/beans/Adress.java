@@ -37,4 +37,13 @@ public class Adress implements Serializable {
 		public void setPostalCode(String postalCode) {
 			this.postalCode = postalCode;
 		}
+		
+		//in json format
+		@Override
+		public String toString() {
+			return new StringBuffer("{ \"street\" : ").append("\""+this.street+"\"")
+	                .append(", \"place\" : ").append("\""+this.place+"\"")
+	                .append(", \"postalCode\" : ").append("\""+this.postalCode+"\"")
+	                .append("}").toString();
+		}
 }

@@ -49,6 +49,14 @@ public class Comment implements Serializable{
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	
+	//in json format
+		@Override
+		public String toString() {
+			return new StringBuffer("{ \"guest\" : ").append("\""+this.guest+"\"")
+	                .append(", \"comment\" : ").append("\""+this.comment+"\"")
+	                .append(", \"stars\" : ").append("\""+this.stars+"\"")
+	                .append(", \"status\" : ").append("\""+this.status+"\"")
+	                .append("}").toString();
+		}
 
 }

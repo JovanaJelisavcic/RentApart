@@ -12,10 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-
-
-
-
 import beans.Adress;
 import beans.Apartment;
 import beans.Comment;
@@ -24,7 +20,7 @@ import beans.User;
 
 public class ApartmentDAO {
 
-    private String ctx;
+    //private String ctx;
 	
 	private Map<Integer, Apartment> apartments = new HashMap<>();
 	
@@ -36,7 +32,7 @@ public class ApartmentDAO {
 	}
 	
 	public ApartmentDAO(String contextPath) {
-		ctx=contextPath;
+		//ctx=contextPath;
 		users = new UserDAO();
 		loadApartments(contextPath);
 		System.out.println("loaded apartments");
@@ -46,6 +42,15 @@ public class ApartmentDAO {
 	
 	public Collection<Apartment> findAll() {
 		return apartments.values();
+	}
+	
+	public Collection<Apartment> getByLocation(String location) {
+		Collection<Apartment> apartsByLocation = new ArrayList<>();
+		for (Apartment apartment : apartments.values()) {
+		    if (apartment.getLocation().getAdress().getPlace().equals(location))
+		    	apartsByLocation.add(apartment);
+		}
+		return apartsByLocation;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,7 +70,6 @@ public class ApartmentDAO {
 			}
 	}
 	
-	 @SuppressWarnings({ "null" })
 	private  void parseUserObject(JSONObject apartment) 
 	    {
 		

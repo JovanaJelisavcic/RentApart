@@ -83,4 +83,16 @@ public class Reservation implements Serializable{
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+	
+	//in json format
+		@Override
+		public String toString() {
+			return new StringBuffer("{ \"apartment\" : ").append("\""+this.apartment.getId()+"\"")
+	                .append(", \"numOfNights\" : ").append("\""+this.numOfNights+"\"")
+	                .append(", \"beginDate\" : ").append("\""+this.beginDate+"\"")
+	                .append(", \"totalPrice\" : ").append("\""+this.totalPrice+"\"")
+	                .append(", \"message\" : ").append("\""+this.message+"\"")
+	                .append(", \"status\" : ").append("\""+this.status+"\"")
+	                .append(", \"guest\" : ").append("\""+this.guest.getUsername()+"\"").append("}").toString();
+		}
 }

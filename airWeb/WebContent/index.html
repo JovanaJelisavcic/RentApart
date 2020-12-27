@@ -60,7 +60,7 @@
 					<div class="row">
 						<div class="col-sm-2">
 							<div class="logo">
-								<a href="search.html">
+								<a href="index.html">
 									APP<span>artments</span>
 								</a>
 							</div><!-- /.logo-->
@@ -77,7 +77,7 @@
 								<div class="collapse navbar-collapse">		  
 									<ul class="nav navbar-nav navbar-right">
 										<li class="smooth-menu"><a href="#home">Home</a></li>
-										<li class="smooth-menu"><a href="#search">Search</a></li>
+										<li class="smooth-menu"><a href="#searchSection">Search</a></li>
 										<li class="smooth-menu"><a href="#about">About </a></li>
 										<li>
 											<button class="book-btn" onClick="location.href='login.html'">Login
@@ -119,7 +119,7 @@
 		<!--about-us end -->
 
 		<!--travel-box start-->
-		<section id="search" class="travel-box">
+		<section id="searchSection" class="travel-box">
         	<div class="container">
         		<div class="row">
         			<div class="col-md-12">
@@ -147,7 +147,7 @@
 													<div class="single-tab-select-box">
 														<h2>destination</h2>
 														<div class="travel-select-icon">
-															<input class="form-control " placeholder="Where do you want to go?"/>
+															<input class="form-control " id="location" name="location" placeholder="Where do you want to go?"/>
 														</div><!-- /.travel-select-icon -->
 													</div><!--/.single-tab-select-box-->
 												</div><!--/.col-->
@@ -228,14 +228,14 @@
 												</div><!--/.col-->
 												<div class="clo-sm-7">
 													<div class="about-btn travel-mrt-0 pull-right">
-														<button  class="about-view travel-btn">
+														<button id="searchButton" class="about-view travel-btn">
 															search	
 														</button><!--/.travel-btn-->
 													</div><!--/.about-btn-->
 												</div><!--/.col-->
 												
 											</div><!--/.row-->
-
+											
 										</div><!--/.tab-para-->
 
 									</div><!--/.tabpannel-->
@@ -249,7 +249,24 @@
         			</div><!--/.col-->
         		</div><!--/.row-->
         	</div><!--/.container-->
+        	
+        	
+        	<!-- ovde da idu reyultati -->
+											<div class="packages" id="searchResults" style="display: none;">
+											<div class="container packages">
+				<div class="packages-content">
+					<div class="row" id="searchItems">
+						
 
+					</div><!--/.row-->
+				</div><!--/.packages-content-->
+			</div><!--/.container-->
+			</div><!-- / .packages -->
+											<!-- dovde reyultati -->
+											
+											
+											
+											
         </section><!--/.travel-box-->
 		<!--travel-box end-->
 		
@@ -388,7 +405,9 @@ So, are you ready to go?
 
 		<!--Custom JS-->
 		<script src="assets/js/custom.js"></script>
-
+		
+		<!--Custom JS-->
+		<script src="assets/js/search.js"></script>
 
 	</body>
 

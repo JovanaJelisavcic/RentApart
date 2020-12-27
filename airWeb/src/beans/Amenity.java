@@ -31,4 +31,12 @@ public class Amenity implements Serializable{
 	public void setAmenitie(String amenitie) {
 		this.amenitie = amenitie;
 	}
+	
+	//in json format
+		@Override
+		public String toString() {
+			return new StringBuffer("{ \"id\" : ").append("\""+this.id+"\"")
+	                .append(", \"amenitie\" : ").append("\""+this.amenitie+"\"")
+	                .append("}").toString();
+		}
 }

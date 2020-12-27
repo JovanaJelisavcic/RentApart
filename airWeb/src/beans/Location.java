@@ -39,4 +39,12 @@ public class Location implements Serializable {
 	public void setAdress(Adress adress) {
 		this.adress = adress;
 	}
+	//in json format
+		@Override
+		public String toString() {
+			return new StringBuffer("{ \"gWidth\" : ").append("\""+this.gWidth+"\"")
+	                .append(", \"gLength\" : ").append("\""+this.gLength+"\"")
+	                .append(", \"Adress\" : ").append("\""+this.adress+"\"")
+	                .append("}").toString();
+		}
 }
