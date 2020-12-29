@@ -1,5 +1,5 @@
 
-import dao.ApartmentDAO;
+
 import dao.UserDAO;
 
 
@@ -11,8 +11,8 @@ public class testUser {
 		UserDAO users = new UserDAO("C:\\Users\\jelis\\git\\web2020\\airWeb\\src");
 		System.out.println(users.findAll());
 		
-		ApartmentDAO apartments = new ApartmentDAO("C:\\Users\\jelis\\git\\web2020\\airWeb\\src");
-		System.out.println(apartments.findAll());
+	//	ApartmentDAO apartments = new ApartmentDAO("C:\\Users\\jelis\\git\\web2020\\airWeb\\src");
+	//.out.println(apartments.findAll());
 	}
 
 }

@@ -1,26 +1,32 @@
 $(document).ready(function() {
 	$("#searchButton").click(function(event){
 		  $("#searchResults").hide();
+		  $("#searchItems").empty();
 		  var location = $('input[name="location"]').val();
+		  var guests = $('input[name="guests"]').val();
+		  var minRooms = $('input[name="minRooms"]').val();
+		  var maxRooms = $('input[name="maxRooms"]').val();
 		$.ajax({
 			url : "rest/apartments/getApartments",
 			type: "GET",
-			data:$.param({location: location}),
+			data:$.param({location: location, guests: guests, minRooms : minRooms, maxRooms : maxRooms}),
 			contentType: 'application/json',
 			success: function (response) {
 				
 				response.forEach(function(apartment) {
-					alert("Successful load of apartments data example:"+apartment['id']);
 	
 					var container = $(document.createElement('div'));
 					$(container).attr('class', 'col-md-4 col-sm-6'); 
+					$(container).css('max-height', '750px');
+					$(container).css('max-width', '500px');
+				
 					
 					var single_package = $(document.createElement('div'));
 					$(single_package).attr('class', 'single-package-item'); 
 					$(container).append(single_package);
 					
 					var img = document.createElement('img'); 
-		            img.src = 'assets/images/packages/p1.jpg'; 
+		            img.src = 'assets/images/places/'+apartment['images'][0]; 
 		            $(single_package).append(img);
 					
 					var single_package_txt = $(document.createElement('div'));
@@ -28,7 +34,7 @@ $(document).ready(function() {
 					$(single_package).append(single_package_txt);
 					
 					var city_name = $(document.createElement('h3'));
-					$(city_name).append( apartment['id'] ); //treba ime posle cu  
+					$(city_name).append( apartment['location']["adress"]["street"]); 
 					
 					var price = $(document.createElement('span'));
 					$(price).attr('class', 'pull-right'); 
@@ -40,27 +46,31 @@ $(document).ready(function() {
 					var packages_para = $(document.createElement('div'));
 					$(packages_para).attr('class', 'packages-para'); 
 					$(single_package_txt).append(packages_para);
+					
+					
 				//PRVI P
 					var simple_p = $(document.createElement('p'));
 					$(packages_para).append(simple_p);
 					
 					var span1 = $(document.createElement('span'));
-					$(span1).append("5 daays 6 nights"); 
 					$(simple_p).append(span1);
 					
 					var i1 = $(document.createElement('i'));
 					$(i1).attr('class', 'fa fa-angle-right');
+					$(i1).append(apartment['type']);
 					$(span1).append(i1);
 					
 					
 					var i2 = $(document.createElement('i'));
 					$(i2).attr('class', 'fa fa-angle-right');
-					$(simple_p).append(i2);
+					$(i2).append(" "+apartment['roomCap']+" rooms");
+					$(span1).append(i2);
 					
-					$(simple_p).append( " 5 star accomodation");
-					
-					
-					
+					var i3 = $(document.createElement('i'));
+					$(i3).attr('class', 'fa fa-angle-right');
+					$(i3).append("up to "+apartment['guestsCap']+" guests");
+					$(span1).append(i3);
+						
 					
 					
 					//DRUGI P
@@ -68,19 +78,20 @@ $(document).ready(function() {
 					$(packages_para).append(simple_p1);
 					
 					var span11 = $(document.createElement('span'));
-					$(span11).append( "transportation"); 
+				//	$(span11).append( apartment['amenities[0]']); 
 					$(simple_p1).append(span11);
 					
-					var i11 = $(document.createElement('i'));
-					$(i11).attr('class', 'fa fa-angle-right');
-					$(span11).append(i11);
+					var i;
+					for (i = 0; i < apartment['amenities'].length; i++) {
+						if (i === 3) { break; }
+						var i11 = $(document.createElement('i'));
+						$(i11).attr('class', 'fa fa-angle-right');
+						$(i11).append(apartment['amenities'][i]['amenitie']);
+						$(span11).append(i11);
+						
+					}
 					
-					
-					var i21 = $(document.createElement('i'));
-					$(i21).attr('class', 'fa fa-angle-right');
-					$(simple_p1).append(i21);
-					$(simple_p1).append( " food facilities");
-					
+										
 					
 					//packages review
 					var packages_review = $(document.createElement('div'));
@@ -111,7 +122,8 @@ $(document).ready(function() {
 					$(simple_p3).append(s5);
 					
 					var span2 = $(document.createElement('span'));
-					$(span2).append( "2335 reviews"); 
+					commNum = Object.keys(apartment.comments).length;
+					$(span2).append( commNum+" comments"); 
 					$(simple_p3).append(span2);
 					
 					
@@ -177,7 +189,22 @@ $(document).ready(function() {
 		    },
 		    error: function(data, textStatus, xhr) {
 	        	var text = data.responseText;
-	        	alert(text);    	 
+	        	 
+	        	var errorLab = $(document.createElement('div'));
+				$(errorLab).attr('class', 'col-md-4 col-sm-6');
+				$(errorLab).css("color","#ff0000");
+				$(errorLab).css("margin","5px");
+				$(errorLab).css("margin-left","350px");
+				$(errorLab).css("padding","5px");
+				$(errorLab).css("border-style","solid");
+				$(errorLab).css("border-width","2px");
+				$(errorLab).css("border-radius","5px");
+				$(errorLab).css("border-color","#ff0000");
+				$(errorLab).css("font-size","larger");
+				$(errorLab).text(data.responseText); 
+				$("#searchItems").append(errorLab);
+				$("#searchResults").show();
+	        	   	 
 	        }
 	});
 });

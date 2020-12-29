@@ -156,14 +156,37 @@ public class Apartment implements Serializable{
 	//in json format
 		@Override
 		public String toString() {
-			return new StringBuffer("{ \"id\" : ").append("\""+this.id+"\"")
+			StringBuffer finalString= new StringBuffer("{ \"id\" : ").append("\""+this.id+"\"")
 	                .append(", \"type\" : ").append("\""+this.type+"\"")
 	                .append(", \"roomCap\" : ").append("\""+this.roomCap+"\"")
 	                .append(", \"guestsCap\" : ").append("\""+this.guestsCap+"\"")
 	                .append(", \"location\" : ").append("\""+this.location+"\"")
-	                .append(", \"user\" : ").append("\""+this.host+"\"")
+	                .append(", \"host\" : ").append("\""+this.host+"\"")
 	                .append(", \"status\" : ").append("\""+this.status+"\"")
-	                .append(", \"price\" : ").append("\""+this.price+ "\"").append("}").toString();
+	                .append(", \"price\" : ").append("\""+this.price+ "\"");
+			
+			finalString.append(", \"images\" : [ ");
+			for(int i=0; i<this.images.size(); i++){
+				String image= images.get(i);
+				finalString.append(" \""+image+"\" ,");
+			}
+			finalString.deleteCharAt(finalString.lastIndexOf(","));
+			finalString.append("]");
+			
+			
+			finalString.append(", \"amenities\" : [ ");
+			for(int i=0; i<this.amenities.size(); i++){
+				Amenity amenity= amenities.get(i);
+				finalString.append(" \""+amenity+"\" ,");
+			}
+			finalString.deleteCharAt(finalString.lastIndexOf(","));
+			finalString.append("]");
+			
+            String realfinal = finalString.append("}").toString();
+			
+			return realfinal;
+	                              
+	                
 		}
 	
 }

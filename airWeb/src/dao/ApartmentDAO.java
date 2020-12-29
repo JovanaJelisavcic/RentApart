@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import beans.Adress;
+import beans.Amenity;
 import beans.Apartment;
 import beans.Comment;
 import beans.Location;
@@ -26,14 +27,16 @@ public class ApartmentDAO {
 	
 	private static FileReader fileReader;	
 	private UserDAO users;
+	private AmenityDAO amenitiesDAO;
 
 	public ApartmentDAO() {
 		//if you're using this initialize users
 	}
 	
-	public ApartmentDAO(String contextPath) {
+	public ApartmentDAO(String contextPath, UserDAO userDAO, AmenityDAO amenityDAO) {
 		//ctx=contextPath;
-		users = new UserDAO();
+		users = userDAO;
+		amenitiesDAO = amenityDAO;
 		loadApartments(contextPath);
 		System.out.println("loaded apartments");
 		apartments.forEach((id,apartment) -> System.out.println(id+" : "+apartment));
@@ -43,16 +46,40 @@ public class ApartmentDAO {
 	public Collection<Apartment> findAll() {
 		return apartments.values();
 	}
-	
+	//moze biti i grad i drzava
 	public Collection<Apartment> getByLocation(String location) {
 		Collection<Apartment> apartsByLocation = new ArrayList<>();
 		for (Apartment apartment : apartments.values()) {
-		    if (apartment.getLocation().getAdress().getPlace().equals(location))
+		    if (apartment.getLocation().getAdress().getPlace().toUpperCase().equals(location.toUpperCase()))
 		    	apartsByLocation.add(apartment);
+		}
+		if (apartsByLocation.isEmpty()){
+			for (Apartment apartment : apartments.values()) {
+			    if (apartment.getLocation().getAdress().getState().toUpperCase().equals(location.toUpperCase()))
+			    	apartsByLocation.add(apartment);
+			}
 		}
 		return apartsByLocation;
 	}
+	
+	public Collection<Apartment> getByGuestsNum(int guestsNum) {
+		Collection<Apartment> apartsByGuests = new ArrayList<>();
+		for (Apartment apartment : apartments.values()) {
+		    if (apartment.getGuestsCap()==guestsNum)
+		    	apartsByGuests.add(apartment);
+		}
+		return apartsByGuests;
+	}
 
+	public Collection<Apartment> getByRoomsNum(int minRooms, int maxRooms) {
+		Collection<Apartment> apartsByRooms = new ArrayList<>();
+		for (Apartment apartment : apartments.values()) {
+		    if (apartment.getRoomCap()>=minRooms && apartment.getRoomCap()<=maxRooms )
+		    	apartsByRooms.add(apartment);
+		}
+		return apartsByRooms;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void loadApartments(String contextPath) {
 			JSONParser parser = new JSONParser();
@@ -70,6 +97,8 @@ public class ApartmentDAO {
 			}
 	}
 	
+
+	@SuppressWarnings("unchecked")
 	private  void parseUserObject(JSONObject apartment) 
 	    {
 		
@@ -102,7 +131,7 @@ public class ApartmentDAO {
 	        JSONArray commentsArray = (JSONArray) apartmentObject.get("comments");
 	        ArrayList<Comment> comments = new ArrayList<Comment>();
 	        if (!commentsArray.isEmpty()){      		
-	        		@SuppressWarnings("unchecked")
+	   
 	        		Iterator<JSONObject> objectIterator =  commentsArray.iterator();
 	        		while(objectIterator.hasNext()) {
 	        				JSONObject object = objectIterator.next();
@@ -120,20 +149,24 @@ public class ApartmentDAO {
 	        			}
 	        }
 
-	      //amenities
-	       /* JSONArray amenitiesArray = (JSONArray) apartmentObject.get("amenities");
-	        ArrayList<Integer> amenities = null;
-	        if (!imagesArray.isEmpty()){	
-	        		for(int i= 0; i<=amenitiesArray.size(); i++){
-	        			    Integer image = (Integer) amenitiesArray.get(i);
-	        				amenities.add(image);
-	        		}
-	        }*/
 
+	        JSONArray amenitiesArray = (JSONArray) apartmentObject.get("amenities");
+	        amenitiesArray.forEach(am -> {System.out.println(am);});
+	        
+	        ArrayList<Amenity> amenities = new ArrayList<Amenity>();
+	        if (!amenitiesArray.isEmpty()){	
+	        		for(int i= 0; i<amenitiesArray.size(); i++){
+	        			    String amenityID = (String) amenitiesArray.get(i);	      
+	        			    Amenity amenityObj = amenitiesDAO.findAmenity( Integer.valueOf(amenityID));
+	        				amenities.add(amenityObj);
+	        		}
+	        }
+	        System.out.println(amenities.toString());
+	        
 	        apartments.put(id, new Apartment(id, type, roomCap, guestCap, location, null,
 	    			null, hostObject, comments,
 	    			images, pricePerNight, checkin, checkout,
-	    			 statusB, null, null));
+	    			 statusB, amenities, null));
 	    }
 
 	private Comment parseComment(JSONObject comment) {
@@ -158,9 +191,14 @@ public class ApartmentDAO {
         String street = (String) locationObject.get("street");
         String place = (String) locationObject.get("place");
         String postalCode = (String) locationObject.get("postalCode");
-        return new Location(gWidth, gLength, new Adress(street,place,postalCode));
+        String state = (String) locationObject.get("state");
+        return new Location(gWidth, gLength, new Adress(street,place,postalCode,state));
 		 
 	}
+
+	
+
+	
 	 
 
 	 	

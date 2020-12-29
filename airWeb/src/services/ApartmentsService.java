@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartment;
+import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.UserDAO;
 
@@ -40,9 +41,13 @@ public class ApartmentsService {
 	    	String contextPath = ctx.getRealPath("/");
 			ctx.setAttribute("userDAO", new UserDAO(contextPath));
 		}
+		if (ctx.getAttribute("amenityDAO") == null) {
+	    	String contextPath = ctx.getRealPath("/");
+			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
+		}
 		if (ctx.getAttribute("apartmentDAO") == null) {
 	    	String contextPath = ctx.getRealPath("/");
-			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath));
+			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (UserDAO) ctx.getAttribute("userDAO"), (AmenityDAO) ctx.getAttribute("amenityDAO")));
 		}
 	}
 	
@@ -54,13 +59,21 @@ public class ApartmentsService {
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getApartments(@Context HttpServletRequest request)
 	    {
-	    	System.out.println("dodje li ovde?");
+	    	//location
 	    	System.out.println(" location: " + request.getParameter("location"));
 	    	String location = request.getParameter("location");
 	    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 	    	Collection<Apartment> aparts=apartmentDAO.getByLocation(location);
 	    	System.out.println("by location filter: " + aparts.toString());
-			if (aparts.isEmpty()) {
+	    	//guests
+	    	Collection<Apartment> apartsGuests=apartmentDAO.getByGuestsNum((Integer.parseInt(request.getParameter("guests"))));
+	    	System.out.println("by guests filter: " + apartsGuests.toString());
+	    	//rooms
+	    	Collection<Apartment> apartsRooms=apartmentDAO.getByRoomsNum(Integer.parseInt(request.getParameter("minRooms")),Integer.parseInt(request.getParameter("maxRooms")) );
+	    	System.out.println("by rooms filter: " + apartsRooms.toString());
+
+	    
+			if (aparts.isEmpty()) {	
 				return Response.status(400).entity("No apartments on that location").build();
 			} else{
 				//ovaj deo lagano moye da ne valja
