@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
 	$("#searchButton").click(function(event){
 		  $("#searchResults").hide();
 		  $("#searchItems").empty();
@@ -6,10 +7,21 @@ $(document).ready(function() {
 		  var guests = $('input[name="guests"]').val();
 		  var minRooms = $('input[name="minRooms"]').val();
 		  var maxRooms = $('input[name="maxRooms"]').val();
+		  var budget = $('input[name="price"]').val();
+		  f = budget.indexOf("$");
+		  l = budget.lastIndexOf("$");
+		  lower = budget.slice(f, l);
+		  upper = budget.slice(l, budget.length+1);
+		  lower = lower.slice(1,lower.length+1);
+		  lower = lower.slice(lower,lower.indexOf("-"));
+		  lower = lower.trim();
+		  upper = upper.slice(1,upper.length+1);
+		  upper = upper.trim();
+		  
 		$.ajax({
 			url : "rest/apartments/getApartments",
 			type: "GET",
-			data:$.param({location: location, guests: guests, minRooms : minRooms, maxRooms : maxRooms}),
+			data:$.param({location: location, guests: guests, minRooms : minRooms, maxRooms : maxRooms, lower : lower, upper : upper}),
 			contentType: 'application/json',
 			success: function (response) {
 				

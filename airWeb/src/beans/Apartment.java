@@ -23,7 +23,7 @@ public class Apartment implements Serializable{
 	private User host;
 	private ArrayList<Comment> comments;
 	private ArrayList<String> images;
-	private float price;
+	private int price;
 	private String checkin;
 	private String checkout;
 	private boolean status;
@@ -35,7 +35,7 @@ public class Apartment implements Serializable{
 	public Apartment(int id, String type, int roomCap, int guestsCap,
 			Location location, ArrayList<Date> freeDates,
 			Map<Date, Boolean> availability, User host, ArrayList<Comment> comments,
-			ArrayList<String> images, float price, String checkin, String checkout,
+			ArrayList<String> images, int price, String checkin, String checkout,
 			boolean status, ArrayList<Amenity> amenities, ArrayList<Reservation> reservations) {
 		super();
 		this.id = id;
@@ -113,7 +113,7 @@ public class Apartment implements Serializable{
 	public float getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 	public String getCheckin() {

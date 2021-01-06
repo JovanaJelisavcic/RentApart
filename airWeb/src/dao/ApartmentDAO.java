@@ -89,6 +89,16 @@ public class ApartmentDAO {
 		return apartsByRooms;
 	}
 	
+	public Collection<Apartment> getByBudget(int lower, int upper,
+			Collection<Apartment> apartsWhole) {
+		Collection<Apartment> apartsByBudget = new ArrayList<>();
+		for (Apartment apartment : apartsWhole) {
+		    if (apartment.getPrice()>=lower && apartment.getPrice()<=upper )
+		    	apartsByBudget.add(apartment);
+		}
+		return apartsByBudget;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void loadApartments(String contextPath) {
 			JSONParser parser = new JSONParser();
@@ -121,7 +131,7 @@ public class ApartmentDAO {
 	        String type = (String) apartmentObject.get("type");  	       
 	        int roomCap = Integer.parseInt((String) apartmentObject.get("roomCap"));  	        
 	        int guestCap = Integer.parseInt((String) apartmentObject.get("guestCap"));    	        
-	        float pricePerNight = Float.parseFloat((String) apartmentObject.get("pricePerNight")); 
+	        int pricePerNight = Integer.parseInt((String) apartmentObject.get("pricePerNight"));
 	        String checkin = (String) apartmentObject.get("checkin");
 	        String checkout = (String) apartmentObject.get("checkout");
 	        //status 
@@ -204,6 +214,8 @@ public class ApartmentDAO {
         return new Location(gWidth, gLength, new Adress(street,place,postalCode,state));
 		 
 	}
+
+	
 
 	
 
