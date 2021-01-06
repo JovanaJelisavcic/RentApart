@@ -59,26 +59,43 @@ public class ApartmentsService {
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getApartments(@Context HttpServletRequest request)
 	    {
-	    	//location
-	    	System.out.println(" location: " + request.getParameter("location"));
-	    	String location = request.getParameter("location");
-	    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-	    	Collection<Apartment> aparts=apartmentDAO.getByLocation(location);
-	    	System.out.println("by location filter: " + aparts.toString());
-	    	//guests
-	    	Collection<Apartment> apartsGuests=apartmentDAO.getByGuestsNum((Integer.parseInt(request.getParameter("guests"))));
-	    	System.out.println("by guests filter: " + apartsGuests.toString());
-	    	//rooms
-	    	Collection<Apartment> apartsRooms=apartmentDAO.getByRoomsNum(Integer.parseInt(request.getParameter("minRooms")),Integer.parseInt(request.getParameter("maxRooms")) );
-	    	System.out.println("by rooms filter: " + apartsRooms.toString());
-
-	    
-			if (aparts.isEmpty()) {	
-				return Response.status(400).entity("No apartments on that location").build();
-			} else{
-				//ovaj deo lagano moye da ne valja
-			return Response.status(200).entity(aparts).build();
+	    	
+	    	
+	    	if(request.getParameter("location").isEmpty() && request.getParameter("guests").isEmpty()
+	    			&& request.getParameter("minRooms").isEmpty()
+	    			&& request.getParameter("maxRooms").isEmpty()
+	    			){
+	    		return Response.status(400).entity("You have to give us something to search by").build();
+	    	}else{
+	    		
+	    		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+	    		//active
+	    		Collection<Apartment> apartsWhole = apartmentDAO.findActive();
+	    		//location
+	    		if (!request.getParameter("location").isEmpty()){
+	    			System.out.println(" location: " + request.getParameter("location"));
+	    			apartsWhole=apartmentDAO.getByLocation(request.getParameter("location"), apartsWhole);
+	    		}
+	    		//guests
+	    		if(!request.getParameter("guests").isEmpty()){
+	    			System.out.println("guests num: " + request.getParameter("guests"));
+	    			apartsWhole=apartmentDAO.getByGuestsNum(Integer.parseInt(request.getParameter("guests")), apartsWhole);
+	    		}
+	    		//rooms
+	    		if(!request.getParameter("minRooms").isEmpty() && !request.getParameter("maxRooms").isEmpty()){
+	    			int rooMin = Integer.parseInt(request.getParameter("minRooms"));
+	    			int rooMax = Integer.parseInt(request.getParameter("maxRooms"));
+	    			System.out.println("by rooms: " + rooMin+ " and "+rooMax);
+	    			apartsWhole=apartmentDAO.getByRoomsNum(rooMin, rooMax, apartsWhole);
+	    		}
+	    		//dates
+	    		//budget
+	    		if (apartsWhole.isEmpty()) {	
+	    			return Response.status(400).entity("We don't have anything like that in offer").build();
+	    		} else{
+	    			return Response.status(200).entity(apartsWhole).build();
 			}
+	    	}
 	    }
 	
 }

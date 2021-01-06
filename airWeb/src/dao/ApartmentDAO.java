@@ -46,15 +46,24 @@ public class ApartmentDAO {
 	public Collection<Apartment> findAll() {
 		return apartments.values();
 	}
-	//moze biti i grad i drzava
-	public Collection<Apartment> getByLocation(String location) {
-		Collection<Apartment> apartsByLocation = new ArrayList<>();
+	
+	public Collection<Apartment> findActive() {
+		Collection<Apartment> actives = new ArrayList<>();
 		for (Apartment apartment : apartments.values()) {
+		    if (apartment.isStatus())
+		    	actives.add(apartment);
+		}
+		return actives;
+	}
+	//moze biti i grad i drzava
+	public Collection<Apartment> getByLocation(String location, Collection<Apartment> searched) {
+		Collection<Apartment> apartsByLocation = new ArrayList<>();
+		for (Apartment apartment : searched) {
 		    if (apartment.getLocation().getAdress().getPlace().toUpperCase().equals(location.toUpperCase()))
 		    	apartsByLocation.add(apartment);
 		}
 		if (apartsByLocation.isEmpty()){
-			for (Apartment apartment : apartments.values()) {
+			for (Apartment apartment : searched) {
 			    if (apartment.getLocation().getAdress().getState().toUpperCase().equals(location.toUpperCase()))
 			    	apartsByLocation.add(apartment);
 			}
@@ -62,18 +71,18 @@ public class ApartmentDAO {
 		return apartsByLocation;
 	}
 	
-	public Collection<Apartment> getByGuestsNum(int guestsNum) {
+	public Collection<Apartment> getByGuestsNum(int guestsNum, Collection<Apartment> apartsWhole) {
 		Collection<Apartment> apartsByGuests = new ArrayList<>();
-		for (Apartment apartment : apartments.values()) {
-		    if (apartment.getGuestsCap()==guestsNum)
+		for (Apartment apartment : apartsWhole) {
+		    if (apartment.getGuestsCap()>=guestsNum)
 		    	apartsByGuests.add(apartment);
 		}
 		return apartsByGuests;
 	}
 
-	public Collection<Apartment> getByRoomsNum(int minRooms, int maxRooms) {
+	public Collection<Apartment> getByRoomsNum(int minRooms, int maxRooms, Collection<Apartment> apartsWhole) {
 		Collection<Apartment> apartsByRooms = new ArrayList<>();
-		for (Apartment apartment : apartments.values()) {
+		for (Apartment apartment : apartsWhole) {
 		    if (apartment.getRoomCap()>=minRooms && apartment.getRoomCap()<=maxRooms )
 		    	apartsByRooms.add(apartment);
 		}
@@ -151,7 +160,7 @@ public class ApartmentDAO {
 
 
 	        JSONArray amenitiesArray = (JSONArray) apartmentObject.get("amenities");
-	        amenitiesArray.forEach(am -> {System.out.println(am);});
+	 
 	        
 	        ArrayList<Amenity> amenities = new ArrayList<Amenity>();
 	        if (!amenitiesArray.isEmpty()){	
@@ -161,7 +170,7 @@ public class ApartmentDAO {
 	        				amenities.add(amenityObj);
 	        		}
 	        }
-	        System.out.println(amenities.toString());
+	      
 	        
 	        apartments.put(id, new Apartment(id, type, roomCap, guestCap, location, null,
 	    			null, hostObject, comments,
@@ -195,6 +204,8 @@ public class ApartmentDAO {
         return new Location(gWidth, gLength, new Adress(street,place,postalCode,state));
 		 
 	}
+
+	
 
 	
 
