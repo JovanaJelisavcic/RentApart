@@ -18,7 +18,7 @@ public class Apartment implements Serializable{
 	private int roomCap;
 	private int guestsCap;
 	private Location location;
-	private ArrayList<Date> freeDates;
+	private ArrayList<FreePeriod> freeDates;
 	private Map<Date,Boolean> availability;
 	private User host;
 	private ArrayList<Comment> comments;
@@ -33,7 +33,7 @@ public class Apartment implements Serializable{
 	
 	
 	public Apartment(int id, String type, int roomCap, int guestsCap,
-			Location location, ArrayList<Date> freeDates,
+			Location location, ArrayList<FreePeriod> freeDates,
 			Map<Date, Boolean> availability, User host, ArrayList<Comment> comments,
 			ArrayList<String> images, int price, String checkin, String checkout,
 			boolean status, ArrayList<Amenity> amenities, ArrayList<Reservation> reservations) {
@@ -80,10 +80,10 @@ public class Apartment implements Serializable{
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public ArrayList<Date> getFreeDates() {
+	public ArrayList<FreePeriod> getFreeDates() {
 		return freeDates;
 	}
-	public void setFreeDates(ArrayList<Date> freeDates) {
+	public void setFreeDates(ArrayList<FreePeriod> freeDates) {
 		this.freeDates = freeDates;
 	}
 	public Map<Date, Boolean> getAvailability() {
@@ -178,6 +178,15 @@ public class Apartment implements Serializable{
 			for(int i=0; i<this.amenities.size(); i++){
 				Amenity amenity= amenities.get(i);
 				finalString.append(" \""+amenity+"\" ,");
+			}
+			finalString.deleteCharAt(finalString.lastIndexOf(","));
+			finalString.append("]");
+			
+			//mozda drugacije
+			finalString.append(", \"freeDates\" : [ ");
+			for(int i=0; i<this.freeDates.size(); i++){
+				FreePeriod freePeriod= freeDates.get(i);
+				finalString.append(freePeriod);
 			}
 			finalString.deleteCharAt(finalString.lastIndexOf(","));
 			finalString.append("]");

@@ -8,6 +8,9 @@ $(document).ready(function() {
 		  var minRooms = $('input[name="minRooms"]').val();
 		  var maxRooms = $('input[name="maxRooms"]').val();
 		  var budget = $('input[name="price"]').val();
+		  var check_in = $('input[name="check_in"]').val();
+		  var check_out = $('input[name="check_out"]').val();
+		  //budget range
 		  f = budget.indexOf("$");
 		  l = budget.lastIndexOf("$");
 		  lower = budget.slice(f, l);
@@ -17,11 +20,16 @@ $(document).ready(function() {
 		  lower = lower.trim();
 		  upper = upper.slice(1,upper.length+1);
 		  upper = upper.trim();
+		  //date conversion
+		  if((check_in!=null && check_out!=null) ||( check_in!="" && check_out!="")){
+		  check_in = new Date(check_in).toISOString();
+		  check_out = new Date(check_out).toISOString();
+		  }
 		  
 		$.ajax({
 			url : "rest/apartments/getApartments",
 			type: "GET",
-			data:$.param({location: location, guests: guests, minRooms : minRooms, maxRooms : maxRooms, lower : lower, upper : upper}),
+			data:$.param({location: location, guests: guests, minRooms : minRooms, maxRooms : maxRooms, lower : lower, upper : upper, check_in: check_in, check_out : check_out}),
 			contentType: 'application/json',
 			success: function (response) {
 				

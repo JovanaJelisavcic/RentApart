@@ -3,7 +3,12 @@ package services;
 
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -59,8 +64,16 @@ public class ApartmentsService {
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getApartments(@Context HttpServletRequest request)
 	    {
-	 
-	    	String response = validateRequest(request);
+	    
+	    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	    	Date   begin = null, end = null;
+	    	try {
+				   begin       = format.parse ( request.getParameter("check_in") );
+				   end       = format.parse ( request.getParameter("check_out") );
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+	    	String response = validateRequest(request, begin, end);
 	    	if(response!=null) {
 	    
 	    				return Response.status(400).entity(response).build();
@@ -73,6 +86,8 @@ public class ApartmentsService {
 	    						&& request.getParameter("minRooms").isEmpty()
 	    						&& request.getParameter("maxRooms").isEmpty()
 	    						&& lower==0 && upper==1000
+	    						&& begin.equals(new GregorianCalendar(2020, Calendar.JANUARY, 01))
+	    						&& end.equals(new GregorianCalendar(2020, Calendar.JANUARY, 02))
 	    						){
 	    				
 	    								return Response.status(400).entity("You have to give us something to search by").build();
@@ -105,6 +120,11 @@ public class ApartmentsService {
     								apartsWhole=apartmentDAO.getByBudget(lower, upper, apartsWhole);
     						    }
 	    						//dates
+	    						if(!(begin.equals(new GregorianCalendar(2020, Calendar.JANUARY, 01))
+	    	    						&& end.equals(new GregorianCalendar(2020, Calendar.JANUARY, 02)))){
+    								System.out.println("by dates: " + begin+ " and "+end);
+    								apartsWhole=apartmentDAO.getByDates(begin, end, apartsWhole);
+    						    }
 	    						
 	    						if (apartsWhole.isEmpty()) {	
 	    							 
@@ -117,8 +137,7 @@ public class ApartmentsService {
 	    	}
 	    }
 
-		private String validateRequest(HttpServletRequest request) {
-			//location
+		private String validateRequest(HttpServletRequest request, Date begin, Date end) {
 			if(!request.getParameter("location").toString().matches("^$|^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$"))
 				return "Destination can contain only letters";
 			if(!request.getParameter("guests").toString().matches("^$|^[1-9]\\d*$") || !request.getParameter("minRooms").toString().matches("^$|^[1-9]\\d*$")
@@ -128,6 +147,10 @@ public class ApartmentsService {
 		    int max = Integer.parseInt(request.getParameter("maxRooms")+0);
 			if(min>max)
 				return "Please type in both minumum and maximum values for room number, while maximum must be greater or equal to minimum";
+			if(begin.before(new Date()) || end.before(new Date()))
+				return "Dates have to be in the future";
+			if(end.before(begin))
+				return "Check in date has to be before check out date";
 			return null;
 		}
 	

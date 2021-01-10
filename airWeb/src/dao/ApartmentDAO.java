@@ -2,8 +2,11 @@ package dao;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,6 +19,7 @@ import beans.Adress;
 import beans.Amenity;
 import beans.Apartment;
 import beans.Comment;
+import beans.FreePeriod;
 import beans.Location;
 import beans.User;
 
@@ -89,6 +93,23 @@ public class ApartmentDAO {
 		return apartsByRooms;
 	}
 	
+	public Collection<Apartment> getByDates(Date begin, Date end,
+			Collection<Apartment> apartsWhole) {
+		Collection<Apartment> apartsByDates = new ArrayList<>();
+		for (Apartment apartment : apartsWhole) {
+			boolean hasFree = false;
+			for(FreePeriod period : apartment.getFreeDates()){
+				if (!begin.before(period.getBegin()) && !end.after(period.getEnd())){
+				   hasFree=true;
+				   break;
+				}
+			}
+			if(hasFree)
+			      apartsByDates.add(apartment);
+		}
+		return apartsByDates;
+	}
+	
 	public Collection<Apartment> getByBudget(int lower, int upper,
 			Collection<Apartment> apartsWhole) {
 		Collection<Apartment> apartsByBudget = new ArrayList<>();
@@ -121,10 +142,6 @@ public class ApartmentDAO {
 	private  void parseUserObject(JSONObject apartment) 
 	    {
 		
-		 /*
-
-"images":["bed1.jpg", "bathroom1.jpg"],
-"amenities":["1", "3", "7", "18"]}}*/
 	        JSONObject apartmentObject = (JSONObject) apartment.get("apartment");
 	        //simple objects
 	        int id = Integer.parseInt((String) apartmentObject.get("id"));    	        
@@ -168,10 +185,8 @@ public class ApartmentDAO {
 	        			}
 	        }
 
-
+            //amenities
 	        JSONArray amenitiesArray = (JSONArray) apartmentObject.get("amenities");
-	 
-	        
 	        ArrayList<Amenity> amenities = new ArrayList<Amenity>();
 	        if (!amenitiesArray.isEmpty()){	
 	        		for(int i= 0; i<amenitiesArray.size(); i++){
@@ -180,13 +195,42 @@ public class ApartmentDAO {
 	        				amenities.add(amenityObj);
 	        		}
 	        }
+	        
+	        //freeDates
+	        JSONArray freeDatesArray = (JSONArray) apartmentObject.get("freeDates");
+	        ArrayList<FreePeriod> periods = new ArrayList<FreePeriod>();
+	        if (!freeDatesArray.isEmpty()){      		
+	   
+	        		Iterator<JSONObject> objectIterator =  freeDatesArray.iterator();
+	        		while(objectIterator.hasNext()) {
+	        				JSONObject object = objectIterator.next();
+	        				FreePeriod freePeriod = parseFreePeriod( object);
+	        				periods.add(freePeriod);
+	        		}
+	        }
 	      
 	        
-	        apartments.put(id, new Apartment(id, type, roomCap, guestCap, location, null,
+	        apartments.put(id, new Apartment(id, type, roomCap, guestCap, location, periods,
 	    			null, hostObject, comments,
 	    			images, pricePerNight, checkin, checkout,
 	    			 statusB, amenities, null));
 	    }
+
+	private FreePeriod parseFreePeriod(JSONObject object) {
+		
+		  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+          Date begin = null;
+          Date end = null;
+		try {
+			begin = simpleDateFormat.parse((String) object.get("begin"));
+			end = simpleDateFormat.parse((String) object.get("end"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	      FreePeriod freePeriod = new FreePeriod(begin,end);
+			return freePeriod;	
+	}
 
 	private Comment parseComment(JSONObject comment) {
         String user = (String) comment.get("user");
@@ -214,6 +258,8 @@ public class ApartmentDAO {
         return new Location(gWidth, gLength, new Adress(street,place,postalCode,state));
 		 
 	}
+
+	
 
 	
 
