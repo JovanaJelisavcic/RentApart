@@ -10,6 +10,7 @@ $(document).ready(function() {
 		  var budget = $('input[name="price"]').val();
 		  var check_in = $('input[name="check_in"]').val();
 		  var check_out = $('input[name="check_out"]').val();
+
 		  //budget range
 		  f = budget.indexOf("$");
 		  l = budget.lastIndexOf("$");
@@ -21,9 +22,15 @@ $(document).ready(function() {
 		  upper = upper.slice(1,upper.length+1);
 		  upper = upper.trim();
 		  //date conversion
-		  if((check_in!=null && check_out!=null) ||( check_in!="" && check_out!="")){
-		  check_in = new Date(check_in).toISOString();
-		  check_out = new Date(check_out).toISOString();
+		  if((check_in!="" && check_out=="") || (check_in=="" && check_out!="") ){
+			  check_in="one";
+		  }else if (check_in=="" && check_out=="") {
+			 check_in="both";
+		  } else{
+		  check_in = new Date(check_in);
+		  check_out = new Date(check_out);
+          check_in = check_in.toISOString();
+          check_out = check_out.toISOString();
 		  }
 		  
 		$.ajax({
