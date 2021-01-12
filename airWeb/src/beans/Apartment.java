@@ -22,6 +22,7 @@ public class Apartment implements Serializable{
 	private Map<Date,Boolean> availability;
 	private User host;
 	private ArrayList<Comment> comments;
+	private int stars;
 	private ArrayList<String> images;
 	private int price;
 	private String checkin;
@@ -54,8 +55,23 @@ public class Apartment implements Serializable{
 		this.status = status;
 		this.amenities = amenities;
 		this.reservations = reservations;
+		this.stars = countStars();
 	}
 	
+	private int countStars() {
+		int sum = 0;
+		for(int i=0; i<comments.size(); i++){
+			sum+= comments.get(i).getStars();
+	    }
+		System.out.println("stars : " + (int) Math.ceil(sum/comments.size()) );
+		return (int) Math.ceil(sum/comments.size());
+	}
+
+	public int getStars() {
+		return stars;
+	}
+
+
 	public String getType() {
 		return type;
 	}
@@ -163,7 +179,8 @@ public class Apartment implements Serializable{
 	                .append(", \"location\" : ").append("\""+this.location+"\"")
 	                .append(", \"host\" : ").append("\""+this.host+"\"")
 	                .append(", \"status\" : ").append("\""+this.status+"\"")
-	                .append(", \"price\" : ").append("\""+this.price+ "\"");
+	                .append(", \"price\" : ").append("\""+this.price+ "\"")
+	                .append(", \"stars\" : ").append("\""+this.stars+ "\"");
 			
 			finalString.append(", \"images\" : [ ");
 			for(int i=0; i<this.images.size(); i++){

@@ -41,18 +41,19 @@ $(document).ready(function() {
 			success: function (response) {
 				
 				response.forEach(function(apartment) {
-	
+					
 					var container = $(document.createElement('div'));
-					$(container).attr('class', 'col-md-4 col-sm-6'); 
-					$(container).css('max-height', '750px');
-					$(container).css('max-width', '500px');
+					$(container).attr('class', 'col-md-4 col-sm-6');
+					
 				
 					
 					var single_package = $(document.createElement('div'));
 					$(single_package).attr('class', 'single-package-item'); 
 					$(container).append(single_package);
 					
-					var img = document.createElement('img'); 
+					var img = document.createElement('img');
+					$(img).css('width', '370px'); 
+					$(img).css('height', '300px');
 		            img.src = 'assets/images/places/'+apartment['images'][0]; 
 		            $(single_package).append(img);
 					
@@ -67,6 +68,10 @@ $(document).ready(function() {
 					$(price).attr('class', 'pull-right'); 
 					$(price).append("$"+apartment['price']); 
 					$(city_name).append(price);
+					
+					var razmak = $(document.createElement('br'));
+					$(city_name).append(razmak);
+					$(city_name).append(apartment['location']["adress"]["place"]);
 					
 					$(single_package_txt).append(city_name);
 					
@@ -128,25 +133,17 @@ $(document).ready(function() {
 					var simple_p3 = $(document.createElement('p'));
 					$(packages_review).append(simple_p3);
 					
-					var s1 = $(document.createElement('i'));
-					$(s1).attr('class', 'fa fa-star');
-					$(simple_p3).append(s1);
 					
-					var s2 = $(document.createElement('i'));
-					$(s2).attr('class', 'fa fa-star');
-					$(simple_p3).append(s2);
+					//stars
 					
-					var s3 = $(document.createElement('i'));
-					$(s3).attr('class', 'fa fa-star');
-					$(simple_p3).append(s3);
 					
-					var s4 = $(document.createElement('i'));
-					$(s4).attr('class', 'fa fa-star');
-					$(simple_p3).append(s4);
 					
-					var s5 = $(document.createElement('i'));
-					$(s5).attr('class', 'fa fa-star');
-					$(simple_p3).append(s5);
+					for (i = 0; i <apartment['stars']; i++) {
+						var s1 = $(document.createElement('i'));
+						$(s1).attr('class', 'fa fa-star');
+						$(simple_p3).append(s1);
+						}
+					
 					
 					var span2 = $(document.createElement('span'));
 					commNum = Object.keys(apartment.comments).length;
@@ -163,6 +160,12 @@ $(document).ready(function() {
 					var basbtn = $(document.createElement('button'));
 					$(basbtn).attr('class', 'about-view packages-btn'); 
 					$(basbtn).append("see more");
+					
+					$(basbtn).click(function(){
+					  document.location.href = 'apartmDetail.html';
+					  APPSTUFF.apartmentForDetail = apartment['price'];
+					  alert(APPSTUFF.apartmentForDetail);
+					});
 					$(morebtn).append(basbtn);
 					
 					

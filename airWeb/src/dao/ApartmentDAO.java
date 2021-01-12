@@ -1,5 +1,6 @@
 package dao;
 
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
@@ -225,7 +226,6 @@ public class ApartmentDAO {
 			begin = simpleDateFormat.parse((String) object.get("begin"));
 			end = simpleDateFormat.parse((String) object.get("end"));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	      FreePeriod freePeriod = new FreePeriod(begin,end);

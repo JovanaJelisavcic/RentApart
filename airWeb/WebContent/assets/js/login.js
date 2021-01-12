@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
 	$("#loginform").submit(function(event){
 		event.preventDefault(); //prevent default action 
 		var username = $('input[name="username"]').val();

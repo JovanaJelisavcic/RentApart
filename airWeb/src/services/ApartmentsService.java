@@ -17,7 +17,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartment;
@@ -59,8 +58,8 @@ public class ApartmentsService {
 	
 	    @GET
 	    @Path("getApartments")
-	    @Consumes(MediaType.APPLICATION_JSON)
-	    @Produces(MediaType.APPLICATION_JSON)
+	    @Consumes("application/json;charset=utf-8" )
+	    @Produces("application/json;charset=utf-8")
 	    public Response getApartments(@Context HttpServletRequest request)
 	    {
 	        
