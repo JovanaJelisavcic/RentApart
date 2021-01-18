@@ -146,7 +146,7 @@ $(document).ready(function() {
 					
 					
 					var span2 = $(document.createElement('span'));
-					commNum = Object.keys(apartment.comments).length;
+					commNum = Object.keys(apartment['comments']).length;
 					$(span2).append( commNum+" comments"); 
 					$(simple_p3).append(span2);
 					
@@ -163,8 +163,9 @@ $(document).ready(function() {
 					
 					$(basbtn).click(function(){
 					  document.location.href = 'apartmDetail.html';
-					  APPSTUFF.apartmentForDetail = apartment['price'];
-					  alert(APPSTUFF.apartmentForDetail);
+					 /* APPSTUFF.apartmentForDetail = apartment['price'];
+					  alert(APPSTUFF.apartmentForDetail);*/
+					  sessionStorage.apartForDetail = JSON.stringify(apartment);
 					});
 					$(morebtn).append(basbtn);
 					
