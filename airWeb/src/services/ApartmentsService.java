@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 
 
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.Response;
 import beans.Apartment;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
+import dao.ReservationDAO;
 import dao.UserDAO;
 
 @Path("apartments")
@@ -51,6 +53,10 @@ public class ApartmentsService {
 		if (ctx.getAttribute("apartmentDAO") == null) {
 	    	String contextPath = ctx.getRealPath("/");
 			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (UserDAO) ctx.getAttribute("userDAO"), (AmenityDAO) ctx.getAttribute("amenityDAO")));
+		}
+		if (ctx.getAttribute("reservationDAO") == null) {
+	    	String contextPath = ctx.getRealPath("/");
+			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath, (UserDAO) ctx.getAttribute("userDAO"), (ApartmentDAO) ctx.getAttribute("apartmentDAO")));
 		}
 	}
 	

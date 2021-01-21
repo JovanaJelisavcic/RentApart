@@ -1,26 +1,34 @@
 package beans;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class Reservation implements Serializable{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6081143477453774459L;
-	enum Status {
+	public enum Status {
 		  CREATED,
 		  REFUSED,
 		  GIVEUP,
 		  ACCEPTED,
 		  DONE
 		}
-	
+	private int reservationID;
+	@JsonManagedReference
 	private Apartment apartment;
 	private Date beginDate;
 	private int numOfNights;
-	private float totalPrice;
+	private int totalPrice;
 	private String message;
 	private User guest;
 	private Status status;
@@ -28,16 +36,17 @@ public class Reservation implements Serializable{
 
 	
 	
-	public Reservation(Apartment apartment, Date beginDate, int numOfNights,
-			float totalPrice, String message, User guest, Status status) {
+	public Reservation(int reservationID,Apartment apartment, Date beginDate, int numOfNights,
+			int totalPrice, String message, User guest, String status) {
 		super();
+		this.reservationID = reservationID;
 		this.apartment = apartment;
 		this.beginDate = beginDate;
 		this.numOfNights = numOfNights;
 		this.totalPrice = totalPrice;
 		this.message = message;
 		this.guest = guest;
-		this.status = status;
+		setStatus(status);
 	}
 	
 	
@@ -59,10 +68,10 @@ public class Reservation implements Serializable{
 	public void setNumOfNights(int numOfNights) {
 		this.numOfNights = numOfNights;
 	}
-	public float getTotalPrice() {
+	public int getTotalPrice() {
 		return totalPrice;
 	}
-	public void setTotalPrice(float totalPrice) {
+	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 	public String getMessage() {
@@ -80,8 +89,28 @@ public class Reservation implements Serializable{
 	public Status getStatus() {
 		return status;
 	}
-	public void setStatus(Status status) {
-		this.status = status;
+	/*  CREATED,
+		  REFUSED,
+		  GIVEUP,
+		  ACCEPTED,
+		  DONE*/
+	public void setStatus(String status) {
+		switch(status.toUpperCase()) {
+		  case "DONE":
+		    this.status=Status.DONE;
+		    break;
+		  case "REFUSED":
+			    this.status=Status.REFUSED;
+			    break;
+		  case "GIVEUP":
+			    this.status=Status.GIVEUP;
+			    break;
+		  case "ACCEPTED":
+			    this.status=Status.ACCEPTED;
+			    break;
+		  default:
+			  this.status=Status.CREATED;
+		}
 	}
 	
 	//in json format
@@ -94,5 +123,26 @@ public class Reservation implements Serializable{
 	                .append(", \"message\" : ").append("\""+this.message+"\"")
 	                .append(", \"status\" : ").append("\""+this.status+"\"")
 	                .append(", \"guest\" : ").append("\""+this.guest.getUsername()+"\"").append("}").toString();
+		}
+
+
+		public int getReservationID() {
+			return reservationID;
+		}
+
+
+		public void setReservationID(int reservationID) {
+			this.reservationID = reservationID;
+		}
+
+
+		public Date getEndDate() {
+			
+				Calendar cal = Calendar.getInstance();
+				cal.setTime( beginDate );
+				cal.add( Calendar.DATE, numOfNights );
+		        Date endDate = cal.getTime();
+				return endDate;
+		
 		}
 }

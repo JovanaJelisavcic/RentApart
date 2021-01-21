@@ -5,12 +5,12 @@ $(document).ready(function() {
 		var username = $('input[name="username"]').val();
 		var password = $('input[name="password"]').val();
 		$.ajax({
-			url : "rest/login",
+			url : "rest/begin/login",
 			type: "POST",
 			data : JSON.stringify({ username: username, password : password}),
 			contentType: 'application/json',
 			success: function (response) {
-				location.replace("http://localhost:8080/airWeb/app.html")
+				location.replace("http://localhost:8080/airWeb/app.html");
 		    },
 		    error: function (xhr, status, error) {
 		    	 $("#errorLab").css("color","#cf180e");

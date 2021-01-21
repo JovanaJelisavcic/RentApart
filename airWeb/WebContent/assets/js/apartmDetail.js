@@ -273,7 +273,7 @@ $(document).ready(function() {
 	
 	var unavailableDates = [];
 
-	apartment['availability'].forEach(function (date) {
+	apartment['unavailability'].forEach(function (date) {
 
 		unavailableDates.push({
 				begin: date['begin'],

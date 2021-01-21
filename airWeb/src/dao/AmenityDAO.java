@@ -44,7 +44,7 @@ public class AmenityDAO {
 				Object obj = parser.parse(new FileReader(contextPath + "/assets/jsons/amenities.json"));
 				System.out.println("first reading:"+contextPath + "/assets/jsons/amenities.json");
 				JSONArray amenityList = (JSONArray) obj;
-				amenityList.forEach( amenity -> parseUserObject( (JSONObject) amenity ) );
+				amenityList.forEach( amenity -> parseAmenityObject( (JSONObject) amenity ) );
 				
 				
 			} catch (Exception e) {
@@ -55,7 +55,7 @@ public class AmenityDAO {
 	}
 	
 
-	private  void parseUserObject(JSONObject amenity) 
+	private  void parseAmenityObject(JSONObject amenity) 
 	    {
 
 	        JSONObject amenityObject = (JSONObject) amenity.get("amenity");

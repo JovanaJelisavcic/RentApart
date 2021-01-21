@@ -24,7 +24,7 @@ $(document).ready(function() {
       var sex = $('input[type=radio][name=gender]:checked').val();
 
       $.ajax({
-        url: "rest/register",
+        url: "rest/begin/register",
         type: "POST",
         data: JSON.stringify({
           username: username,

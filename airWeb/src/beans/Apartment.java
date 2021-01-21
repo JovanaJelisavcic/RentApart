@@ -8,6 +8,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(
+		  generator = ObjectIdGenerators.PropertyGenerator.class, 
+		  property = "id")
 public class Apartment implements Serializable{
 
 	
@@ -23,6 +30,7 @@ public class Apartment implements Serializable{
 	private Location location;
 	private ArrayList<TPeriod> freeDates;
 	private ArrayList<TPeriod> availability;
+	private ArrayList<TPeriod> unavailability;
 	private User host;
 	private ArrayList<Comment> comments;
 	private int stars;
@@ -32,6 +40,7 @@ public class Apartment implements Serializable{
 	private String checkout;
 	private boolean status;
 	private ArrayList<Amenity> amenities;
+	@JsonBackReference
 	private ArrayList<Reservation> reservations;
 	
 	
@@ -58,7 +67,8 @@ public class Apartment implements Serializable{
 		this.amenities = amenities;
 		this.reservations = reservations;
 		this.stars = countStars();
-		this.availability = setUpAvailability();
+		this.unavailability = setUpUnavailability();
+		this.availability = this.freeDates;
 	}
 	
 	/*var unavailableDates = [
@@ -66,7 +76,7 @@ public class Apartment implements Serializable{
 	                        {begin: '2021-01-25', end: '2021-01-30'},
 	                        {begin: '2021-02-01', end: '2021-02-03'}
 	                    ];*/
-	private ArrayList<TPeriod> setUpAvailability() {
+	private ArrayList<TPeriod> setUpUnavailability() {
 		ArrayList<TPeriod> busyPeriods = new ArrayList<>();
 		//year beggining
 		Calendar calendar = new GregorianCalendar(2021,1,1);
@@ -156,12 +166,7 @@ public class Apartment implements Serializable{
 	public void setFreeDates(ArrayList<TPeriod> freeDates) {
 		this.freeDates = freeDates;
 	}
-	public ArrayList<TPeriod> getAvailability() {
-		return availability;
-	}
-	public void setAvailability(ArrayList<TPeriod> availability) {
-		this.availability = availability;
-	}
+
 	public User getHost() {
 		return host;
 	}
@@ -216,6 +221,35 @@ public class Apartment implements Serializable{
 	public void setReservations(ArrayList<Reservation> reservations) {
 		this.reservations = reservations;
 	}
+	
+	public ArrayList<TPeriod> getUnavailability() {
+		return unavailability;
+	}
+
+	public void addUnavailability(ArrayList<TPeriod> reserved) {
+		unavailability.addAll(reserved);
+		
+	}
+	public void changeAvailability(ArrayList<TPeriod> reserved) {
+		for(TPeriod reserve : reserved){	
+			for(TPeriod free : freeDates){
+				if(!reserve.getBegin().before(free.getBegin()) && !reserve.getEnd().after(free.getBegin())){
+					availability.remove(free);
+					availability.add(new TPeriod(free.getBegin(),reserve.getBegin()));
+					availability.add(new TPeriod(free.getEnd(),reserve.getEnd()));
+				} 
+			}
+		}
+	}
+
+
+	public ArrayList<TPeriod> getAvailability() {
+		return availability;
+	}
+
+	public void setAvailability(ArrayList<TPeriod> availability) {
+		this.availability = availability;
+	}
 	public int getId() {
 		return id;
 	}
@@ -265,19 +299,17 @@ public class Apartment implements Serializable{
 			finalString.append("]");
 			
 			
-			finalString.append(", \"availability\" : [ ");
-			for(int i=0; i<this.availability.size(); i++){
-				TPeriod busyPeriod= availability.get(i);
-				finalString.append(busyPeriod);
-			}
-			finalString.deleteCharAt(finalString.lastIndexOf(","));
-			finalString.append("]");
-			
             String realfinal = finalString.append("}").toString();
 			
 			return realfinal;
 	                              
 	                
 		}
+
+		
+
+		
+
+		
 	
 }

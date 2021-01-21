@@ -6,7 +6,7 @@ $(document).ready(function() {
 	
 	
 	$.ajax({
-		url : "rest/currentUser",
+		url : "rest/begin/currentUser",
 		type: "GET",
 		contentType: 'application/json',
 		success: function (response) {
@@ -64,7 +64,7 @@ $(document).ready(function() {
         
 
         $.ajax({
-          url: "rest/changeProfile",
+          url: "rest/begin/changeProfile",
           type: "POST",
           data: JSON.stringify({
             	username: username,

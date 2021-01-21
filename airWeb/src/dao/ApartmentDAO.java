@@ -20,6 +20,7 @@ import beans.Adress;
 import beans.Amenity;
 import beans.Apartment;
 import beans.Comment;
+import beans.Reservation;
 import beans.TPeriod;
 import beans.Location;
 import beans.User;
@@ -99,7 +100,7 @@ public class ApartmentDAO {
 		Collection<Apartment> apartsByDates = new ArrayList<>();
 		for (Apartment apartment : apartsWhole) {
 			boolean hasFree = false;
-			for(TPeriod period : apartment.getFreeDates()){
+			for(TPeriod period : apartment.getAvailability()){
 				if (!begin.before(period.getBegin()) && !end.after(period.getEnd())){
 				   hasFree=true;
 				   break;
@@ -119,6 +120,11 @@ public class ApartmentDAO {
 		    	apartsByBudget.add(apartment);
 		}
 		return apartsByBudget;
+	}
+	
+	
+	public Apartment findApartmentByID(Integer apartmentID) {
+		return apartments.get(apartmentID);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -259,16 +265,49 @@ public class ApartmentDAO {
 		 
 	}
 
+	public void fillReservationsInApartments(
+			Map<Integer, Reservation> reservations) {
+
+		for (Map.Entry<Integer, Apartment> entry : apartments.entrySet()) {
+		   Apartment apartment =  entry.getValue();
+		   ArrayList<Reservation> reservationsApart = new ArrayList<>();
+		     for (Reservation reservation : reservations.values()) {
+		    	 
+			   if (reservation.getApartment().getId()==apartment.getId()){
+			   	  reservationsApart.add(reservation);
+			   }
+			}
+		   
+		   apartment.setReservations(reservationsApart);
+		}
+		System.out.println("loaded reservations into apartments ");
+		apartments.forEach((id,apartment) -> System.out.println("id"+" : "+id + "," +"reservations"+" : "+apartment.getReservations()));
+		
+		
+		adjustUnAvailability();
+		
+	}
+
+	private void adjustUnAvailability() {
 	
+		for (Map.Entry<Integer, Apartment> entry : apartments.entrySet()) {
+			   Apartment apartment =  entry.getValue();
+			   ArrayList<TPeriod> reserved = new ArrayList<>();
+			     for (Reservation reservation : apartment.getReservations()) {
+			    	 if(reservation.getStatus().equals(Reservation.Status.ACCEPTED)){
+			    		 reserved.add(new TPeriod(reservation.getBeginDate(), reservation.getEndDate()));
+			    	 }  
+				 }
+			   apartment.addUnavailability(reserved);
+			   apartment.changeAvailability(reserved);
+			}
+		
+		System.out.println("adjusted (un)availability ");
+		apartments.forEach((id,apartment) -> System.out.println("id"+" : "+id + "," +"available"+" : "+apartment.getAvailability() + "," +"unavailable"+" : "+apartment.getUnavailability()));
+		
+	}
 
 	
-
-	
-
-	
-
-	
-	 
 
 	 	
 }
