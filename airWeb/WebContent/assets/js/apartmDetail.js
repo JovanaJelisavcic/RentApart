@@ -197,4 +197,109 @@ $(document).ready(function() {
 				*/
 	
 	
+	//more details
+	
+	var numOfRooms = $(document.createElement('dt'));
+	$(numOfRooms).append("Number of rooms");
+	$('#apartmentDetail').append(numOfRooms);
+	
+	var numberRooms = $(document.createElement('dd'));
+	$(numberRooms).append(apartment['roomCap']+ " rooms");
+	$('#apartmentDetail').append(numberRooms);
+	
+	var br1 = $(document.createElement('br'));
+	$('#apartmentDetail').append(br1);
+	
+	var checkIn = $(document.createElement('dt'));
+	$(checkIn).append("CHECK IN");
+	$('#apartmentDetail').append(checkIn);
+	
+	var chInTime = $(document.createElement('dd'));
+	$(chInTime).text(apartment['checkin']);
+	$('#apartmentDetail').append(chInTime);
+	
+	var br2 = $(document.createElement('br'));
+	$('#apartmentDetail').append(br2);
+	
+	var checkOut = $(document.createElement('dt'));
+	$(checkOut).append("CHECK OUT");
+	$('#apartmentDetail').append(checkOut);
+	
+	var chOutTime = $(document.createElement('dd'));
+	$(chOutTime).text(apartment['checkout']);
+	$('#apartmentDetail').append(chOutTime);
+	
+	var br3 = $(document.createElement('br'));
+	$('#apartmentDetail').append(br3);
+	
+	
+	//amenities
+	
+	var amns = $(document.createElement('dt'));
+	$(amns).append("Amenities");
+	$('#amenitiesDetail').append(amns);
+	
+	for (i = 0; i < apartment['amenities'].length; i++) {
+		var am = $(document.createElement('dd'));
+		$(am).text(apartment['amenities'][i]['amenitie']);
+		$('#amenitiesDetail').append(am);
+		
+	}
+	
+	
+	/*
+	<dt>Number of rooms</dt>
+    <dd>8</dd>
+    <br />
+
+    <dt>Check in time</dt>
+    <dd>10PM</dd>
+    <br />
+    
+    <dt>Check out time</dt>
+    <dd>15PM</dd>
+    <br />
+    
+    <dt>Amenities</dt>
+    <dd>TV</dd>
+    <dd>Free Wifi</dd>
+    <dd>Free Parking</dd>
+    <dd>Fridge</dd>
+    <dd>High chair</dd>
+  
+	*/
+	
+	//availability
+	
+	var unavailableDates = [];
+
+	apartment['availability'].forEach(function (date) {
+
+		unavailableDates.push({
+				begin: date['begin'],
+				end: date['end']
+			});
+		
+	});
+	
+	
+	
+	$('#calendar').availabilityCalendar(unavailableDates);
+			
+	$("#calendarTable").selectable({
+		  filter: "td:not(.unavailable)",
+		  selected: function(event, ui) {
+			  var date = Date.parse($(".ui-selected").text()+" "+$('#monthLabel').text());
+			  if($(".ui-selected").hasClass( "unavailable") || $(".ui-selected").hasClass( "ex-month")){
+					 $(".ui-selected").removeClass( "ui-selected");
+			  }else	if(date <=  new Date()){
+					$(".ui-selected").removeClass( "ui-selected");
+			  }
+		  }	  
+		
+	});
+	
+	 $('[data-toggle="datepicker"]').datepicker();
+	
+	
 });

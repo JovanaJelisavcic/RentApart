@@ -343,7 +343,7 @@ hr {
 }
 
 .blog-comment{
-    padding-left: 15%;
+    padding-left: 0%;
 	padding-right: 15%;
 }
 
@@ -413,4 +413,60 @@ hr {
 	line-height: 30px;
 	font-weight: 800;
 }
+
+
+#calendarTable .ui-selected { background: #80ff00; color: white; }
+
+#calendarTable .checkInColor { background: #80ff00; color: white; }
+#calendarTable .checkOutColor { background: #ffff00; color: white; }
+        
+        
+.single-tab-select-box h2{
+	color: #565a5c;
+    font-size: 20px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    text-transform: capitalize;
+    margin-bottom: 17px;
+}
+
+.travel-check-icon{
+    position: relative;
+}
+.travel-check-icon:after{
+    position: absolute;
+    content: "\f073";
+    right: 0px;
+    top: 0;
+    font-size: 18px;
+    color: #aaa;
+    background: #f9f9f9;
+    font-family: "fontAwesome";
+    pointer-events: none;
+    border:1px solid #d7d7d7;
+    border-bottom: transparent;
+    padding: 10px 8px;
+}/*travel-select-icon*/
+
+.travel-check-icon  input {
+	color:#aaa;
+	font-size:14px;
+	font-family: 'Poppins', sans-serif;
+	text-transform: capitalize;
+	height: 48px;
+}/*select*/
+
+.travel-check-icon .form-control{
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	-o-appearance:none;
+	-ms-appearance:none;
+	appearance:none;
+	outline:0!important;
+	box-shadow:none;
+	border:1px solid #d7d7d7;
+	border-radius: 0px;
+	margin-bottom: 20px;
+}/*.travel-select-icon .form-control*/ 
+   
 

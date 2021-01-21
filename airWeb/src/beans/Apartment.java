@@ -2,8 +2,11 @@ package beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.Map;
+import java.util.GregorianCalendar;
 
 public class Apartment implements Serializable{
 
@@ -18,8 +21,8 @@ public class Apartment implements Serializable{
 	private int roomCap;
 	private int guestsCap;
 	private Location location;
-	private ArrayList<FreePeriod> freeDates;
-	private Map<Date,Boolean> availability;
+	private ArrayList<TPeriod> freeDates;
+	private ArrayList<TPeriod> availability;
 	private User host;
 	private ArrayList<Comment> comments;
 	private int stars;
@@ -34,8 +37,8 @@ public class Apartment implements Serializable{
 	
 	
 	public Apartment(int id, String type, int roomCap, int guestsCap,
-			Location location, ArrayList<FreePeriod> freeDates,
-			Map<Date, Boolean> availability, User host, ArrayList<Comment> comments,
+			Location location, ArrayList<TPeriod> freeDates,
+		    User host, ArrayList<Comment> comments,
 			ArrayList<String> images, int price, String checkin, String checkout,
 			boolean status, ArrayList<Amenity> amenities, ArrayList<Reservation> reservations) {
 		super();
@@ -45,7 +48,6 @@ public class Apartment implements Serializable{
 		this.guestsCap = guestsCap;
 		this.location = location;
 		this.freeDates = freeDates;
-		this.availability = availability;
 		this.host = host;
 		this.comments = comments;
 		this.images = images;
@@ -56,14 +58,66 @@ public class Apartment implements Serializable{
 		this.amenities = amenities;
 		this.reservations = reservations;
 		this.stars = countStars();
+		this.availability = setUpAvailability();
 	}
 	
+	/*var unavailableDates = [
+	                        {begin: '2021-01-19', end: '2021-01-21'},
+	                        {begin: '2021-01-25', end: '2021-01-30'},
+	                        {begin: '2021-02-01', end: '2021-02-03'}
+	                    ];*/
+	private ArrayList<TPeriod> setUpAvailability() {
+		ArrayList<TPeriod> busyPeriods = new ArrayList<>();
+		//year beggining
+		Calendar calendar = new GregorianCalendar(2021,1,1);
+		Date yearBegin = calendar.getTime();
+        //year end
+		Calendar calendarEnd = new GregorianCalendar(2021,12,31);
+		Date yearEnd = calendarEnd.getTime();
+		 
+		sortFreeDates();
+		for(int i = 0 ; i < freeDates.size()-1; i++){
+			if(i==0){
+			busyPeriods.add(new TPeriod(yearBegin,yesterday(freeDates.get(i).getBegin())));
+			busyPeriods.add(new TPeriod(tommorow(freeDates.get(i).getEnd()),yesterday(freeDates.get(i+1).getBegin())));
+			}else{
+			busyPeriods.add(new TPeriod(tommorow(freeDates.get(i).getEnd()),yesterday(freeDates.get(i+1).getBegin())));
+			}	
+		}
+		busyPeriods.add(new TPeriod(tommorow(freeDates.get(freeDates.size()-1).getEnd()),yearEnd));
+		
+		return busyPeriods;
+	}
+
+	private Date yesterday(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime( date );
+		cal.add( Calendar.DATE, -1 );
+        Date oneDayBefore = cal.getTime();
+		return oneDayBefore;
+	}
+	
+	private Date tommorow(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime( date );
+		cal.add( Calendar.DATE, 1 );
+        Date oneDayAfter = cal.getTime();;
+		return oneDayAfter;
+	}
+	
+	private void sortFreeDates() {
+		Collections.sort(freeDates, new Comparator<TPeriod>(){
+			public int compare(TPeriod t1, TPeriod t2){
+				return t1.getBegin().compareTo(t2.getBegin());
+			}
+		});
+	}
+
 	private int countStars() {
 		int sum = 0;
 		for(int i=0; i<comments.size(); i++){
 			sum+= comments.get(i).getStars();
-	    }
-		System.out.println("stars : " + (int) Math.ceil(sum/comments.size()) );
+	    }		
 		return (int) Math.ceil(sum/comments.size());
 	}
 
@@ -96,16 +150,16 @@ public class Apartment implements Serializable{
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public ArrayList<FreePeriod> getFreeDates() {
+	public ArrayList<TPeriod> getFreeDates() {
 		return freeDates;
 	}
-	public void setFreeDates(ArrayList<FreePeriod> freeDates) {
+	public void setFreeDates(ArrayList<TPeriod> freeDates) {
 		this.freeDates = freeDates;
 	}
-	public Map<Date, Boolean> getAvailability() {
+	public ArrayList<TPeriod> getAvailability() {
 		return availability;
 	}
-	public void setAvailability(Map<Date, Boolean> availability) {
+	public void setAvailability(ArrayList<TPeriod> availability) {
 		this.availability = availability;
 	}
 	public User getHost() {
@@ -180,7 +234,9 @@ public class Apartment implements Serializable{
 	                .append(", \"host\" : ").append("\""+this.host+"\"")
 	                .append(", \"status\" : ").append("\""+this.status+"\"")
 	                .append(", \"price\" : ").append("\""+this.price+ "\"")
-	                .append(", \"stars\" : ").append("\""+this.stars+ "\"");
+	                .append(", \"stars\" : ").append("\""+this.stars+ "\"")
+	                .append(", \"checkIn\" : ").append("\""+this.checkin+ "\"")
+	                .append(", \"checkOut\" : ").append("\""+this.checkout+ "\"");
 			
 			finalString.append(", \"images\" : [ ");
 			for(int i=0; i<this.images.size(); i++){
@@ -199,11 +255,20 @@ public class Apartment implements Serializable{
 			finalString.deleteCharAt(finalString.lastIndexOf(","));
 			finalString.append("]");
 			
-			//mozda drugacije
+			
 			finalString.append(", \"freeDates\" : [ ");
 			for(int i=0; i<this.freeDates.size(); i++){
-				FreePeriod freePeriod= freeDates.get(i);
+				TPeriod freePeriod= freeDates.get(i);
 				finalString.append(freePeriod);
+			}
+			finalString.deleteCharAt(finalString.lastIndexOf(","));
+			finalString.append("]");
+			
+			
+			finalString.append(", \"availability\" : [ ");
+			for(int i=0; i<this.availability.size(); i++){
+				TPeriod busyPeriod= availability.get(i);
+				finalString.append(busyPeriod);
 			}
 			finalString.deleteCharAt(finalString.lastIndexOf(","));
 			finalString.append("]");

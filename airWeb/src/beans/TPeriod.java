@@ -3,16 +3,20 @@ package beans;
 import java.io.Serializable;
 import java.util.Date;
 
-public class FreePeriod implements Serializable{ /**
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+public class TPeriod implements Serializable{ /**
 	 * 
 	 */
 	private static final long serialVersionUID = 4641797356889458477L;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date begin;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date end;
 
 	
 	
-	public FreePeriod(Date begin, Date end) {
+	public TPeriod(Date begin, Date end) {
 		super();
 		this.begin = begin;
 		this.end = end;

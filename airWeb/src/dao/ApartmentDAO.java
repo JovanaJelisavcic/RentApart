@@ -20,13 +20,13 @@ import beans.Adress;
 import beans.Amenity;
 import beans.Apartment;
 import beans.Comment;
-import beans.FreePeriod;
+import beans.TPeriod;
 import beans.Location;
 import beans.User;
 
 public class ApartmentDAO {
 
-    //private String ctx;
+  
 	
 	private Map<Integer, Apartment> apartments = new HashMap<>();
 	
@@ -39,7 +39,7 @@ public class ApartmentDAO {
 	}
 	
 	public ApartmentDAO(String contextPath, UserDAO userDAO, AmenityDAO amenityDAO) {
-		//ctx=contextPath;
+		
 		users = userDAO;
 		amenitiesDAO = amenityDAO;
 		loadApartments(contextPath);
@@ -60,7 +60,7 @@ public class ApartmentDAO {
 		}
 		return actives;
 	}
-	//moze biti i grad i drzava
+	
 	public Collection<Apartment> getByLocation(String location, Collection<Apartment> searched) {
 		Collection<Apartment> apartsByLocation = new ArrayList<>();
 		for (Apartment apartment : searched) {
@@ -99,7 +99,7 @@ public class ApartmentDAO {
 		Collection<Apartment> apartsByDates = new ArrayList<>();
 		for (Apartment apartment : apartsWhole) {
 			boolean hasFree = false;
-			for(FreePeriod period : apartment.getFreeDates()){
+			for(TPeriod period : apartment.getFreeDates()){
 				if (!begin.before(period.getBegin()) && !end.after(period.getEnd())){
 				   hasFree=true;
 				   break;
@@ -199,25 +199,25 @@ public class ApartmentDAO {
 	        
 	        //freeDates
 	        JSONArray freeDatesArray = (JSONArray) apartmentObject.get("freeDates");
-	        ArrayList<FreePeriod> periods = new ArrayList<FreePeriod>();
+	        ArrayList<TPeriod> periods = new ArrayList<TPeriod>();
 	        if (!freeDatesArray.isEmpty()){      		
 	   
 	        		Iterator<JSONObject> objectIterator =  freeDatesArray.iterator();
 	        		while(objectIterator.hasNext()) {
 	        				JSONObject object = objectIterator.next();
-	        				FreePeriod freePeriod = parseFreePeriod( object);
+	        				TPeriod freePeriod = parseFreePeriod( object);
 	        				periods.add(freePeriod);
 	        		}
 	        }
 	      
 	        
 	        apartments.put(id, new Apartment(id, type, roomCap, guestCap, location, periods,
-	    			null, hostObject, comments,
+	    			hostObject, comments,
 	    			images, pricePerNight, checkin, checkout,
 	    			 statusB, amenities, null));
 	    }
 
-	private FreePeriod parseFreePeriod(JSONObject object) {
+	private TPeriod parseFreePeriod(JSONObject object) {
 		
 		  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
           Date begin = null;
@@ -228,7 +228,7 @@ public class ApartmentDAO {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-	      FreePeriod freePeriod = new FreePeriod(begin,end);
+	      TPeriod freePeriod = new TPeriod(begin,end);
 			return freePeriod;	
 	}
 

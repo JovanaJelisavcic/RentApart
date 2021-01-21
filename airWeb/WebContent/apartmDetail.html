@@ -24,8 +24,9 @@
 		<!--datepicker.css-->
 		<link rel="stylesheet"  href="assets/css/datepicker.css" >
 
-		<!-- range css-->
-        <link rel="stylesheet" href="assets/css/jquery-ui.min.css" />
+		<!-- range css
+        <link rel="stylesheet" href="assets/css/jquery-ui.min.css" />-->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
 		<!--bootstrap.min.css-->
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
@@ -36,17 +37,23 @@
 		<!--detail.css-->
 		<link rel="stylesheet" href="assets/css/detail.css" />
 		
+		<!-- calendar -->
+		<link href="assets/css/availability-calendar.css" rel="stylesheet">
+		
+		<!--datepicker.css-->
+		<link rel="stylesheet"  href="assets/css/datepicker.css" >
+		
+		
+		
 
 </head>
 <body>
 			<div class="col-sm-12 col-md-12 col-lg-12">
     <!-- product -->
-    <button type="button" class="close" aria-label="Close" onclick="location.href = 'index.html';">
-  							<span aria-hidden="true">×</span>
-							</button>
     <div class="product-content product-wrap clearfix product-deatil">
         <div class="row">
             <div class="col-md-5 col-sm-12 col-xs-12">
+             <div class="row">
                 <div class="product-image">
                     <div id="myCarousel-2">
                         <ol id="apartDetailImgs">
@@ -55,6 +62,30 @@
                         </div>
                     </div>
                 </div>
+                </div>
+                 <div class="row">
+                <div class="col-sm-6">
+													<div class="single-tab-select-box">
+														<h2>check in</h2>
+														<div class="travel-check-icon">
+															
+																<input type="text" name="check_in" class="form-control" data-toggle="datepicker" placeholder="01/01/2021 ">
+															
+														</div><!-- /.travel-check-icon -->
+													</div><!--/.single-tab-select-box-->
+												</div><!--/.col-->
+
+												<div class="col-sm-6">
+													<div class="single-tab-select-box">
+														<h2>check out</h2>
+														<div class="travel-check-icon">
+															
+																<input type="text" name="check_out" class="form-control"  data-toggle="datepicker" placeholder="02/01/2021 ">
+															
+														</div><!-- /.travel-check-icon -->
+													</div><!--/.single-tab-select-box-->
+												</div><!--/.col-->
+												</div>
             </div>
 
             <div class="col-md-6 col-md-offset-1 col-sm-12 col-xs-12">
@@ -82,32 +113,23 @@
                     </ul>
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane fade active in" id="availability">
-                            <br />
-                            <strong>Check out the free dates</strong>
-                            <p>
-                                Integer egestas, orci id condimentum eleifend, nibh nisi pulvinar eros, vitae ornare massa neque ut orci. Nam aliquet lectus sed odio eleifend, at iaculis dolor egestas. Nunc elementum pellentesque augue
-                                sodales porta. Etiam aliquet rutrum turpis, feugiat sodales ipsum consectetur nec.
-                            </p>
+                            <br />   
+                            <strong></strong>                                 
+                           <div id="calendar">
+         					</div>
                         </div>
                         <div class="tab-pane fade" id="specifications">
-                            <br />
-                            <dl class="">
-                                <dt>Gravina</dt>
-                                <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
-                                <dd>Donec id elit non mi porta gravida at eget metus.</dd>
-                                <dd>Eget lacinia odio sem nec elit.</dd>
-                                <br />
-
-                                <dt>Test lists</dt>
-                                <dd>A description list is perfect for defining terms.</dd>
-                                <br />
-
-                                <dt>Altra porta</dt>
-                                <dd>Vestibulum id ligula porta felis euismod semper</dd>
+                               <br />
+  							<div class="col-sm-4">
+                            <dl id="apartmentDetail" class="">                               
                             </dl>
+                            </div>
+                            <div class="col-sm-4">
+                            <dl id="amenitiesDetail" class="">                               
+                            </dl>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="comments">
-                            <br />
 							<div class="blog-comment">
                 				<hr/>
                                 <ul class= "comments" id="messagesListDetail">
@@ -145,15 +167,24 @@
 
 		<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 
-		<!--jquery-ui.min.js-->
-        <script src="assets/js/jquery-ui.min.js"></script>
-
+		<!--jquery-ui.min.js
+        <script src="assets/js/jquery-ui.min.js"></script>-->
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         
         <!--datepicker.js-->
         <script  src="assets/js/datepicker.js"></script>
 		
 		<!--search JS-->
 		<script src="assets/js/apartmDetail.js"></script>
+		
+		<!-- calendar -->
+		<script src="assets/js/availability-calendar.js"></script>
+		
+		<!--datepicker.js-->
+        <script  src="assets/js/datepicker.js"></script>
+		
+		
+		
 
 </body>
 </html>
