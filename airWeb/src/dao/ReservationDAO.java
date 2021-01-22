@@ -36,7 +36,7 @@ public class ReservationDAO {
 		apartments.fillReservationsInApartments(reservations);
 		System.out.println("loaded reservations ");
 		reservations.forEach((id,reservation) -> System.out.println("id"+" : "+id + "," +"reservation"+" : "+reservation));
-		
+
 	}
 	
 	

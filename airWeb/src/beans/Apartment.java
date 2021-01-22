@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -57,6 +58,7 @@ public class Apartment implements Serializable{
 		this.guestsCap = guestsCap;
 		this.location = location;
 		this.freeDates = freeDates;
+		sortDates(freeDates);
 		this.host = host;
 		this.comments = comments;
 		this.images = images;
@@ -68,6 +70,7 @@ public class Apartment implements Serializable{
 		this.reservations = reservations;
 		this.stars = countStars();
 		this.unavailability = setUpUnavailability();
+		sortDates(unavailability);
 		this.availability = this.freeDates;
 	}
 	
@@ -78,21 +81,11 @@ public class Apartment implements Serializable{
 	                    ];*/
 	private ArrayList<TPeriod> setUpUnavailability() {
 		ArrayList<TPeriod> busyPeriods = new ArrayList<>();
-		//year beggining
-		Calendar calendar = new GregorianCalendar(2021,1,1);
-		Date yearBegin = calendar.getTime();
         //year end
 		Calendar calendarEnd = new GregorianCalendar(2021,12,31);
 		Date yearEnd = calendarEnd.getTime();
-		 
-		sortFreeDates();
 		for(int i = 0 ; i < freeDates.size()-1; i++){
-			if(i==0){
-			busyPeriods.add(new TPeriod(yearBegin,yesterday(freeDates.get(i).getBegin())));
 			busyPeriods.add(new TPeriod(tommorow(freeDates.get(i).getEnd()),yesterday(freeDates.get(i+1).getBegin())));
-			}else{
-			busyPeriods.add(new TPeriod(tommorow(freeDates.get(i).getEnd()),yesterday(freeDates.get(i+1).getBegin())));
-			}	
 		}
 		busyPeriods.add(new TPeriod(tommorow(freeDates.get(freeDates.size()-1).getEnd()),yearEnd));
 		
@@ -115,8 +108,8 @@ public class Apartment implements Serializable{
 		return oneDayAfter;
 	}
 	
-	private void sortFreeDates() {
-		Collections.sort(freeDates, new Comparator<TPeriod>(){
+	private void sortDates(ArrayList<TPeriod> dates) {
+		Collections.sort(dates, new Comparator<TPeriod>(){
 			public int compare(TPeriod t1, TPeriod t2){
 				return t1.getBegin().compareTo(t2.getBegin());
 			}
@@ -228,18 +221,27 @@ public class Apartment implements Serializable{
 
 	public void addUnavailability(ArrayList<TPeriod> reserved) {
 		unavailability.addAll(reserved);
-		
+		sortDates(unavailability);	
 	}
+
 	public void changeAvailability(ArrayList<TPeriod> reserved) {
-		for(TPeriod reserve : reserved){	
-			for(TPeriod free : freeDates){
-				if(!reserve.getBegin().before(free.getBegin()) && !reserve.getEnd().after(free.getBegin())){
-					availability.remove(free);
-					availability.add(new TPeriod(free.getBegin(),reserve.getBegin()));
-					availability.add(new TPeriod(free.getEnd(),reserve.getEnd()));
-				} 
+
+		for (Iterator<TPeriod> reservation = reserved.iterator(); reservation.hasNext(); ) {
+			ArrayList<TPeriod> putback = new ArrayList<>();
+			TPeriod reserve = reservation.next();
+			for (Iterator<TPeriod> iterator = availability.iterator(); iterator.hasNext(); ) {
+				TPeriod available = iterator.next();
+			    if (reserve.getBegin().after(yesterday(available.getBegin())) && reserve.getEnd().before(tommorow(available.getEnd()))) {
+			    	iterator.remove();
+			    	if(!reserve.getBegin().equals(available.getBegin()))
+			    	putback.add(new TPeriod(available.getBegin(), yesterday(reserve.getBegin())));
+			    	if(!reserve.getEnd().equals(available.getEnd()))
+			    	putback.add(new TPeriod(tommorow(reserve.getEnd()), available.getEnd()));
+			    }
 			}
+			availability.addAll(putback);
 		}
+		sortDates(availability);
 	}
 
 

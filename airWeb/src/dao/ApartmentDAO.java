@@ -289,7 +289,7 @@ public class ApartmentDAO {
 	}
 
 	private void adjustUnAvailability() {
-	
+		
 		for (Map.Entry<Integer, Apartment> entry : apartments.entrySet()) {
 			   Apartment apartment =  entry.getValue();
 			   ArrayList<TPeriod> reserved = new ArrayList<>();
