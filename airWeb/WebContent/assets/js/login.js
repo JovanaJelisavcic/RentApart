@@ -2,12 +2,12 @@ $(document).ready(function() {
 	
 	$("#loginform").submit(function(event){
 		event.preventDefault(); //prevent default action 
-		var username = $('input[name="username"]').val();
-		var password = $('input[name="password"]').val();
+		var username = $('input[name="usernameLogin"]').val();
+		var password = $('input[name="passwordLogin"]').val();
 		$.ajax({
 			url : "rest/begin/login",
-			type: "POST",
-			data : JSON.stringify({ username: username, password : password}),
+			type: "GET",
+			data : $.param({ username: username, password : password}),
 			contentType: 'application/json',
 			success: function (response) {
 				location.replace("http://localhost:8080/airWeb/app.html");

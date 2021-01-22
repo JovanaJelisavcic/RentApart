@@ -22,17 +22,20 @@ $(document).ready(function() {
       var firstName = $('input[name="firstName"]').val();
       var lastName = $('input[name="lastName"]').val();
       var sex = $('input[type=radio][name=gender]:checked').val();
-
+      var newPass ="";
+      var role = "guest"
       $.ajax({
         url: "rest/begin/register",
         type: "POST",
-        data: JSON.stringify({
-          username: username,
-          password: password,
-          firstName: firstName,
-          lastName: lastName,
-          sex: sex
-        }),
+        data: $.param({
+        	username: username,
+        	password: password,
+            firstName: firstName,
+            lastName: lastName,
+            sex: sex,
+            newPass : newPass,
+            role : role
+      }),
         contentType: 'application/json',
         success: function(response) {
           location.replace("http://localhost:8080/airWeb/app.html");

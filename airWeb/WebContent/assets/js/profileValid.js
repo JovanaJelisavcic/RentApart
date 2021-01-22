@@ -66,7 +66,7 @@ $(document).ready(function() {
         $.ajax({
           url: "rest/begin/changeProfile",
           type: "POST",
-          data: JSON.stringify({
+          data: $.param({
             	username: username,
             	password: password,
                 firstName: firstName,
