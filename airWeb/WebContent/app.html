@@ -77,8 +77,8 @@
 								<div class="collapse navbar-collapse">		  
 									<ul class="nav navbar-nav navbar-right">
 										<li class="smooth-menu"><a href="#home">Home</a></li>
-										<li class="smooth-menu"><a href="#search">Search</a></li>
-										<li class="smooth-menu"><a href="#about">About </a></li>
+										<li class="smooth-menu"><a href="#search">Apartments</a></li>
+										<li class="smooth-menu"><a href="#reservations">My Reservations </a></li>
 										<li>
 										 		<button class="book-btn" type="button" onClick="location.href='myprofile.html'" id="myprofile">My Profile</button>
       											<button class="book-btn" type="button" id="logout">Logout</button>     
@@ -147,7 +147,7 @@
 													<div class="single-tab-select-box">
 														<h2>destination</h2>
 														<div class="travel-select-icon">
-															<input class="form-control " placeholder="Where do you want to go?"/>
+															<input class="form-control " id="location" name="location" placeholder="Where do you want to go?"/>
 														</div><!-- /.travel-select-icon -->
 													</div><!--/.single-tab-select-box-->
 												</div><!--/.col-->
@@ -156,9 +156,9 @@
 													<div class="single-tab-select-box">
 														<h2>check in</h2>
 														<div class="travel-check-icon">
-															<form action="#">
-																<input type="text" name="check_in" class="form-control" data-toggle="datepicker" placeholder="12 -01 - 2017 ">
-															</form>
+															
+																<input type="text" name="check_in" class="form-control" data-toggle="datepicker" placeholder="01/01/2021 ">
+															
 														</div><!-- /.travel-check-icon -->
 													</div><!--/.single-tab-select-box-->
 												</div><!--/.col-->
@@ -167,9 +167,9 @@
 													<div class="single-tab-select-box">
 														<h2>check out</h2>
 														<div class="travel-check-icon">
-															<form action="#">
-																<input type="text" name="check_out" class="form-control"  data-toggle="datepicker" placeholder="22 -01 - 2017 ">
-															</form>
+															
+																<input type="text" name="check_out" class="form-control"  data-toggle="datepicker" placeholder="02/01/2021 ">
+															
 														</div><!-- /.travel-check-icon -->
 													</div><!--/.single-tab-select-box-->
 												</div><!--/.col-->
@@ -180,7 +180,7 @@
 													<div class="single-tab-select-box">
 														<h2>guests</h2>
 														<div class="travel-select-icon">
-															<input class="form-control " placeholder="How many guests will be there?"/>
+															<input class="form-control " id="guests" name="guests" placeholder="How many guests will be there?"/>
 														</div><!-- /.travel-select-icon -->
 													</div><!--/.single-tab-select-box-->
 												</div><!--/.col-->
@@ -202,7 +202,7 @@
 																			<div id="slider-range"></div><!--/.slider-range-->
 
 																			<div class="price_slider_amount">
-																				<input type="text" id="amount" name="price"  placeholder="Add Your Price" />
+																				<input type="text" id="amount" name="price"  placeholder="Add Your Price" readonly/>
 																			</div><!--/.price_slider_amount-->
 																		</div><!--/.price-filter-->
 																	</div><!--/.info_widget-->
@@ -217,10 +217,10 @@
 														<div class="travel-select-icon">
 															<div class="row">
 															<div class="col-sm-3">
-																<input  class="form-control " placeholder="min"/>
+																<input  class="form-control " id="minRooms" name="minRooms" placeholder="min"/>
 																</div>
 																<div class="col-sm-3">
-																<input class="form-control " placeholder="max"/>
+																<input class="form-control " id="maxRooms" name="maxRooms" placeholder="max"/>
 																</div>
 															</div><!-- /.row -->
 														</div><!-- /.travel-select-icon -->
@@ -228,14 +228,14 @@
 												</div><!--/.col-->
 												<div class="clo-sm-7">
 													<div class="about-btn travel-mrt-0 pull-right">
-														<button  class="about-view travel-btn">
+														<button id="searchButton" class="about-view travel-btn">
 															search	
 														</button><!--/.travel-btn-->
 													</div><!--/.about-btn-->
 												</div><!--/.col-->
 												
 											</div><!--/.row-->
-
+											
 										</div><!--/.tab-para-->
 
 									</div><!--/.tabpannel-->
@@ -250,10 +250,43 @@
         		</div><!--/.row-->
         	</div><!--/.container-->
 
+		        	<!-- ovde da idu reyultati -->
+			<div class="packages" id="searchResults" style="display: none;">
+				<div class="container packages" >
+					<div class="row" id="searchToolbar">
+					</div>
+				   <div class="packages-content row">
+				   		<!-- BEGIN FILTERS -->
+         		 <div class="col-md-3">
+            		<h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
+            		<hr>
+            
+            		<!-- BEGIN FILTER BY TYPE -->
+            		<h4>By type:</h4>
+           		 <div class="checkbox">
+             		 <label><input type="checkbox" class="icheck"> Private room</label>
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" class="icheck"> Whole place</label>
+            </div>
+            <!-- BEGIN FILTER BY AMENITIES -->
+            		<h4>By amenities:</h4>
+           			<div id="amenitiesFilters">
+           			</div>
+           	<button class="btn btn-success ml-auto"><span class="fa fa-filter"></span> &nbsp;&nbsp;Apply Filter</button>
+            </div>
+            <!-- END FILTERS -->
+					    <div class="row" id="searchItems">
+						</div><!--/.row-->
+				   </div><!--/.packages-content-->
+			    </div><!--/.container-->
+			</div><!-- / .packages -->
+			<!-- dovde reyultati -->
+			
         </section><!--/.travel-box-->
 		<!--travel-box end-->
 		
-		<section id="about" class="subscribe">
+		<section id="reservations" class="subscribe">
 			<div class="container">
 				<div class="subscribe-title text-center">
 					<h2>
@@ -389,8 +422,9 @@ So, are you ready to go?
 		<!--Custom JS-->
 		<script src="assets/js/custom.js"></script>
 		
-		<!--logout.js-->
-		<script src="assets/js/logout.js"></script>
+		<!--guestApartmentSearch.js-->
+		<script src="assets/js/guestApartmentSearch.js"></script>
+
 
 	</body>
 

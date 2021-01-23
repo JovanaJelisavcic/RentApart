@@ -2,6 +2,7 @@ package dao;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +66,9 @@ public class AmenityDAO {
 	        amenities.put(id,new Amenity(id, name));
 	    }
 
+	public Collection<Amenity> findAll() {
+		return amenities.values();
+	}
 	
 
 	 	

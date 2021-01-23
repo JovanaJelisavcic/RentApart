@@ -156,6 +156,17 @@ public class ApartmentsService {
 	    			}
 	    	}
 	    }
+	    
+	    
+	    @GET
+		@Path("getAmenities")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getAmenities(@Context HttpServletRequest request) {
+	    	AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
+			return Response.status(200).entity(amenityDAO.findAll()).build();
+					
+		}
 
 		private String validateRequest(HttpServletRequest request) {
 			if(!request.getParameter("location").toString().matches("^$|^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$"))
