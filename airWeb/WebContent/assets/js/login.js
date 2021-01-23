@@ -10,17 +10,18 @@ $(document).ready(function() {
 			data : $.param({ username: username, password : password}),
 			contentType: 'application/json',
 			success: function (response) {
-				if(sessionStorage.apartForDetail!=null){
+				if(sessionStorage.getItem("apartForDetail")!="null"){
 					sessionStorage.user = username;
 					location.replace("http://localhost:8080/airWeb/apartmDetail.html");
 				}else{
+					
 				sessionStorage.user = username;
 				location.replace("http://localhost:8080/airWeb/app.html");
 				}
 		    },
-		    error: function (xhr, status, error) {
+		    error: function (data, textStatus, xhr) {
 		    	 $("#errorLab").css("color","#cf180e");
-		    	 $("#errorLab").text("Invalid password and/or username.");
+		    	 $("#errorLab").text(data.responseText);
 		    	 
 		    }
 	});

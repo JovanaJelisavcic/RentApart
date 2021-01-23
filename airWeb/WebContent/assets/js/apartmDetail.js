@@ -370,9 +370,8 @@ $(document).ready(function() {
 
 	});
 	//close for users
-	$("#closeDetail").hide();
 	if(sessionStorage.user!=null){
-		$("#closeDetail").show();
+		$("#closeDetail").css("visibility", "visible");
 		$("#closeDetail").click(function(event){
 		location.replace("http://localhost:8080/airWeb/app.html");
 	});

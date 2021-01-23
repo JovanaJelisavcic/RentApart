@@ -1,5 +1,10 @@
 $(document).ready(function() {
-	sessionStorage.apartForDetail = null;
+
+	$("#indexLogin").click(function(event){
+		sessionStorage.apartForDetail=null;
+		location.replace("http://localhost:8080/airWeb/login.html");
+	});
+	
 	$("#searchButton").click(function(event){
 		  $("#searchResults").hide();
 		  $("#searchItems").empty();

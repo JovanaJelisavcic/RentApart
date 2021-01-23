@@ -192,7 +192,7 @@ public class ApartmentsService {
 			if(apartment.checkAvailability(reservation.getBeginDate(), reservation.getNumOfNights())){
 				ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
 				if(!reservationDAO.saveReservation(reservation)) {
-					return Response.status(400).entity("Registration unsuccessful").build();			
+					return Response.status(400).entity("Reservation unsuccessful. Check your connection!").build();			
 				}else return Response.status(200).build();
 			}else
 				return Response.status(400).entity("This appartment is occupied during that time. Check the calendar again!").build();
