@@ -3,24 +3,34 @@ package services;
 
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
 
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartment;
+import beans.Reservation;
+import beans.User;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.ReservationDAO;
@@ -68,7 +78,7 @@ public class ApartmentsService {
 	    @Produces("application/json;charset=utf-8")
 	    public Response getApartments(@Context HttpServletRequest request)
 	    {
-	        
+	        System.out.println("search request");
 	    	String response = validateRequest(request);
 	    	if(response!=null) {
 	    
@@ -162,6 +172,103 @@ public class ApartmentsService {
 			if(request.getParameter("check_in").equals(""))
 				return null;
 			return null;
+		}
+		
+		
+		
+		@POST
+		@Path("reservate")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response reservate(@Context HttpServletRequest request) {
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("reservation request: "+payloadRequest);
+			Reservation reservation = retreiveInfo(payloadRequest);
+			Apartment apartment = reservation.getApartment();
+			if(apartment.checkAvailability(reservation.getBeginDate(), reservation.getNumOfNights())){
+				ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+				if(!reservationDAO.saveReservation(reservation)) {
+					return Response.status(400).entity("Registration unsuccessful").build();			
+				}else return Response.status(200).build();
+			}else
+				return Response.status(400).entity("This appartment is occupied during that time. Check the calendar again!").build();
+			
+			
+		}
+		
+		
+		
+		
+		//utils
+		private Reservation retreiveInfo(String payloadRequest) {
+			ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+			UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
+			ArrayList<String> params = new ArrayList<>();
+			payloadRequest =payloadRequest.replaceAll("%3A", ":");
+			//date=2021-01-29T23%3A00%3A00.000Z&numOfNights=1&username=snalica&apartmID=8&message=
+			System.out.println(payloadRequest);
+			String[]  pairs=  payloadRequest.split("&");
+			for(int i=0; i<pairs.length ; i++){
+			String[] keys=pairs[i].split("=");
+			for(String st : keys){
+			params.add(st);
+			}
+			}
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	    	Date   begin = null;
+	    	try {
+				   begin       = format.parse ( params.get(1) );
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+	    	Apartment apartment = apartmentDAO.findApartmentByID(Integer.parseInt(params.get(7)));
+	    	int totalPrice = (int) (apartment.getPrice()*Integer.parseInt(params.get(3)));
+	    	User guest = userDAO.findUser(params.get(5));
+			//int reservationID,Apartment apartment, Date beginDate, int numOfNights,
+			//int totalPrice, String message, User guest, String status
+			if(params.size()==10)
+				return new Reservation( ThreadLocalRandom.current().nextInt(100, 1000000 + 1),apartment,begin,Integer.parseInt(params.get(3)),totalPrice,params.get(10),guest,"created");
+			else return new Reservation(ThreadLocalRandom.current().nextInt(100, 1000000 + 1),apartment,begin,Integer.parseInt(params.get(3)),totalPrice,"",guest,"created");
+		
+			
+		}
+
+		public static String getBody(HttpServletRequest request) throws IOException {
+
+		    String body = null;
+		    StringBuilder stringBuilder = new StringBuilder();
+		    BufferedReader bufferedReader = null;
+
+		    try {
+		        InputStream inputStream = request.getInputStream();
+		        if (inputStream != null) {
+		            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		            char[] charBuffer = new char[128];
+		            int bytesRead = -1;
+		            while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+		                stringBuilder.append(charBuffer, 0, bytesRead);
+		            }
+		        } else {
+		            stringBuilder.append("");
+		        }
+		    } catch (IOException ex) {
+		        throw ex;
+		    } finally {
+		        if (bufferedReader != null) {
+		            try {
+		                bufferedReader.close();
+		            } catch (IOException ex) {
+		                throw ex;
+		            }
+		        }
+		    }
+
+		    body = stringBuilder.toString();
+		    return body;
 		}
 	
 }

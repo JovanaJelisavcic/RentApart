@@ -2,6 +2,9 @@ package beans;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 public class User implements Serializable {
 	private static final long serialVersionUID = 6640936480584723344L;
@@ -14,7 +17,8 @@ public class User implements Serializable {
 	private String role;
 	private String newPass="";
 	private Apartment[] apartments; //i za domacine i za iznajmljene
-	private Reservation[] reservations; //samo za goste 
+	@JsonBackReference
+	private ArrayList<Reservation> reservations; //samo za goste 
 	
 	
 	
@@ -109,24 +113,42 @@ public class User implements Serializable {
 		this.apartments = apartments;
 	}
 
-	public Reservation[] getReservations() {
+	public ArrayList<Reservation> getReservations() {
 		return reservations;
 	}
 
-	public void setReservations(Reservation[] reservations) {
-		this.reservations = reservations;
+	public void setReservations(ArrayList<Reservation> reservationsUsers) {
+		this.reservations = reservationsUsers;
+	}
+	
+	public void addReservation(Reservation reservation) {
+		reservations.add(reservation);
+		
 	}
 	
 
 	//in json format
 	@Override
 	public String toString() {
-		return new StringBuffer("{ \"firstName\" : ").append("\""+this.firstName+"\"")
+		StringBuffer finalString=new StringBuffer("{ \"firstName\" : ").append("\""+this.firstName+"\"")
                 .append(", \"lastName\" : ").append("\""+this.lastName+"\"")
                 .append(", \"sex\" : ").append("\""+this.sex+"\"")
                 .append(", \"username\" : ").append("\""+this.username+"\"")
                 .append(", \"password\" : ").append("\""+this.password+"\"")
-                .append(", \"role\" : ").append("\""+this.role+ "\"").append("}").toString();
+                .append(", \"role\" : ").append("\""+this.role+ "\"");
+		if(reservations!=null){
+		finalString.append(", \"reservations\" : [ ");
+		for(int i=0; i<this.reservations.size(); i++){
+			Reservation reservation= reservations.get(i);
+			finalString.append(" \""+reservation+"\" ,");
+		}
+		finalString.deleteCharAt(finalString.lastIndexOf(","));
+		finalString.append("]");}
+		
+		 String realfinal = finalString.append("}").toString();
+		 return realfinal;
 	}
+
+	
 
 }

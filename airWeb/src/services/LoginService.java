@@ -149,7 +149,7 @@ public class LoginService {
 	private User retreiveInfo(String payloadRequest) {
 		ArrayList<String> params = new ArrayList<>();
 		//username=administer&password=58fk4d&firstName=JOvana&lastName=Doe&sex=male&newPass=s&role=admin
-		System.out.println(payloadRequest);
+		System.out.println("register/changeuser request"+payloadRequest);
 		String[]  pairs=  payloadRequest.split("&");
 		for(int i=0; i<pairs.length ; i++){
 		String[] keys=pairs[i].split("=");

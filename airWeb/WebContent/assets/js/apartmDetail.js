@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+	$("#reservationError").hide();
 	var apartment = JSON.parse(sessionStorage.apartForDetail);
 	
 	//imgs
@@ -88,7 +88,7 @@ $(document).ready(function() {
 	
 	
 	
-	//host, stars, comments
+	//host stars comments info
 	var nRed = $(document.createElement('br'));
 	
 	var hostDetail = $(document.createElement('span'));
@@ -99,6 +99,7 @@ $(document).ready(function() {
 	var nRed2 = $(document.createElement('br'));
 	$('#locationDetailInfo').append(nRed2);
 	
+	
 	for (i = 0; i <apartment['stars']; i++) {
 		var sD1 = $(document.createElement('i'));
 		$(sD1).attr('class', 'fa fa-star fa-2x text-primary');
@@ -108,7 +109,7 @@ $(document).ready(function() {
 	var raymak = $(document.createElement('span'));
 	$('#locationDetailInfo').append(raymak);
 	
-	
+
 	var commentsDetail = $(document.createElement('p'));
 	$(commentsDetail).attr('class', 'small');
 	commNumD = Object.keys(apartment['comments']).length;
@@ -132,6 +133,7 @@ $(document).ready(function() {
 	//comments
 
 	for (i = 0; i < apartment['comments'].length; i++) {
+		if(apartment['comments'][i]['status']){
 		var commLi = $(document.createElement('li'));
 		$(commLi).attr('class', 'clearfix');
 		
@@ -171,6 +173,7 @@ $(document).ready(function() {
 		
 		$(commLi).append(commDiv);
 		$("#messagesListDetail").append(commLi);
+		}
 	}
 	
 	
@@ -285,21 +288,97 @@ $(document).ready(function() {
 	
 	
 	$('#calendar').availabilityCalendar(unavailableDates);
-			
+	var date= null;	
 	$("#calendarTable").selectable({
 		  filter: "td:not(.unavailable)",
 		  selected: function(event, ui) {
-			  var date = Date.parse($(".ui-selected").text()+" "+$('#monthLabel').text());
+			 // var innerDate = Date.parse($(".ui-selected").text()+" "+$('#monthLabel').text());
+			  var innerDate = new Date($(".ui-selected").text()+" "+$('#monthLabel').text());
 			  if($(".ui-selected").hasClass( "unavailable") || $(".ui-selected").hasClass( "ex-month")){
 					 $(".ui-selected").removeClass( "ui-selected");
-			  }else	if(date <=  new Date()){
+			  }else	if(innerDate <=  new Date()){
 					$(".ui-selected").removeClass( "ui-selected");
-			  }
-		  }	  
-		
+			  }else if($(".ui-selected").length>1){
+				    $(".ui-selected").removeClass( "ui-selected");
+			  }else date=innerDate;
+		  },
+		  unselected: function(event, ui) {
+			 date=null;
+		  }
 	});
 	
-	 $('[data-toggle="datepicker"]').datepicker();
+	 $("#reservationError").css("color","#ff0000");
+  	  $("#reservationError").css("margin","150px");
+  	  $("#reservationError").css("padding","5px");
+  	  $("#reservationError").css("border-style","solid");
+  	  $("#reservationError").css("border-width","2px");
+  	  $("#reservationError").css("border-radius","5px");
+  	  $("#reservationError").css("border-color","#ff0000");
+  	  $("#reservationError").css("font-size","larger");
+	 
+  
+	 //makeReservation button
+  	const regex = new RegExp('^[1-9]\\d*$');
+	$("#makeReservationButton").click(function(event){
+		var numNights = $('input[name="days"]').val();
+		var message = $('input[name="message"]').val();
+		//validation
+			if(date==null){
+   		      $("#reservationError").text("You have to pick one date from the calendar"); 
+   		      $("#reservationError").show();
+			}else if(numNights==null || numNights=="" ){
+				$("#reservationError").text("You have to type in the number of nights you'll stay"); 
+	   		    $("#reservationError").show();
+			}else if(!regex.test(numNights)){
+				$("#reservationError").text("The number of nights has to be a whole number bigger than 0"); 
+	   		    $("#reservationError").show();
+			}else {
+				//action
+				$("#reservationError").hide();
+				if(sessionStorage.user==null){
+				    location.replace("http://localhost:8080/airWeb/login.html");
+				}else{
+					
+					var finalDate =date.toISOString();
+					 $.ajax({
+					        url: "rest/apartments/reservate",
+					        type: "POST",
+					        data: $.param({
+					        	date: finalDate,
+					        	numOfNights: numNights,
+					            username : sessionStorage.user,
+					            apartmID : apartment["id"],
+					             message: message
+					      }),
+					        contentType: 'application/json',
+					        success: function(response) {
+					        	$("#reservationError").css("border-color","#2da873");
+					        	$("#reservationError").css("color","#2da873");
+					        	$("#reservationError").text("Reservation successful!"); 
+					   		    $("#reservationError").show();
+					        },
+					        error: function(data, textStatus, xhr) {
+					        	$("#reservationError").text(data.responseText); 
+					   		    $("#reservationError").show();
+					        }
+					      });
+				}
+				
+			}
+			//alert(date+" "+$('input[name="days"]').val()+ " "+ $('input[name="message"]').val() );
+			//window.location.href='login.html';
+
+	});
+	//close for users
+	$("#closeDetail").hide();
+	if(sessionStorage.user!=null){
+		$("#closeDetail").show();
+		$("#closeDetail").click(function(event){
+		location.replace("http://localhost:8080/airWeb/app.html");
+	});
+	}
+	
+	
 	
 	
 });

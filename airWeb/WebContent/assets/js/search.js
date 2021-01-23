@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+	sessionStorage.apartForDetail = null;
 	$("#searchButton").click(function(event){
 		  $("#searchResults").hide();
 		  $("#searchItems").empty();

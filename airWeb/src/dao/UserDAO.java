@@ -4,13 +4,16 @@ package dao;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import beans.Reservation;
 import beans.User;
 
 public class UserDAO {
@@ -124,7 +127,6 @@ public class UserDAO {
         	System.out.println("write here:"+ctx + "/assets/jsons/adminsinfo.json");
         	fileWrite.write(users.toJSONString());
         	users.forEach(v->System.out.println(v));
-        	
         	  
  
         } catch (IOException e) {
@@ -170,6 +172,35 @@ public class UserDAO {
 	public User findUser(String username) {
 		User user = users.get(username);
 		return user;
+		
+	}
+
+	public void fillReservationInUsers(Map<Integer, Reservation> reservations) {
+		for (Map.Entry<String, User> entry : users.entrySet()) {
+			   User user =  entry.getValue();
+			   if(user.getRole().equals("guest")){
+			   ArrayList<Reservation> reservationsUsers = new ArrayList<>();
+			     for (Reservation reservation : reservations.values()) {
+			    	 
+				   if (reservation.getGuest().getUsername().equals(user.getUsername())){
+					   reservationsUsers.add(reservation);
+				   }
+				}
+			   
+			   user.setReservations(reservationsUsers);
+			}
+			
+		}
+		System.out.println("loaded reservations into users ");
+		users.forEach((id,user) -> System.out.println("id"+" : "+id + "," +"reservations"+" : "+user.getReservations()));
+	}
+
+	public void addReservation(Reservation reservation) {
+		User oldValue = reservation.getGuest();
+		User newValue = oldValue;
+		newValue.addReservation(reservation);
+		users.replace(oldValue.getUsername(), oldValue, newValue);
+		
 		
 	}
 	 	

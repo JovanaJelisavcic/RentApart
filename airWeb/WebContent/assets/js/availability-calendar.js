@@ -34,6 +34,7 @@
 			var self = this;
 
 			$inputs.eq(0).on('click', function () {
+				
 				self.date = new Date();
 				self.date.setDate(1);
 				self.renderMonth();
@@ -167,7 +168,8 @@
 			this.$monthLabel.html(months[month] + ' ' + year);
 			this.$cells.removeClass('ex-month');
 			this.$cells.filter('.unavailable').removeClass('unavailable').children().remove();
-
+			this.$cells.filter('.ui-selected').removeClass('ui-selected');
+			
 			this.__addPreviousMonthDays(date, cellIndexes, dates);
 			this.__addThisMonthDays(date, year, month, cellIndexes, dates);
 			this.__addNextMonthDays(date, month, cellIndexes, dates);

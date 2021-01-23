@@ -307,6 +307,14 @@ public class ApartmentDAO {
 		
 	}
 
+	public void addReservation(Reservation reservation) {
+		Apartment oldValue = reservation.getApartment();
+		Apartment newValue = oldValue;
+		newValue.addReservation(reservation);
+		apartments.replace(oldValue.getId(), oldValue, newValue);
+		
+	}
+
 	
 
 	 	

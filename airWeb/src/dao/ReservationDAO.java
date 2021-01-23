@@ -1,6 +1,7 @@
 package dao;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,8 +20,10 @@ import beans.User;
 public class ReservationDAO {
 	
     private Map<Integer, Reservation> reservations = new HashMap<>();
-	
+    
+    private static FileWriter fileWrite;
 	private static FileReader fileReader;	
+	private String ctx;
 	
 	private UserDAO users;
 	private ApartmentDAO apartments;
@@ -30,10 +33,12 @@ public class ReservationDAO {
 	}
 	
 	public ReservationDAO(String contextPath,UserDAO userDAO,ApartmentDAO apartmentDAO) {
+		ctx = contextPath;
 		users = userDAO;
 		apartments=apartmentDAO;
 		loadReservations(contextPath);
 		apartments.fillReservationsInApartments(reservations);
+		users.fillReservationInUsers(reservations);
 		System.out.println("loaded reservations ");
 		reservations.forEach((id,reservation) -> System.out.println("id"+" : "+id + "," +"reservation"+" : "+reservation));
 
@@ -97,6 +102,69 @@ public class ReservationDAO {
 	        reservations.put(id,new Reservation(id,apartObject, begin, numOfNights,
 	    			 totalPrice, message, guestObject, status));
 	    }
+
+	public boolean saveReservation(Reservation reservation) {
+		  reservations.put(reservation.getReservationID(), reservation);
+   	   if(writeDown(convertReservations())){
+   		   users.addReservation(reservation);
+   		   apartments.addReservation(reservation);
+   		   return true;}
+   	   else return false;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean writeDown(JSONArray reservations){
+        try {
+
+        	fileWrite = new FileWriter(ctx+"/assets/jsons/reservations.json", false);
+        	System.out.println("write here:"+ctx + "/assets/jsons/reservations.json");
+        	fileWrite.write(reservations.toJSONString());
+        	reservations.forEach(v->System.out.println(v));
+        	
+        	  
+ 
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+ 
+        } finally {
+            if (fileWrite != null) try { fileWrite.close(); } catch (IOException ignore) {ignore.printStackTrace();}
+        }
+		return true;
+        
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONArray convertReservations(){
+		JSONArray convertedReservations = new JSONArray();
+		
+		 reservations.forEach((id,reservation) ->{
+		 
+		//final way object should look
+	        JSONObject obj = new JSONObject();
+	        //here I'll put the info about the user
+	        JSONObject reservOb=new JSONObject();
+
+	        reservOb.put("reservationID", reservation.getReservationID());
+	        reservOb.put("apartmentID", reservation.getApartment().getId());
+	        reservOb.put("beginDate", reservation.getBeginDate());
+	        reservOb.put("totalPrice", reservation.getTotalPrice());
+	        reservOb.put("numOfNights", reservation.getNumOfNights());
+	        reservOb.put("message", reservation.getMessage());
+	        reservOb.put("guest", reservation.getGuest().getUsername());
+	        reservOb.put("status", reservation.getStatus().toString());
+	        
+	        obj.put("reservation", reservOb);
+	        convertedReservations.add(obj);
+	        
+		 }); 
+		
+		return convertedReservations;
+		
+		
+	}
 
 
 }

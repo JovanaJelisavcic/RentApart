@@ -6,6 +6,7 @@ $(document).ready(function() {
 			type: "POST",
 			contentType: 'application/json',
 			success: function (response) {
+				sessionStorage.user = null;
 				location.replace("http://localhost:8080/airWeb/login.html");
 		    },
 		    error: function (response) {

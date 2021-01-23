@@ -38,7 +38,13 @@ $(document).ready(function() {
       }),
         contentType: 'application/json',
         success: function(response) {
-          location.replace("http://localhost:8080/airWeb/app.html");
+        	if(sessionStorage.getItem("apartForDetail") =="null"){
+				sessionStorage.user = username;
+				location.replace("http://localhost:8080/airWeb/apartmDetail.html");
+			}else{
+			sessionStorage.user = username;
+			location.replace("http://localhost:8080/airWeb/app.html");
+			}
         },
         error: function(data, textStatus, xhr) {
         	var text = data.responseText;

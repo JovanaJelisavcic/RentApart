@@ -30,6 +30,7 @@ public class Reservation implements Serializable{
 	private int numOfNights;
 	private int totalPrice;
 	private String message;
+	@JsonManagedReference
 	private User guest;
 	private Status status;
 	

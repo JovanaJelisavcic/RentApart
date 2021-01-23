@@ -108,6 +108,14 @@ public class Apartment implements Serializable{
 		return oneDayAfter;
 	}
 	
+	private Date addNights(Date date, int i ) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime( date );
+		cal.add( Calendar.DATE, i );
+        Date oneDayAfter = cal.getTime();;
+		return oneDayAfter;
+	}
+	
 	private void sortDates(ArrayList<TPeriod> dates) {
 		Collections.sort(dates, new Comparator<TPeriod>(){
 			public int compare(TPeriod t1, TPeriod t2){
@@ -244,6 +252,17 @@ public class Apartment implements Serializable{
 		sortDates(availability);
 	}
 
+	public boolean checkAvailability(Date begin, int i) {
+		Date end= addNights(begin,i);
+		boolean result= false;
+		for(TPeriod period : availability){
+			if (!begin.before(period.getBegin()) && !end.after(period.getEnd())){
+			   result = true;
+			   break;
+			}
+		}
+		return result;
+	}
 
 	public ArrayList<TPeriod> getAvailability() {
 		return availability;
@@ -300,6 +319,15 @@ public class Apartment implements Serializable{
 			finalString.deleteCharAt(finalString.lastIndexOf(","));
 			finalString.append("]");
 			
+			if(reservations!=null){
+				finalString.append(", \"reservations\" : [ ");
+				for(int i=0; i<this.reservations.size(); i++){
+					Reservation reservation= reservations.get(i);
+					finalString.append(" \""+reservation+"\" ,");
+				}
+				finalString.deleteCharAt(finalString.lastIndexOf(","));
+				finalString.append("]");}
+			
 			
             String realfinal = finalString.append("}").toString();
 			
@@ -308,7 +336,11 @@ public class Apartment implements Serializable{
 	                
 		}
 
-		
+		public void addReservation(Reservation reservation) {
+			reservations.add(reservation);
+			
+		}
+
 
 		
 
