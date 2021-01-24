@@ -4,12 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "id")
+
+
 public class Reservation implements Serializable{
 	
 	/**
@@ -23,6 +20,9 @@ public class Reservation implements Serializable{
 		  ACCEPTED,
 		  DONE
 		}
+	/*@JsonIdentityInfo(
+			  generator = ObjectIdGenerators.PropertyGenerator.class, 
+			  property = "reservationID")*/
 	private int reservationID;
 	@JsonManagedReference
 	private Apartment apartment;
@@ -123,7 +123,8 @@ public class Reservation implements Serializable{
 	                .append(", \"totalPrice\" : ").append("\""+this.totalPrice+"\"")
 	                .append(", \"message\" : ").append("\""+this.message+"\"")
 	                .append(", \"status\" : ").append("\""+this.status+"\"")
-	                .append(", \"guest\" : ").append("\""+this.guest.getUsername()+"\"").append("}").toString();
+	                .append(", \"guest\" : ").append("\""+this.guest.getUsername()+"\"")
+			        .append(", \"id\" : ").append("\""+this.reservationID+"\"").append("}").toString();   
 		}
 
 

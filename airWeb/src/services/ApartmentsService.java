@@ -211,7 +211,35 @@ public class ApartmentsService {
 			
 		}
 		
+		@GET
+		@Path("getUserReservations")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getUserReservations(@Context HttpServletRequest request) {
+			User user = (User) request.getSession().getAttribute("user");
+			if(!user.getRole().equals("guest")){
+				return Response.status(403).build();
+			}else{
+			ArrayList<Reservation> reservs = user.getReservations();
+			Collection<Reservation> colreserv = reservs;
+		    return Response.status(200).entity(colreserv).build();
+			}
+		}
 		
+		@POST
+		@Path("giveUpOnReservation")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response giveUpOnReservation(@Context HttpServletRequest request) {
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("reservation request: "+payloadRequest);
+			return Response.status(200).build();
+			
+		}
 		
 		
 		//utils
