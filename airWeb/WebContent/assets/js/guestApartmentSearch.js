@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	var amenities= null;
+	//search utils
 	$("#searchButton").click(function(event){
 		  $("#searchResults").hide();
 		  $("#searchItems").empty();
@@ -33,7 +34,7 @@ $(document).ready(function() {
           check_in = check_in.toISOString();
           check_out = check_out.toISOString();
 		  }
-		  
+		  //fetch apartments
 		$.ajax({
 			url : "rest/apartments/getApartments",
 			type: "GET",
@@ -47,6 +48,7 @@ $(document).ready(function() {
 						type: "GET",
 						contentType: 'application/json',
 						success: function (response) {
+							 //fetch all amenities
 							amenities =response;
 							for (i = 0; i < amenities.length; i++) {
 								/*filters
@@ -62,7 +64,8 @@ $(document).ready(function() {
 								
 								var amenityFilterInput = $(document.createElement('input'));
 								$(amenityFilterInput).attr('type', 'checkbox');
-								$(amenityFilterInput).attr('class', 'icheck');
+								$(amenityFilterInput).attr('class', 'icheck amenityClass');
+								$(amenityFilterInput).attr('id', amenities[i]["id"]);
 								
 								$(amenityFilterLabel).append(amenityFilterInput);
 								$(amenityFilterLabel).append(amenities[i]["amenitie"]);
@@ -76,7 +79,7 @@ $(document).ready(function() {
 						}
 					});
 				}
-				      //toolbar
+				      //sort utils
 				      var sort = $(document.createElement('button'));
 				      $(sort).attr('class', 'book-btn pull-right');
 				      $(sort).append("sort by price ");
@@ -102,9 +105,41 @@ $(document).ready(function() {
 				    	});
 				      $("#searchToolbar").append(sort);
 				      
-
+				      //draw everything
 				    response.forEach(drawResult);		
 				   $("#searchResults").show();
+				   
+				   //filter handle
+				   $("#applyFilterButton").click(function(event){
+					   response.forEach(returnDisplay);
+					   if($("#room").is(':checked') && $("#place").is(':checked')){
+							//response.forEach(returnDisplay);							
+						}else if($("#room").is(':checked')){
+							response.forEach(filterRoom);							
+						}else if($("#place").is(':checked')){
+							response.forEach(filterWholePlace);							
+						}
+					   
+					   //skupi sve idove koji su checkirani 
+					   
+					   var amenitiesForFilter = [];
+					   
+					   $(".amenityClass:checkbox").each(function(){
+						    var $this = $(this);
+
+						    if($this.is(":checked")){
+						    	amenitiesForFilter.push($this.attr("id"));
+						    }
+						});
+					  
+					   if(amenitiesForFilter.length!=0){
+						   response.forEach(function (item, index) {
+							    filterByAmenities(amenitiesForFilter, item, index)
+						   });
+						}
+					   
+					      
+					});
 		    },
 		    error: function(data, textStatus, xhr) {
 	        	var text = data.responseText;
@@ -129,15 +164,11 @@ $(document).ready(function() {
 });
 	
 	function drawResult(apartment) {
-
-		
-		
-		
 		
 		//results
 		var container = $(document.createElement('div'));
-		$(container).attr('class', 'col-md-4 col-sm-6');
-		
+		$(container).attr('class', 'col-md-4 col-sm-6 pass-filter');
+		$(container).attr('id', 'apartment'+apartment["id"]);
 	
 		
 		var single_package = $(document.createElement('div'));
@@ -311,6 +342,45 @@ $(document).ready(function() {
 		
 	}
 	
+	function filterWholePlace(apartment){
+		alert(apartment["type"].toUpperCase()+ '#apartment'+apartment["id"]);
+		if(apartment["type"].toUpperCase() != "WHOLE PLACE"){
+			
+			$('#apartment'+apartment["id"]).removeClass("pass-filter");
+			$('#apartment'+apartment["id"]).addClass("no-pass-filter");
+		}
+	}
 	
+	function filterRoom(apartment){
+		if(apartment["type"].toUpperCase() != "PRIVATE ROOM"){
+			
+			$('#apartment'+apartment["id"]).removeClass("pass-filter");
+			$('#apartment'+apartment["id"]).addClass("no-pass-filter");
+		}
+	}
+	
+	function returnDisplay(apartment){
 
+		$('#apartment'+apartment["id"]).removeClass("no-pass-filter");
+		$('#apartment'+apartment["id"]).addClass("pass-filter");
+			
+	}
+	
+	function filterByAmenities(amenitiesForFilter, apartment, index){
+		var passes = true;
+		var amnts = [];
+		for(var j=0; j<apartment["amenities"].length; j++){
+			amnts.push(""+apartment["amenities"][j]["id"]);
+		}
+
+		for(var i=0; i<amenitiesForFilter.length; i++){
+			if(!amnts.includes(""+amenitiesForFilter[i])){
+				passes=false;
+			}	
+		}
+		if(passes!=true){
+			$('#apartment'+apartment["id"]).removeClass("pass-filter");
+			$('#apartment'+apartment["id"]).addClass("no-pass-filter");
+		}	
+}
 });
