@@ -10,6 +10,8 @@ $(document).ready(function() {
 			data : $.param({ username: username, password : password}),
 			contentType: 'application/json',
 			success: function (response) {
+				if(response.role=="guest"){
+				
 				if(sessionStorage.getItem("apartForDetail")!="null"){
 					sessionStorage.user = username;
 					location.replace("http://localhost:8080/airWeb/apartmDetail.html");
@@ -17,6 +19,10 @@ $(document).ready(function() {
 					
 				sessionStorage.user = username;
 				location.replace("http://localhost:8080/airWeb/app.html");
+				}
+				}else if(response.role=="host"){
+					sessionStorage.user = username;
+					location.replace("http://localhost:8080/airWeb/hostApp.html");
 				}
 		    },
 		    error: function (data, textStatus, xhr) {

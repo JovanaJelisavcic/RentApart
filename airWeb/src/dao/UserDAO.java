@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import beans.Apartment;
 import beans.Reservation;
 import beans.User;
 
@@ -209,6 +210,27 @@ public class UserDAO {
 		User newValue = oldValue;
 		newValue.removeReservation(reservation);
 		users.replace(oldValue.getUsername(), oldValue, newValue);
+	}
+
+	public void fillApartmentsInHosts(Map<Integer, Apartment> apartments) {
+		for (Map.Entry<String, User> entry : users.entrySet()) {
+			   User user =  entry.getValue();
+			   if(user.getRole().equals("host")){
+			   ArrayList<Apartment> apartmentsUsers = new ArrayList<>();
+			     for (Apartment apartment : apartments.values()) {
+			    	 
+				   if (apartment.getHost().getUsername().equals(user.getUsername())){
+					   apartmentsUsers.add(apartment);
+				   }
+				}
+			   
+			   user.setApartments(apartmentsUsers);
+			}
+			
+		}
+		System.out.println("loaded apartments into hosts ");
+		users.forEach((id,user) -> System.out.println("id"+" : "+id + "," +"apartments"+" : "+user.getApartments()));
+		
 	}
 	 	
 	

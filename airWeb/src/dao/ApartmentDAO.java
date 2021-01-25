@@ -48,6 +48,7 @@ public class ApartmentDAO {
 		amenitiesDAO = amenityDAO;
 		ctx=contextPath;
 		loadApartments(contextPath);
+		users.fillApartmentsInHosts(apartments);
 		System.out.println("loaded apartments");
 		apartments.forEach((id,apartment) -> System.out.println(id+" : "+apartment));
 	}

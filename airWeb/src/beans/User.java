@@ -16,7 +16,7 @@ public class User implements Serializable {
 	private String password;
 	private String role;
 	private String newPass="";
-	private Apartment[] apartments; //i za domacine i za iznajmljene
+	private ArrayList<Apartment> apartments;  
 	@JsonBackReference
 	private ArrayList<Reservation> reservations; //samo za goste 
 	
@@ -105,11 +105,11 @@ public class User implements Serializable {
 	}
 	
 	
-	public Apartment[] getApartments() {
+	public ArrayList<Apartment> getApartments() {
 		return apartments;
 	}
 
-	public void setApartments(Apartment[] apartments) {
+	public void setApartments(ArrayList<Apartment> apartments) {
 		this.apartments = apartments;
 	}
 
