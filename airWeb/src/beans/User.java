@@ -126,6 +126,10 @@ public class User implements Serializable {
 		
 	}
 	
+	public void removeReservation(Reservation reservation) {
+		reservations.remove(reservation);
+	}
+	
 
 	//in json format
 	@Override
@@ -148,6 +152,8 @@ public class User implements Serializable {
 		 String realfinal = finalString.append("}").toString();
 		 return realfinal;
 	}
+
+	
 
 	
 

@@ -203,6 +203,13 @@ public class UserDAO {
 		
 		
 	}
+
+	public void removeReservation(Reservation reservation) {
+		User oldValue = reservation.getGuest();
+		User newValue = oldValue;
+		newValue.removeReservation(reservation);
+		users.replace(oldValue.getUsername(), oldValue, newValue);
+	}
 	 	
 	
 }

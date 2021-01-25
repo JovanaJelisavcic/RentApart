@@ -126,7 +126,7 @@
 {"begin" : "2021-06-12T05:00:00.000Z", "end" : "2021-06-30T05:00:00.000Z"},
 {"begin" : "2021-07-10T05:00:00.000Z", "end" : "2021-12-30T05:00:00.000Z"}],
 "host":"tokyo",
-"comments":[{"user": "eva", "comment":"Tidy and clean. Great view", "stars" : "5", "status" : "active"},{"user": "pureevil", "comment":"Definitely will be coming back", "stars" : "5", "status" : "active"},{"user": "siennaculo", "comment":"Algunos elementos de la cocina estaban un poco rotos, pero el resto era excelente", "stars" : "4", "status" : "active"},{"user": "zokaklatnakoka", "comment":"The kitchen is not so functioning, there's no elevator in the building..but mostly nice", "stars" : "3", "status" : "active"}],
+"comments":[{"user": "eva", "comment":"Tidy and clean. Great view", "stars" : "5", "status" : "active"},{"user": "pureevil", "comment":"Definitely will be coming back", "stars" : "5", "status" : "active"},{"user": "siennachulo", "comment":"Algunos elementos de la cocina estaban un poco rotos, pero el resto era excelente", "stars" : "4", "status" : "active"},{"user": "zokazlatnakoka", "comment":"The kitchen is not so functioning, there's no elevator in the building..but mostly nice", "stars" : "3", "status" : "active"}],
 "images":["bed6.jpg", "bathroom6.jpg", "livin6.jpg"],
 "pricePerNight":"70",
 "checkin":"11AM",

@@ -29,20 +29,23 @@ $(document).ready(function() {
 				    	  		  });
 				    	  		$("#orderReserv").text("desc");
 				    	  		$("#reservationsList").empty();
-				    	  		response.forEach(drawReservation);		
+				    	  		response.forEach(drawReservation);
+				    	  		putGiveUpListener();
 				    	  	}else{
 				    	  		response.sort(function(a,b){
 				    	  		    return b.totalPrice - a.totalPrice;
 				    	  		  });
 				    	  		$("#orderReserv").text("asc");
 				    	  		$("#reservationsList").empty();
-				    	  		response.forEach(drawReservation);		
+				    	  		response.forEach(drawReservation);
+				    	  		putGiveUpListener();
 				    	  	}
 				    	});
 				      $("#sortReservations").append(sortReserv);
 					
 					
-				response.forEach(drawReservation);		
+				response.forEach(drawReservation);
+				putGiveUpListener();
 				}else{
 					var titleReserv = $(document.createElement('h4'));
 					$(titleReserv).attr('class', 'card-title'); 
@@ -72,32 +75,85 @@ $(document).ready(function() {
 			var giveup = $(document.createElement('button'));
 			$(giveup).attr('class', 'book-btn give-up-class'); 
 			$(giveup).attr('type', 'button'); 
-			$(giveup).attr('id', 'giveUp'+reservation['reservationID']); 
+			$(giveup).attr('id', 'giveUp-'+reservation['reservationID']); 
 			$(giveup).css('margin-left', '10px');
 			$(giveup).append("Give Up");
 			$(buttons).append(giveup);
-			$("#giveUp"+reservation['reservationID']).click(function(event){
-				$.ajax({
-					url : "rest/begin/giveUpOnReservation",
-					type: "POST",
-					data : $.param({ reservationID: reservation['reservationID']}),
-					contentType: 'application/json',
-					success: function (response) {
-						alert("you gave up ");
-				    },
-				    error: function (response) {
-				    	alert("dont ggive up ");
-				    }
-					});
-				});
+			
 			}
 			if(reservation["status"].toUpperCase()=="REFUSED" || reservation["status"].toUpperCase()=="DONE" ){
+				var wholeDiv = $(document.createElement('div'));
+				$(wholeDiv).attr('id', 'whole-'+reservation['reservationID']);
+				$(buttons).append(wholeDiv);
+				var stardiv = $(document.createElement('div'));
+				$(stardiv).html('<fieldset class="rating"> <input type="radio" id="star5-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="5" /> <label class="full" for="star5-'+reservation['reservationID']+'" title="Awesome - 5 stars"></label> <input type="radio" id="star4-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="4" /> <label class="full" for="star4-'+reservation['reservationID']+'" title="Pretty good - 4 stars"></label><input type="radio" id="star3-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="3" /><label class="full" for="star3-'+reservation['reservationID']+'" title="Meh - 3 stars"></label> </label> <input type="radio" id="star2-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'"value="2" /><label class="full" for="star2-'+reservation['reservationID']+'"title="Kinda bad - 2 stars"></label> <input type="radio" id="star1-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="1" /><label class="full" for="star1-'+reservation['reservationID']+'" title="Very very bad - 1 star"></label> <input type="radio" class="reset-option" name="rating-'+reservation['reservationID']+'" value="reset" /> </fieldset>');
+				$(wholeDiv).append(stardiv);
+				
+				
+				 
+				
+				
+			var divcomment = $(document.createElement('div'));
+			$(divcomment).attr('class', 'form-group');
+			var textAreaComment = $(document.createElement('textarea'));
+			$(textAreaComment).attr('class', 'form-control rounded-0');
+			$(textAreaComment).attr('id', 'commentTextA-'+reservation['reservationID']);
+			$(textAreaComment).attr('placeholder', 'Write your comment here...');
+			$(textAreaComment).attr('rows', '4');
+			$(divcomment).append(textAreaComment);
+			$(wholeDiv).append(divcomment);
+			
+			var errorComment = $(document.createElement('label'));
+			$(errorComment).css('display', 'none');
+			$(errorComment).css("color","red");
+			$(divcomment).append(errorComment);
+			
+			var successLabReview = $(document.createElement('label'));
+			$(successLabReview).text('Successfully commented on a reservation ');
+			$(successLabReview).css("color","green");
+			$(successLabReview).css('display', 'none');
+			
 			var review = $(document.createElement('button'));
 			$(review).attr('class', 'book-btn');
 			$(review).attr('type', 'button'); 
-			$(giveup).css('margin-right', '10px'); 
+			$(review).attr('id', 'review-'+reservation['reservationID']); 
+			$(review).css('margin-right', '10px'); 
 			$(review).append("Review");
-			$(buttons).append(review);
+			$(wholeDiv).append(review);
+			$(review).click(function(event){
+				$(errorComment).css('display', 'none');
+				starsNumber= $("input[name=\"rating-"+reservation['reservationID']+"\"]:checked").val();
+				var reviewVar = $(textAreaComment).val();
+				alert(reviewVar);
+				if(reviewVar!="" && starsNumber!=0){
+				
+				$.ajax({
+					url : "rest/apartments/leaveAComment",
+					type: "POST",
+					data : $.param({ comment: reviewVar, apartmantID : reservation['apartment']['id'], starsNum : starsNumber }),
+					contentType: 'application/json',
+					success: function (response) {
+						$('#whole-'+reservation['reservationID']).css('display', 'none');
+				    	$(successLabReview).css('display', 'block');
+				    	$(buttons).append(successLabReview);
+						starsNumber=0;
+				    },
+				    error: function (data, textStatus, xhr) {
+				    	$(errorComment).text('Something went wrong. Check your connection');
+				    	$(errorComment).css('display', 'block');
+				    	starsNumber=0;
+				    	 
+				    }
+				
+				});
+				}else {
+					$(errorComment).text("You have to write something and rate first");
+					$(errorComment).css('display', 'block');
+					
+					
+				}
+			});
+			
 			}
 			var media = $(document.createElement('div'));
 			$(media).attr('class', 'media'); 
@@ -125,6 +181,7 @@ $(document).ready(function() {
 			var statusReserve = $(document.createElement('span'));
 			$(statusReserve).attr('class', 'badge badge-primary mx-3');
 			$(statusReserve).css('margin-left', '10px');
+			$(statusReserve).attr('id', "status-"+reservation['reservationID']);
 			$(statusReserve).append(reservation['status']);
 			$(h5).append(statusReserve);
 			
@@ -254,6 +311,32 @@ $(document).ready(function() {
 			
 		}
 
+		function putGiveUpListener(){
+
+			$(".give-up-class").each(function (index, value) {
+				this.addEventListener('click', function() {
+				  var id = this.id;
+				  var resID = id.slice(7);
+					$.ajax({
+						url : "rest/apartments/giveUpOnReservation",
+						type: "POST",
+						data : $.param({ reservationID: resID}),
+						contentType: 'application/json',
+						success: function (response) {
+							$("#status-"+resID).text("GIVEUP");
+							$("#giveUp-"+resID).css("display", "none");
+					    },
+					    error: function (data, textStatus, xhr) {
+					    	alert("dont give up");
+					    	 
+					    }
+				});
+			  });
+			});
+			
+		}
+		
+		
 	
 
 });

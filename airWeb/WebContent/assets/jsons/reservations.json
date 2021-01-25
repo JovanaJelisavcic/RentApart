@@ -24,5 +24,6 @@
 {"reservation" : {"reservationID":"24","apartmentID": "3", "beginDate": "2021-02-25T05:00:00.000Z", "totalPrice": "180", "numOfNights": "3", "message" : "", "guest": "plamena", "status" : "created"}},
 {"reservation" : {"reservationID":"25","apartmentID": "4", "beginDate": "2021-02-08T05:00:00.000Z", "totalPrice": "264", "numOfNights": "3", "message" : "", "guest": "plamena", "status" : "refused"}},
 {"reservation" : {"reservationID":"26","apartmentID": "6", "beginDate": "2021-01-15T05:00:00.000Z", "totalPrice": "280", "numOfNights": "4", "message" : "", "guest": "tado", "status" : "done"}},
+{"reservation" : {"reservationID":"29","apartmentID": "4", "beginDate": "2021-01-01T05:00:00.000Z", "totalPrice": "176", "numOfNights": "2", "message" : "", "guest": "tado", "status" : "done"}},
 {"reservation" : {"reservationID":"27","apartmentID": "6", "beginDate": "2021-01-23T05:00:00.000Z", "totalPrice": "280", "numOfNights": "4", "message" : "", "guest": "petrana", "status" : "done"}},
 {"reservation" : {"reservationID":"28","apartmentID": "7", "beginDate": "2021-02-27T05:00:00.000Z", "totalPrice": "148", "numOfNights": "2", "message" : "", "guest": "snalica", "status" : "giveup"}}]

@@ -341,6 +341,16 @@ public class Apartment implements Serializable{
 			
 		}
 
+		public void removeReservation(Reservation reservation) {
+			reservations.remove(reservation);
+			
+		}
+
+		public void addComment(Comment newComment) {
+			comments.add(newComment);
+			
+		}
+
 
 		
 

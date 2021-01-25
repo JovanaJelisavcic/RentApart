@@ -2,6 +2,7 @@ package dao;
 
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,8 +31,10 @@ public class ApartmentDAO {
   
 	
 	private Map<Integer, Apartment> apartments = new HashMap<>();
+	 private static FileWriter fileWrite;
+	private static FileReader fileReader;
+	private String ctx;
 	
-	private static FileReader fileReader;	
 	private UserDAO users;
 	private AmenityDAO amenitiesDAO;
 
@@ -43,6 +46,7 @@ public class ApartmentDAO {
 		
 		users = userDAO;
 		amenitiesDAO = amenityDAO;
+		ctx=contextPath;
 		loadApartments(contextPath);
 		System.out.println("loaded apartments");
 		apartments.forEach((id,apartment) -> System.out.println(id+" : "+apartment));
@@ -315,7 +319,142 @@ public class ApartmentDAO {
 		
 	}
 
+	public void removeReservation(Reservation reservation) {
+		Apartment oldValue = reservation.getApartment();
+		Apartment newValue = oldValue;
+		newValue.removeReservation(reservation);
+		apartments.replace(oldValue.getId(), oldValue, newValue);
+		
+	}
+
+	public boolean addComment(Comment newComment, int apartmentID) {
+		Apartment oldValue = apartments.get(apartmentID);
+		Apartment newValue = oldValue;
+		newValue.addComment(newComment);
+		apartments.replace(oldValue.getId(), oldValue, newValue);
+		if(saveApartments())
+		return true;
+		else return false;
+	}
+
+	public boolean saveApartments() {
+ 	   if(writeDown(convertReservations()))
+ 		   return true;
+ 	   else return false;
+
+	}
 	
+	
+	@SuppressWarnings("unchecked")
+	private boolean writeDown(JSONArray apartments){
+        try {
+
+        	fileWrite = new FileWriter(ctx+"/assets/jsons/apartments.json", false);
+        	System.out.println("write here:"+ctx + "/assets/jsons/apartments.json");
+        	fileWrite.write(apartments.toJSONString());
+        	apartments.forEach(v->System.out.println(v));
+        	
+        	  
+ 
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+ 
+        } finally {
+            if (fileWrite != null) try { fileWrite.close(); } catch (IOException ignore) {ignore.printStackTrace();}
+        }
+		return true;
+        
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONArray convertReservations(){
+		JSONArray convertedApartments = new JSONArray();
+		
+		   apartments.forEach((id,apartment) ->{
+		 
+		//final way object should look
+	        JSONObject obj = new JSONObject();
+	        //here I'll put the info about the user
+	        JSONObject apartOb=new JSONObject();
+
+	        apartOb.put("id", apartment.getId());
+	        apartOb.put("type", apartment.getType());
+	        apartOb.put("roomCap", apartment.getRoomCap());
+	        apartOb.put("guestCap", apartment.getGuestsCap());
+	        apartOb.put("host", apartment.getHost().getUsername());
+	        apartOb.put("pricePerNight", apartment.getPrice());
+	        apartOb.put("checkin", apartment.getCheckin());
+	        apartOb.put("checkout", apartment.getCheckout());
+	        if(apartment.isStatus())
+	        apartOb.put("status", "active");
+	        else apartOb.put("status", "inactive");
+	        
+	        
+	        //freedates
+	        JSONArray freeDates = new JSONArray();
+	        for(TPeriod period : apartment.getFreeDates()) {
+	        	
+	        	String isoDatePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+	        	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(isoDatePattern);
+
+	        	String begin = simpleDateFormat.format(period.getBegin());
+	        	String end = simpleDateFormat.format(period.getEnd());
+	        	JSONObject periodOb = new JSONObject();
+	        	periodOb.put("begin", begin);
+	        	periodOb.put("end", end);
+	        	freeDates.add(periodOb);
+	        }
+	        apartOb.put("freeDates", freeDates);
+	        //images
+	        JSONArray images = new JSONArray();
+	        for(String image : apartment.getImages()) {
+	        	images.add(image);
+	        }
+	        apartOb.put("images", images);
+	        //amenities
+	        JSONArray amenities = new JSONArray();
+	        for(Amenity amn : apartment.getAmenities()) {
+	        	amenities.add(amn.getId());
+	        }
+	        apartOb.put("amenities", amenities);
+	        //comments
+	        JSONArray comments = new JSONArray();
+	        for(Comment comment : apartment.getComments()) {
+	        	JSONObject commentOb = new JSONObject();
+	        	commentOb.put("user", comment.getGuest().getUsername());
+	        	commentOb.put("comment", comment.getComment());
+	        	commentOb.put("stars", comment.getStars());
+	        	if(comment.isStatus())
+	     	        apartOb.put("status", "active");
+	     	        else apartOb.put("status", "inactive");
+	        	comments.add(commentOb);
+	        }
+	        
+	        apartOb.put("comments", comments);
+	        
+	        //location
+	   
+	        JSONObject locationOB = new JSONObject();
+	        locationOB.put("gWidth", apartment.getLocation().getgWidth());
+	        locationOB.put("gLength", apartment.getLocation().getgLength());
+	        locationOB.put("street", apartment.getLocation().getAdress().getStreet());
+	        locationOB.put("place", apartment.getLocation().getAdress().getPlace());
+	        locationOB.put("state", apartment.getLocation().getAdress().getState());
+	        locationOB.put("postalCode", apartment.getLocation().getAdress().getPostalCode());
+	        apartOb.put("location", locationOB);
+	        //end
+	        obj.put("apartment", apartOb);
+	        convertedApartments.add(obj);
+	        
+		 }); 
+		
+		return convertedApartments;
+		
+		
+	}
 
 	 	
 }

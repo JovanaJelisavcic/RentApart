@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartment;
+import beans.Comment;
 import beans.Reservation;
 import beans.User;
 import dao.AmenityDAO;
@@ -237,7 +238,43 @@ public class ApartmentsService {
 				e.printStackTrace();
 			}
 			System.out.println("reservation request: "+payloadRequest);
+			String[] keys=payloadRequest.split("=");
+			ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+			if(!reservationDAO.giveUp(Integer.parseInt(keys[1]))){
+				return Response.status(400).entity("Can't give up now. Check your connection").build();
+			}else
 			return Response.status(200).build();
+			
+		}
+		
+		@POST
+		@Path("leaveAComment")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response leaveAComment(@Context HttpServletRequest request) {
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			//comment=wefw&apartmantID=6&starsNum=3
+			System.out.println("reservation request: "+payloadRequest);
+			ArrayList<String> params = new ArrayList<>();
+			String[]  pairs=  payloadRequest.split("&");
+			for(int i=0; i<pairs.length ; i++){
+				String[] keys=pairs[i].split("=");
+				for(String st : keys){
+				params.add(st);
+				}
+				}
+		     String comment = params.get(1).replace("+", " ");
+			Comment newComment = new Comment((User) request.getSession().getAttribute("user"), comment,Integer.parseInt(params.get(5)), true);
+			ApartmentDAO apartments = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+			if(!apartments.addComment(newComment, Integer.parseInt(params.get(3)))) 
+				return Response.status(400).entity("Comment wasn't added. Check your connection").build();
+		    else
+		        return Response.status(200).build();
+			
 			
 		}
 		
@@ -249,7 +286,6 @@ public class ApartmentsService {
 			ArrayList<String> params = new ArrayList<>();
 			payloadRequest =payloadRequest.replaceAll("%3A", ":");
 			//date=2021-01-29T23%3A00%3A00.000Z&numOfNights=1&username=snalica&apartmID=8&message=
-			System.out.println(payloadRequest);
 			String[]  pairs=  payloadRequest.split("&");
 			for(int i=0; i<pairs.length ; i++){
 			String[] keys=pairs[i].split("=");

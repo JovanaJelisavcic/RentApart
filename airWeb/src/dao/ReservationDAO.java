@@ -113,6 +113,19 @@ public class ReservationDAO {
 
 	}
 	
+	
+	public boolean giveUp(int id) {
+		Reservation old = reservations.get(id);
+		old.setStatus("GIVEUP");
+		reservations.remove(old);
+		users.removeReservation(old);
+ 		apartments.removeReservation(old);
+		if(saveReservation(old)){
+			return true;
+			} else return false;
+	
+	}
+	
 	@SuppressWarnings("unchecked")
 	private boolean writeDown(JSONArray reservations){
         try {
@@ -165,6 +178,8 @@ public class ReservationDAO {
 		
 		
 	}
+
+	
 
 
 }
