@@ -116,15 +116,48 @@ public class ReservationDAO {
 	
 	public boolean giveUp(int id) {
 		Reservation old = reservations.get(id);
-		old.setStatus("GIVEUP");
+			reservations.remove(old);
+			users.removeReservation(old);
+			apartments.removeReservation(old);
+			old.setStatus("GIVEUP");
+			if(saveReservation(old)){
+				return true;
+				} else return false;
+	
+	}
+	
+	public boolean accept(int reservationID) {
+		Reservation old = reservations.get(reservationID);
 		reservations.remove(old);
 		users.removeReservation(old);
  		apartments.removeReservation(old);
+		old.setStatus("ACCEPTED");
 		if(saveReservation(old)){
 			return true;
 			} else return false;
-	
 	}
+	
+	public boolean refuse(int reservationID) {
+		Reservation old = reservations.get(reservationID);
+		reservations.remove(old);
+		users.removeReservation(old);
+ 		apartments.removeReservation(old);
+		old.setStatus("REFUSED");
+		if(saveReservation(old)){
+			return true;
+			} else return false;
+	}
+	public boolean finish(int reservationID) {
+		Reservation old = reservations.get(reservationID);
+		reservations.remove(old);
+		users.removeReservation(old);
+ 		apartments.removeReservation(old);
+		old.setStatus("DONE");
+		if(saveReservation(old)){
+			return true;
+			} else return false;
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	private boolean writeDown(JSONArray reservations){
@@ -178,6 +211,11 @@ public class ReservationDAO {
 		
 		
 	}
+
+	
+	
+
+	
 
 	
 

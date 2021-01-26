@@ -335,7 +335,7 @@ $(document).ready(function() {
 			}else {
 				//action
 				$("#reservationError").hide();
-				if(sessionStorage.user==null){
+				if(sessionStorage.user==null || sessionStorage.getItem("user")==null ){
 				    location.replace("http://localhost:8080/airWeb/login.html");
 				}else{
 					

@@ -9,13 +9,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import beans.Reservation.Status;
 
-@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "id")
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+
+
 public class Apartment implements Serializable{
 
 	
@@ -338,6 +337,27 @@ public class Apartment implements Serializable{
 
 		public void addReservation(Reservation reservation) {
 			reservations.add(reservation);
+			if(reservation.getStatus().equals(Status.ACCEPTED)){
+			ArrayList<TPeriod> reserv = new ArrayList<>();
+			reserv.add(new TPeriod(reservation.getBeginDate(), reservation.getEndDate()));
+			addUnavailability(reserv);
+			changeAvailability(reserv);
+			}else if(reservation.getStatus().equals(Status.REFUSED)){
+				ArrayList<TPeriod> reserv = new ArrayList<>();
+				reserv.add(new TPeriod(reservation.getBeginDate(), reservation.getEndDate()));
+				removeUnavailability(reserv);
+				addAvailability(reserv);
+			}
+		}
+
+		public void addAvailability(ArrayList<TPeriod> reserv) {
+			availability.addAll(reserv);
+			sortDates(availability);
+		}
+
+		public void removeUnavailability(ArrayList<TPeriod> reserv) {
+			unavailability.removeAll(reserv);
+			sortDates(unavailability);
 			
 		}
 

@@ -1,12 +1,12 @@
 $(document).ready(function() {
-
+	var reservations = null;
 		//fetch reservations
 		$.ajax({
 			url : "rest/apartments/getHostReservations",
 			type: "GET",
 			contentType: 'application/json',
 			success: function (response) {
-				
+				reservations = response;
 				if(response.length!=0){
 					
 					//sort
@@ -24,25 +24,25 @@ $(document).ready(function() {
 					
 				      $(sortReserv).click(function() {
 				    	  	if($("#orderReserv").text()=="asc"){
-				    	  		response.sort(function(a,b){
+				    	  		reservations.sort(function(a,b){
 				    	  		    return a.totalPrice - b.totalPrice;
 				    	  		  });
 				    	  		$("#orderReserv").text("desc");
 				    	  		$("#hostReservations").empty();
-				    	  		response.forEach(drawReservation);
+				    	  		reservations.forEach(drawReservation);
 				    	  	}else{
-				    	  		response.sort(function(a,b){
+				    	  		reservations.sort(function(a,b){
 				    	  		    return b.totalPrice - a.totalPrice;
 				    	  		  });
 				    	  		$("#orderReserv").text("asc");
 				    	  		$("#hostReservations").empty();
-				    	  		response.forEach(drawReservation);
+				    	  		reservations.forEach(drawReservation);
 				    	  	}
 				    	});
 				      $("#reservationTools").append(sortReserv);
 					
 					
-				response.forEach(drawReservation);
+				      reservations.forEach(drawReservation);
 
 				}else{
 					var titleReserv = $(document.createElement('h4'));
@@ -59,8 +59,9 @@ $(document).ready(function() {
 	
 		function drawReservation(reservation){
 			
-			alert(JSON.stringify(reservation));
 			//reservation
+			
+			
 			var containerReserv = $(document.createElement('li'));
 			$(containerReserv).attr('class', 'position-relative booking');
 			
@@ -68,90 +69,135 @@ $(document).ready(function() {
 			$(buttons).attr('class', 'pull-right'); 
 			$(containerReserv).append(buttons);
 			
-			/*if(reservation["status"].toUpperCase()=="ACCEPTED" || reservation["status"].toUpperCase()=="CREATED" ){
-			var giveup = $(document.createElement('button'));
-			$(giveup).attr('class', 'book-btn give-up-class'); 
-			$(giveup).attr('type', 'button'); 
-			$(giveup).attr('id', 'giveUp-'+reservation['reservationID']); 
-			$(giveup).css('margin-left', '10px');
-			$(giveup).append("Give Up");
-			$(buttons).append(giveup);
 			
-			}*/
-			/*if(reservation["status"].toUpperCase()=="REFUSED" || reservation["status"].toUpperCase()=="DONE" ){
-				var wholeDiv = $(document.createElement('div'));
-				$(wholeDiv).attr('id', 'whole-'+reservation['reservationID']);
-				$(buttons).append(wholeDiv);
-				var stardiv = $(document.createElement('div'));
-				$(stardiv).html('<fieldset class="rating"> <input type="radio" id="star5-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="5" /> <label class="full" for="star5-'+reservation['reservationID']+'" title="Awesome - 5 stars"></label> <input type="radio" id="star4-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="4" /> <label class="full" for="star4-'+reservation['reservationID']+'" title="Pretty good - 4 stars"></label><input type="radio" id="star3-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="3" /><label class="full" for="star3-'+reservation['reservationID']+'" title="Meh - 3 stars"></label> </label> <input type="radio" id="star2-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'"value="2" /><label class="full" for="star2-'+reservation['reservationID']+'"title="Kinda bad - 2 stars"></label> <input type="radio" id="star1-'+reservation['reservationID']+'" name="rating-'+reservation['reservationID']+'" value="1" /><label class="full" for="star1-'+reservation['reservationID']+'" title="Very very bad - 1 star"></label> <input type="radio" class="reset-option" name="rating-'+reservation['reservationID']+'" value="reset" /> </fieldset>');
-				$(wholeDiv).append(stardiv);
-				
-				
-				 
-				
-				
-			var divcomment = $(document.createElement('div'));
-			$(divcomment).attr('class', 'form-group');
-			var textAreaComment = $(document.createElement('textarea'));
-			$(textAreaComment).attr('class', 'form-control rounded-0');
-			$(textAreaComment).attr('id', 'commentTextA-'+reservation['reservationID']);
-			$(textAreaComment).attr('placeholder', 'Write your comment here...');
-			$(textAreaComment).attr('rows', '4');
-			$(divcomment).append(textAreaComment);
-			$(wholeDiv).append(divcomment);
+			var formattedDate = new Date(reservation['beginDate']); 
+			var d = formattedDate.getDate();
+			var m =  formattedDate.getMonth();
+			m += 1;
+			var y = formattedDate.getFullYear();
+
+			var reserveBegin =d + "-" + m + "-" + y;
 			
-			var errorComment = $(document.createElement('label'));
-			$(errorComment).css('display', 'none');
-			$(errorComment).css("color","red");
-			$(divcomment).append(errorComment);
 			
-			var successLabReview = $(document.createElement('label'));
-			$(successLabReview).text('Successfully commented on a reservation ');
-			$(successLabReview).css("color","green");
-			$(successLabReview).css('display', 'none');
+			var formattedEnd = new Date(reservation['endDate']); 
+			var dd = formattedEnd.getDate();
+			var mm =  formattedEnd.getMonth();
+			mm += 1;
+			var yy = formattedEnd.getFullYear();
+
+			var reserveEnd =dd + "-" + mm + "-" + yy;
 			
-			var review = $(document.createElement('button'));
-			$(review).attr('class', 'book-btn');
-			$(review).attr('type', 'button'); 
-			$(review).attr('id', 'review-'+reservation['reservationID']); 
-			$(review).css('margin-right', '10px'); 
-			$(review).append("Review");
-			$(wholeDiv).append(review);
-			$(review).click(function(event){
-				$(errorComment).css('display', 'none');
-				starsNumber= $("input[name=\"rating-"+reservation['reservationID']+"\"]:checked").val();
-				var reviewVar = $(textAreaComment).val();
-				alert(reviewVar);
-				if(reviewVar!="" && starsNumber!=0){
-				
-				$.ajax({
-					url : "rest/apartments/leaveAComment",
-					type: "POST",
-					data : $.param({ comment: reviewVar, apartmantID : reservation['apartment']['id'], starsNum : starsNumber }),
-					contentType: 'application/json',
-					success: function (response) {
-						$('#whole-'+reservation['reservationID']).css('display', 'none');
-				    	$(successLabReview).css('display', 'block');
-				    	$(buttons).append(successLabReview);
-						starsNumber=0;
-				    },
-				    error: function (data, textStatus, xhr) {
-				    	$(errorComment).text('Something went wrong. Check your connection');
-				    	$(errorComment).css('display', 'block');
-				    	starsNumber=0;
-				    	 
-				    }
-				
-				});
-				}else {
-					$(errorComment).text("You have to write something and rate first");
-					$(errorComment).css('display', 'block');
+			var todaysDate = new Date();
+			//3 DUGMETA
+			
+			if(reservation["status"].toUpperCase()=="CREATED" || reservation["status"].toUpperCase()=="ACCEPTED"){
+						
+					var errorComment = $(document.createElement('label'));
+					$(errorComment).css('display', 'none');
+					$(errorComment).css("color","red");
+					$(buttons).append(errorComment);
+			
+					var successLabReview = $(document.createElement('label'));
+					$(successLabReview).text('Successfully changed reservation status');
+					$(successLabReview).css("color","green");
+					$(successLabReview).css('display', 'none');
 					
+					//ACCEPT
+					if(reservation["status"].toUpperCase()=="CREATED"){
+						var wholeDiv = $(document.createElement('div'));
+						$(wholeDiv).attr('id', 'whole-'+reservation['reservationID']);
+						$(buttons).append(wholeDiv);
 					
-				}
-			});
+					var accept = $(document.createElement('button'));
+					$(accept).attr('class', 'book-btn');
+					$(accept).attr('type', 'button'); 
+					$(accept).attr('id', 'accept-'+reservation['reservationID']); 
+					$(accept).css('margin', '10px 10px 10px 10px'); 
+					$(accept).append("Accept");
+					$(wholeDiv).append(accept);
+					$(accept).click(function(event){
+						$(errorComment).css('display', 'none');
+						$.ajax({
+							url : "rest/apartments/acceptReservation",
+							type: "POST",
+							data : $.param({ reservationID : reservation['reservationID']}),
+							contentType: 'application/json',
+							success: function (response) {
+								reservation["status"]="ACCEPTED";
+								$("#status-"+reservation['reservationID']).text("ACCEPTED");
+								$('#whole-'+reservation['reservationID']).css('display', 'none');
+						    	$(successLabReview).css('display', 'block');
+						    	$(buttons).append(successLabReview);
+						    	if(todaysDate >= formattedEnd ){
+						   
+									makeDoneButton(reservation, buttons, errorComment,successLabReview);
+									}
+							
+						    },
+						    error: function (data, textStatus, xhr) {
+						    	$(errorComment).text('Something went wrong. Check your connection');
+						    	$(errorComment).css('display', 'block');
+				
+						    	 
+						    }
+						
+						});
+					});
+					
+					}
+					//refuse
+					if(reservation["status"].toUpperCase()=="CREATED" || reservation["status"].toUpperCase()=="ACCEPTED" ) {
+						if(todaysDate < formattedDate){
+						var wholeDiv = $(document.createElement('div'));
+						$(wholeDiv).attr('id', 'whole1-'+reservation['reservationID']);
+						$(buttons).append(wholeDiv);
+					
+					var refuse = $(document.createElement('button'));
+					$(refuse).attr('class', 'book-btn');
+					$(refuse).attr('type', 'button'); 
+					$(refuse).attr('id', 'refuse-'+reservation['reservationID']); 
+					$(refuse).css('margin', '10px 10px 10px 10px'); 
+					$(refuse).append("Refuse");
+					$(wholeDiv).append(refuse);
+					$(refuse).click(function(event){
+						$(errorComment).css('display', 'none');
+						$.ajax({
+							url : "rest/apartments/refuseReservation",
+							type: "POST",
+							data : $.param({  reservationID : reservation['reservationID']}),
+							contentType: 'application/json',
+							success: function (response) {
+								$('#whole1-'+reservation['reservationID']).css('display', 'none');
+								$('#whole-'+reservation['reservationID']).css('display', 'none');
+								$("#status-"+reservation['reservationID']).text("REFUSED");
+								reservation["status"]="REFUSED";
+						    	$(successLabReview).css('display', 'block');
+						    	$(buttons).append(successLabReview);
+
+						    },
+						    error: function (data, textStatus, xhr) {
+						    	$(errorComment).text('Something went wrong. Check your connection');
+						    	$(errorComment).css('display', 'block');
+				
+						    	 
+						    }
+						
+						});
+					});
+						}
+					}
+					
+					//DONE
+					if(reservation["status"].toUpperCase()=="ACCEPTED" && todaysDate >= formattedEnd ){
+						
+					makeDoneButton(reservation, buttons,errorComment,successLabReview);
+					}
+					
+			}
 			
-			}*/
+			
+			
+			
 			var media = $(document.createElement('div'));
 			$(media).attr('class', 'media'); 
 			$(containerReserv).append(media);
@@ -193,22 +239,7 @@ $(document).ready(function() {
 			$(date1).append("Booking dates: ");
 			$(dates).append(date1);
 					
-			var formattedDate = new Date(reservation['beginDate']); 
-			var d = formattedDate.getDate();
-			var m =  formattedDate.getMonth();
-			m += 1;
-			var y = formattedDate.getFullYear();
 
-			var reserveBegin =d + "-" + m + "-" + y;
-			
-			
-			var formattedEnd = new Date(reservation['endDate']); 
-			var dd = formattedEnd.getDate();
-			var mm =  formattedEnd.getMonth();
-			mm += 1;
-			var yy = formattedEnd.getFullYear();
-
-			var reserveEnd =dd + "-" + mm + "-" + yy;
 			
 			
 			var date2 = $(document.createElement('span'));
@@ -257,19 +288,19 @@ $(document).ready(function() {
 			
 			var host1 = $(document.createElement('span'));
 			$(host1).attr('class', 'mr-2 d-block d-sm-inline-block mb-2 mb-sm-0'); 
-			$(host1).append("Host: ");
+			$(host1).append("Guest: ");
 			$(host).append(host1);
 			
 			var host2 = $(document.createElement('span'));
 			$(host2).attr('class', 'bg-light-blue'); 
-			$(host2).append(reservation['apartment']['host']['username']);
+			$(host2).append(reservation['guest']['username']);
 			$(host).append(host2);
 			
 			
 			
 			
 			
-			$("#reservationsList").append(containerReserv);
+			$("#hostReservations").append(containerReserv);
 			/*
 			  <li class="position-relative booking">
               <div class="media">
@@ -307,7 +338,47 @@ $(document).ready(function() {
 */
 			
 		}
-
+		
+		function makeDoneButton(reservation, buttons,errorComment,successLabReview){
+			
+			var wholeDiv2 = $(document.createElement('div'));
+			$(wholeDiv2).attr('id', 'whole2-'+reservation['reservationID']);
+			$(buttons).append(wholeDiv2);
+		
+		var doneButton = $(document.createElement('button'));
+		$(doneButton).attr('class', 'book-btn');
+		$(doneButton).attr('type', 'button'); 
+		$(doneButton).attr('id', 'done-'+reservation['reservationID']); 
+		$(doneButton).css('margin', '10px 10px 10px 10px'); 
+		$(doneButton).append("Done");
+		$(wholeDiv2).append(doneButton);
+		$(doneButton).click(function(event){
+			$(errorComment).css('display', 'none');
+			$.ajax({
+				url : "rest/apartments/finishReservation",
+				type: "POST",
+				data : $.param({ reservationID : reservation['reservationID']}),
+				contentType: 'application/json',
+				success: function (response) {
+					$("#status-"+reservation['reservationID']).text("DONE");
+					reservation["status"]="DONE";
+					$('#whole2-'+reservation['reservationID']).css('display', 'none');
+					$('#whole1-'+reservation['reservationID']).css('display', 'none');
+			    	$(successLabReview).css('display', 'block');
+			    	$(buttons).append(successLabReview);
+				
+			    },
+			    error: function (data, textStatus, xhr) {
+			    	$(errorComment).text('Something went wrong. Check your connection');
+			    	$(errorComment).css('display', 'block');
+	
+			    	 
+			    }
+			
+			});
+		});
+		
+		}
 		
 		
 	

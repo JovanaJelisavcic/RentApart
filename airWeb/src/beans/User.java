@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+
+
 public class User implements Serializable {
 	private static final long serialVersionUID = 6640936480584723344L;
 	
@@ -16,6 +18,7 @@ public class User implements Serializable {
 	private String password;
 	private String role;
 	private String newPass="";
+	@JsonBackReference
 	private ArrayList<Apartment> apartments;  
 	@JsonBackReference
 	private ArrayList<Reservation> reservations; //samo za goste 

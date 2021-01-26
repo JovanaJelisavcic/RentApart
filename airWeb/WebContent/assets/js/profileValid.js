@@ -5,11 +5,14 @@ $(document).ready(function() {
 	  });
 	
 	
+	
+	user=null;
 	$.ajax({
 		url : "rest/begin/currentUser",
 		type: "GET",
 		contentType: 'application/json',
 		success: function (response) {
+			user = response;
 		    $('#username').text("@"+response.username);
 		    $('#fullname').text(response.firstName+" "+response.lastName);
 		    $('#role').text(response.role);
@@ -24,6 +27,15 @@ $(document).ready(function() {
 	    }
 	});
 	
+	$("#goBackProfile").click(function(){
+		alert(user.role);
+		if(user.role=="guest"){
+				location.replace("http://localhost:8080/airWeb/app.html");
+			
+		}else if(user.role=="host"){
+				location.replace("http://localhost:8080/airWeb/hostApp.html");
+			}
+	  });
 	
 	  
   

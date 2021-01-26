@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.io.Serializable;
 
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
@@ -20,9 +21,7 @@ public class Reservation implements Serializable{
 		  ACCEPTED,
 		  DONE
 		}
-	/*@JsonIdentityInfo(
-			  generator = ObjectIdGenerators.PropertyGenerator.class, 
-			  property = "reservationID")*/
+
 	private int reservationID;
 	@JsonManagedReference
 	private Apartment apartment;
@@ -48,9 +47,18 @@ public class Reservation implements Serializable{
 		this.message = message;
 		this.guest = guest;
 		setStatus(status);
+		fixStatusRefused();
 	}
 	
 	
+	private void fixStatusRefused() {
+		if(beginDate.before(new Date()) && getStatus().equals(Status.CREATED)){
+			setStatus("REFUSED");
+		}
+		
+	}
+
+
 	public Apartment getApartment() {
 		return apartment;
 	}

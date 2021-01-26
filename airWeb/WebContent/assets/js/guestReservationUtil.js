@@ -124,7 +124,6 @@ $(document).ready(function() {
 				$(errorComment).css('display', 'none');
 				starsNumber= $("input[name=\"rating-"+reservation['reservationID']+"\"]:checked").val();
 				var reviewVar = $(textAreaComment).val();
-				alert(reviewVar);
 				if(reviewVar!="" && starsNumber!=0){
 				
 				$.ajax({

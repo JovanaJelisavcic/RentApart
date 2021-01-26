@@ -254,11 +254,71 @@ public class ApartmentsService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("reservation request: "+payloadRequest);
+			System.out.println("give up request: "+payloadRequest);
 			String[] keys=payloadRequest.split("=");
 			ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
 			if(!reservationDAO.giveUp(Integer.parseInt(keys[1]))){
 				return Response.status(400).entity("Can't give up now. Check your connection").build();
+			}else
+			return Response.status(200).build();
+			
+		}
+		
+		@POST
+		@Path("acceptReservation")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response acceptReservation(@Context HttpServletRequest request) {
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("accept reservation request: "+payloadRequest);
+			String[] keys=payloadRequest.split("=");
+			ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+			if(!reservationDAO.accept(Integer.parseInt(keys[1]))){
+				return Response.status(400).entity("Can't accept now. Check your connection").build();
+			}else
+			return Response.status(200).build();
+			
+		}
+		
+		@POST
+		@Path("refuseReservation")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response refuseReservation(@Context HttpServletRequest request) {
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("refuse reservation request: "+payloadRequest);
+			String[] keys=payloadRequest.split("=");
+			ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+			if(!reservationDAO.refuse(Integer.parseInt(keys[1]))){
+				return Response.status(400).entity("Can't accept now. Check your connection").build();
+			}else
+			return Response.status(200).build();
+			
+		}
+		
+		@POST
+		@Path("finishReservation")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response finishReservation(@Context HttpServletRequest request) {
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("finish reservation request: "+payloadRequest);
+			String[] keys=payloadRequest.split("=");
+			ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+			if(!reservationDAO.finish(Integer.parseInt(keys[1]))){
+				return Response.status(400).entity("Can't accept now. Check your connection").build();
 			}else
 			return Response.status(200).build();
 			
