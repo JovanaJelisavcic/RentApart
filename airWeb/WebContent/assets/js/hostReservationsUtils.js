@@ -15,12 +15,16 @@ $(document).ready(function() {
 					$(titleReserv).attr('class', 'card-title'); 
 					$(titleReserv).text('Reservations'); 
 					$("#sortReservations").append(titleReserv);
+
+					
 					
 					var sortReserv = $(document.createElement('button'));
 					$(sortReserv).attr('class', 'book-btn pull-right'); 
 					$(sortReserv).attr('type', 'button'); 
 					$(sortReserv).append("sort by price ");
 					$(sortReserv).append("<small id=\"orderReserv\">asc<small>");
+				
+					
 					
 				      $(sortReserv).click(function() {
 				    	  	if($("#orderReserv").text()=="asc"){
@@ -39,10 +43,37 @@ $(document).ready(function() {
 				    	  		reservations.forEach(drawReservation);
 				    	  	}
 				    	});
+				      
 				      $("#reservationTools").append(sortReserv);
-					
-					
+				  	//<input id="myInput" type="text" placeholder="Search..">
+				      var searchReserv = $(document.createElement('input'));
+						$(searchReserv).attr('id', 'searchInput');  
+						$(searchReserv).attr('class', 'pull-right');  
+						$(searchReserv).attr('margin', '10px 10px 10px 10px');
+						$(searchReserv).attr('type', 'text');  
+						$(searchReserv).attr('placeholder', 'Search by guest name..'); 
+						$("#reservationTools").append(searchReserv);
+						
+						
 				      reservations.forEach(drawReservation);
+				      
+				      $(searchReserv).keyup(function() {
+				          var filter = $(this).val(),
+				            count = 0;
+				          $("#hostReservations").find("li").each(function() {
+				            // If the list item does not contain the text phrase fade it out
+				            if ($(this).find(".guest").text().search(new RegExp(filter, "i")) < 0) {
+				            	$(this).hide();
+				              // Show the list item if the phrase matches and increase the count by 1
+				            } else {
+				              $(this).show();
+				              count++;
+				            }
+				          });
+				        });
+				      
+				     
+				     
 
 				}else{
 					var titleReserv = $(document.createElement('h4'));
@@ -292,7 +323,7 @@ $(document).ready(function() {
 			$(host).append(host1);
 			
 			var host2 = $(document.createElement('span'));
-			$(host2).attr('class', 'bg-light-blue'); 
+			$(host2).attr('class', 'bg-light-blue guest');  
 			$(host2).append(reservation['guest']['username']);
 			$(host).append(host2);
 			
