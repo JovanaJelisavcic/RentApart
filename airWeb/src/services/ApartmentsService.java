@@ -236,8 +236,10 @@ public class ApartmentsService {
 				return Response.status(403).build();
 			}else{
 			ArrayList<Reservation> reservs = new ArrayList<>();
+			if(user.getApartments()!=null){
 			for(Apartment apart : user.getApartments()){
 					reservs.addAll(apart.getReservations());
+			}
 			}
 		    return Response.status(200).entity(reservs).build();
 			}
@@ -265,6 +267,19 @@ public class ApartmentsService {
 		    return Response.status(200).entity(guests).build();
 			}
 			
+		}
+		
+		@GET
+		@Path("getHostApartments")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getHostApartments(@Context HttpServletRequest request) {
+			User user = (User) request.getSession().getAttribute("user");
+			if(!user.getRole().equals("host")){
+				return Response.status(403).build();
+			}else{
+		    return Response.status(200).entity(user.getApartments()).build();
+			}
 		}
 		
 		@POST

@@ -1,0 +1,196 @@
+$(document).ready(function() {
+
+activeApartments=[];
+inactiveApartments= [];
+    //fetch reservations
+    $.ajax({
+        url: "rest/apartments/getHostApartments",
+        type: "GET",
+        contentType: 'application/json',
+        success: function(response) {
+  
+            	
+            		response.forEach(divideApartments);
+            		
+            		if(activeApartments.length>0){
+            		activeApartments.forEach(drawHostApart);
+            		$("#hostApartmentsPart").show();
+            		$("#hostApartments").show();
+            		}else {
+            			var titleReserv = $(document.createElement('h4'));
+    					$(titleReserv).attr('class', 'card-title'); 
+    					$(titleReserv).text('You don\'t have any active apartments'); 
+    					$("#hostApartments").append(titleReserv);
+            		}
+            		
+            		if(inactiveApartments.length>0){
+            			inactiveApartments.forEach(drawHostApart);
+                		$("#hostApartmentsPart").show();
+                		$("#inactiveApartments").show();
+                		}else {
+                			var titleReserv = $(document.createElement('h4'));
+        					$(titleReserv).attr('class', 'card-title'); 
+        					$(titleReserv).text('You don\'t have any inactive apartments'); 
+        					$("#inactiveApartments").append(titleReserv);
+                		}
+            	    
+            		
+            
+        },
+        error: function(data, textStatus, xhr) {
+            alert(data.responseText);
+        }
+    });
+
+    function drawHostApart(apartment){
+    	var container = $(document.createElement('div'));
+		$(container).attr('class', 'col-md-4 col-sm-6 pass-filter');
+		$(container).attr('id', 'apartment'+apartment["id"]);
+	
+		
+		var single_package = $(document.createElement('div'));
+		$(single_package).attr('class', 'single-package-item'); 
+		$(container).append(single_package);
+		
+		var img = document.createElement('img');
+		$(img).css('width', '370px'); 
+		$(img).css('height', '300px');
+        img.src = 'assets/images/places/'+apartment['images'][0]; 
+        $(single_package).append(img);
+		
+		var single_package_txt = $(document.createElement('div'));
+		$(single_package_txt).attr('class', 'single-package-item-txt'); 
+		$(single_package).append(single_package_txt);
+		
+		var city_name = $(document.createElement('h3'));
+		$(city_name).append( apartment['location']["adress"]["street"]); 
+		
+		var price = $(document.createElement('span'));
+		$(price).attr('class', 'pull-right'); 
+		$(price).append("$"+apartment['price']); 
+		$(city_name).append(price);
+		
+		var razmak = $(document.createElement('br'));
+		$(city_name).append(razmak);
+		$(city_name).append(apartment['location']["adress"]["place"]);
+		
+		$(single_package_txt).append(city_name);
+		
+		var packages_para = $(document.createElement('div'));
+		$(packages_para).attr('class', 'packages-para'); 
+		$(single_package_txt).append(packages_para);
+		
+		
+	//PRVI P
+		var simple_p = $(document.createElement('p'));
+		$(packages_para).append(simple_p);
+		
+		var span1 = $(document.createElement('span'));
+		$(simple_p).append(span1);
+		
+		var i1 = $(document.createElement('i'));
+		$(i1).attr('class', 'fa fa-angle-right');
+		$(i1).append(apartment['type']);
+		$(span1).append(i1);
+		
+		
+		var i2 = $(document.createElement('i'));
+		$(i2).attr('class', 'fa fa-angle-right');
+		$(i2).append(" "+apartment['roomCap']+" rooms");
+		$(span1).append(i2);
+		
+		var i3 = $(document.createElement('i'));
+		$(i3).attr('class', 'fa fa-angle-right');
+		$(i3).append("up to "+apartment['guestsCap']+" guests");
+		$(span1).append(i3);
+			
+		
+		
+		//DRUGI P
+		var simple_p1 = $(document.createElement('p'));
+		$(packages_para).append(simple_p1);
+		
+		var span11 = $(document.createElement('span'));
+	//	$(span11).append( apartment['amenities[0]']); 
+		$(simple_p1).append(span11);
+		
+		var i;
+		for (i = 0; i < apartment['amenities'].length; i++) {
+			if (i === 3) { break; }
+			var i11 = $(document.createElement('i'));
+			$(i11).attr('class', 'fa fa-angle-right');
+			$(i11).append(apartment['amenities'][i]['amenitie']);
+			$(span11).append(i11);
+			
+		}
+		
+							
+		
+		//packages review
+		var packages_review = $(document.createElement('div'));
+		$(packages_review).attr('class', 'packages-review'); 
+		$(single_package_txt).append(packages_review);
+		
+		var simple_p3 = $(document.createElement('p'));
+		$(packages_review).append(simple_p3);
+		
+		
+		//stars
+		
+		
+		
+		for (i = 0; i <apartment['stars']; i++) {
+			var s1 = $(document.createElement('i'));
+			$(s1).attr('class', 'fa fa-star');
+			$(simple_p3).append(s1);
+			}
+		
+		
+		var span2 = $(document.createElement('span'));
+		commNum = Object.keys(apartment['comments']).length;
+		$(span2).append( commNum+" comments"); 
+		$(simple_p3).append(span2);
+		
+		
+		//aboutbtn
+		
+		var morebtn = $(document.createElement('div'));
+		$(morebtn).attr('class', 'about-btn'); 
+		$(single_package_txt).append(morebtn);
+		
+		var basbtn = $(document.createElement('button'));
+		$(basbtn).attr('class', 'about-view packages-btn'); 
+		$(basbtn).append("see more");
+		
+		$(basbtn).click(function(){
+		  sessionStorage.apartForDetail = JSON.stringify(apartment);
+		  window.open("hostApartmentDetail.html","_blank");
+		  return false;
+		  
+		});
+		$(morebtn).append(basbtn);
+		
+		var changeBtn = $(document.createElement('button'));
+		$(changeBtn).attr('class', 'about-view packages-btn'); 
+		$(changeBtn).append("change");
+		
+		$(changeBtn).click(function(){
+		  
+		});
+		$(morebtn).append(changeBtn);
+		
+		if(apartment["status"]){
+			$("#hostApartments").append(container);
+		}else $("#inactiveApartments").append(container);
+		
+		
+				
+	
+    }
+    
+    function divideApartments(apartment){
+    			if(apartment["status"]){
+    				activeApartments.push(apartment);
+    			}else inactiveApartments.push(apartment);
+    }
+});

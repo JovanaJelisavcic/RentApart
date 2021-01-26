@@ -12,7 +12,7 @@ $(document).ready(function() {
 					//sort
 					//  <h4 class="card-title">Booking Requests</h4>
 					var titleReserv = $(document.createElement('h4'));
-					$(titleReserv).attr('class', 'card-title'); 
+					$(titleReserv).attr('class', 'card-title text-center'); 
 					$(titleReserv).text('Reservations'); 
 					$("#sortReservations").append(titleReserv);
 					

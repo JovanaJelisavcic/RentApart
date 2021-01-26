@@ -122,12 +122,12 @@
 		<!--travel-box start-->
 		<section id="apartments" class="travel-box">
 
-			<div class="packages" id="searchResults" style="display: none;">
+			<div class="packages" id="hostApartmentsPart" style="display: none;">
+			<h4 class="text-center">My active apartments</h4>
 				<div class="container packages" >
-					<div class="row" id="searchToolbar">
-					</div>
-				   <div class="packages-content row">
-				   		<!-- BEGIN FILTERS -->
+					<div class="row pull-right" id="apartmentsToolbar">
+					 <button class="book-btn" type="button" onClick="location.href=''" id="addApartment">Add</button>
+									   		<!-- BEGIN FILTERS -->
          		 <div class="col-md-3">
             		<h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
             		<hr>
@@ -147,7 +147,13 @@
            	<button id="applyFilterButton" class="btn btn-success ml-auto"><span class="fa fa-filter"></span> &nbsp;&nbsp;Apply Filter</button>
             </div>
             <!-- END FILTERS -->
-					    <div class="row" id="searchItems">
+          
+					</div>
+				   <div class="packages-content row">
+					    <div class="row" style="display: none;" id="hostApartments">
+						</div><!--/.row-->
+						 <div class="row" id="inactiveApartments">
+						 <h4 class="text-center" style="display: none;">My inactive apartments</h4>
 						</div><!--/.row-->
 				   </div><!--/.packages-content-->
 			    </div><!--/.container-->
@@ -162,6 +168,7 @@
 				<div class="row">
 			  		<div class="col-md-12">
             			<div id="reservationTools" style="display:none;" class="card-heading clearfix border-bottom mb-4 pull-right">
+             			<h4 class="text-center">Reservations</h4>
              			<!-- sort place -->
              			<!-- BEGIN FILTERS -->
          		 		<div class="col-md-3">
@@ -204,7 +211,7 @@
 			<div class="container" id="hostGuestsPart" style="display: none;">
 					<div class="row" id="guestsToolbar">
 					
-						<h4>All your guests</h4>
+						<h4 class="text-center">All my guests</h4>
 						<!-- BEGIN FILTER BY TYPE -->
 						<div class="pull-right">
             			<h4>By sex:</h4>
@@ -348,6 +355,8 @@
 		<!--hostUsersUtils JS-->
 		<script src="assets/js/hostGuestsUtils.js"></script>
 
+		<!--hostApartmentsUtils JS-->
+		<script src="assets/js/hostApartmentsUtils.js"></script>
 
 	</body>
 
