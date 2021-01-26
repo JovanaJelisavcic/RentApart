@@ -237,11 +237,34 @@ public class ApartmentsService {
 			}else{
 			ArrayList<Reservation> reservs = new ArrayList<>();
 			for(Apartment apart : user.getApartments()){
-					System.out.println(apart.getReservations());
 					reservs.addAll(apart.getReservations());
 			}
 		    return Response.status(200).entity(reservs).build();
 			}
+		}
+		
+		@GET
+		@Path("getHostGuests")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getHostGuests(@Context HttpServletRequest request) {
+			User user = (User) request.getSession().getAttribute("user");
+			if(!user.getRole().equals("host")){
+				return Response.status(403).build();
+			}else{
+			ArrayList<User> guests = new ArrayList<>();
+			for(Apartment apart : user.getApartments()){
+				if(apart.getReservations()!=null){
+					for(Reservation res : apart.getReservations()){
+						if(!guests.contains(res.getGuest())){
+							guests.add(res.getGuest());
+						}
+					}
+				}	
+			}
+		    return Response.status(200).entity(guests).build();
+			}
+			
 		}
 		
 		@POST

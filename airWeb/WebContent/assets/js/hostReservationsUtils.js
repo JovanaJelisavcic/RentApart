@@ -47,7 +47,7 @@ $(document).ready(function() {
                 $(searchReserv).attr('class', 'pull-right');
                 $(searchReserv).attr('margin', '10px 10px 10px 10px');
                 $(searchReserv).attr('type', 'text');
-                $(searchReserv).attr('placeholder', 'Search by guest name..');
+                $(searchReserv).attr('placeholder', 'Search by guest username..');
                 $("#reservationTools").append(searchReserv);
 
                 $(searchReserv).keyup(function() {
@@ -81,7 +81,6 @@ $(document).ready(function() {
                 //filter handle
 				   $("#applyFilterRes").click(function(event){
 					   if($("#created").is(':checked')){
-						   alert("je l u ovome problem");
 						   reservations = reservations.filter(function(res) {
                                return res["status"].toLowerCase()=="created";
                            });
