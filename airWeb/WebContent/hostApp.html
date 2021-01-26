@@ -161,8 +161,33 @@
 			<div class="container" >
 				<div class="row">
 			  		<div class="col-md-12">
-            			<div id="reservationTools" class="card-heading clearfix border-bottom mb-4">
+            			<div id="reservationTools" style="display:none;" class="card-heading clearfix border-bottom mb-4 pull-right">
              			<!-- sort place -->
+             			<!-- BEGIN FILTERS -->
+         		 		<div class="col-md-3">
+            			<h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
+            			<hr>
+            
+            			<!-- BEGIN FILTER BY TYPE -->
+            			<h4>By type:</h4>
+           		 		<div class="checkbox">
+             		 		<label><input type="checkbox" id="created" name="statusRes" class="icheck"> created</label>
+            			</div>
+            			<div class="checkbox">
+              				<label><input type="checkbox" id="giveup" name="statusRes" class="icheck"> giveup</label>
+            			</div>     
+            			<div class="checkbox">
+             		 		<label><input type="checkbox" id="accepted" name="statusRes" class="icheck"> accepted</label>
+            			</div>
+            			<div class="checkbox">
+              				<label><input type="checkbox" id="refused" name="statusRes" class="icheck"> refused</label>
+            			</div>     
+            			<div class="checkbox">
+             		 		<label><input type="checkbox" id="done" name="statusRes" class="icheck"> done</label>
+            			</div>           			
+           				<button id="applyFilterRes" class="btn btn-success ml-auto"><span class="fa fa-filter"></span> &nbsp;&nbsp;Apply Filter</button>
+            			</div>
+            			<!-- END FILTERS -->
             			</div>
             			<div class="card-body">
                 			<ul class="list-unstyled" id="hostReservations">

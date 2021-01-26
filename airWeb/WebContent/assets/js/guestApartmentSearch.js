@@ -120,7 +120,6 @@ $(document).ready(function() {
 							response.forEach(filterWholePlace);							
 						}
 					   
-					   //skupi sve idove koji su checkirani 
 					   
 					   var amenitiesForFilter = [];
 					   
@@ -343,7 +342,6 @@ $(document).ready(function() {
 	}
 	
 	function filterWholePlace(apartment){
-		alert(apartment["type"].toUpperCase()+ '#apartment'+apartment["id"]);
 		if(apartment["type"].toUpperCase() != "WHOLE PLACE"){
 			
 			$('#apartment'+apartment["id"]).removeClass("pass-filter");

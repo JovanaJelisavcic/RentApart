@@ -28,7 +28,6 @@ $(document).ready(function() {
 	});
 	
 	$("#goBackProfile").click(function(){
-		alert(user.role);
 		if(user.role=="guest"){
 				location.replace("http://localhost:8080/airWeb/app.html");
 			
