@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Comment implements Serializable{
 	
@@ -8,6 +9,7 @@ public class Comment implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 8623309115934285200L;
+	private int id;
 	private User guest;
 	private String comment;
 	private int stars;
@@ -22,6 +24,7 @@ public class Comment implements Serializable{
 		this.comment = comment;
 		this.stars = stars;
 		this.status = status;
+		this.id = ThreadLocalRandom.current().nextInt(100, 1000000 + 1);
 	}
 	
 	public User getGuest() {
@@ -57,6 +60,14 @@ public class Comment implements Serializable{
 	                .append(", \"stars\" : ").append("\""+this.stars+"\"")
 	                .append(", \"status\" : ").append("\""+this.status+"\"")
 	                .append("}").toString();
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
 		}
 
 }

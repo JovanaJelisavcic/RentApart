@@ -133,6 +133,17 @@ public class User implements Serializable {
 		reservations.remove(reservation);
 	}
 	
+	public void changeApartment(Apartment apartment) {
+		Apartment old= null;
+		for(Apartment a: apartments){
+			if(a.getId()==apartment.getId())
+				old=a;
+		}
+		apartments.remove(old);
+		apartments.add(apartment);
+		
+	}
+	
 
 	//in json format
 	@Override
@@ -155,6 +166,8 @@ public class User implements Serializable {
 		 String realfinal = finalString.append("}").toString();
 		 return realfinal;
 	}
+
+	
 
 	
 

@@ -370,7 +370,7 @@ $(document).ready(function() {
 
 	});
 	//close for users
-	if(sessionStorage.user!=null){
+	if(sessionStorage.user!=null ){
 		$("#closeDetail").css("visibility", "visible");
 		$("#closeDetail").click(function(event){
 		location.replace("http://localhost:8080/airWeb/app.html");

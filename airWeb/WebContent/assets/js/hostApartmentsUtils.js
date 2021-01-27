@@ -2,6 +2,8 @@ $(document).ready(function() {
 
 activeApartments=[];
 inactiveApartments= [];
+apartsToSort=[];
+amenities=null;
     //fetch reservations
     $.ajax({
         url: "rest/apartments/getHostApartments",
@@ -14,11 +16,115 @@ inactiveApartments= [];
             		
             		if(activeApartments.length>0){
             		activeApartments.forEach(drawHostApart);
+            		apartsToSort=activeApartments;
             		$("#hostApartmentsPart").show();
             		$("#hostApartments").show();
+
+            		//filter
+            				//get amenities
+            				if(amenities==null){
+            					$.ajax({
+            						url : "rest/apartments/getAmenities",
+            						type: "GET",
+            						contentType: 'application/json',
+            						success: function (response) {
+            							 //fetch all amenities
+            							amenities =response;
+            							for (i = 0; i < amenities.length; i++) {
+            								/*filters
+            								 *  <div class="checkbox">
+            						             		 <label><input type="checkbox" class="icheck"> Application</label>
+            						            </div>*/
+            								
+            								var amenityFilter = $(document.createElement('div'));
+            								$(amenityFilter).attr('class', 'checkbox');
+            								
+            								var amenityFilterLabel = $(document.createElement('label'));
+            								
+            								
+            								var amenityFilterInput = $(document.createElement('input'));
+            								$(amenityFilterInput).attr('type', 'checkbox');
+            								$(amenityFilterInput).attr('class', 'icheck amenityClass');
+            								$(amenityFilterInput).attr('id', "amenity-"+amenities[i]["id"]);
+            								
+            								$(amenityFilterLabel).append(amenityFilterInput);
+            								$(amenityFilterLabel).append(amenities[i]["amenitie"]);
+            								$(amenityFilter).append(amenityFilterLabel);
+            								$("#amenitiesFilters").append(amenityFilter);   
+            									      
+            								
+            							}
+            						},
+            						error: function (response) {
+            							alert("There's been a mistake, check your connection");
+            						}
+            					});
+            				}
+            				
+
+            				
+            				$("#applyFilterApartms").click(function(event){
+								   activeApartments.forEach(returnDisplay);
+								   if($("#room").is(':checked') && $("#place").is(':checked')){							
+									}else if($("#room").is(':checked')){
+										activeApartments.forEach(filterRoom);							
+									}else if($("#place").is(':checked')){
+										activeApartments.forEach(filterWholePlace);							
+									}
+								   
+								   
+								   var amenitiesForFilter = [];
+								   
+								   $(".amenityClass:checkbox").each(function(){
+									    var $this = $(this);
+
+									    if($this.is(":checked")){
+									    	amenitiesForFilter.push($this.attr("id"));
+									    }
+									});
+								  
+								   if(amenitiesForFilter.length!=0){
+									   activeApartments.forEach(function (item, index) {
+										    filterByAmenities(amenitiesForFilter, item, index)
+									   });
+									}
+								   fillSortAparts();
+								  
+            				});
+            				
+            				
+           				 //sort utils
+        				      var sort = $(document.createElement('button'));
+        				      $(sort).attr('class', 'book-btn pull-right');
+        				      $(sort).attr('margin', '10px 10px 10px 10px');
+        				      $(sort).append("sort by price ");
+        				      $(sort).append("<small id=\"orderApart\">asc<small>");
+        				      $(sort).click(function() {
+        				    	  	if($("#orderApart").text()=="asc"){
+        				    	  		apartsToSort.sort(function(a,b){
+        				    	  		    return a.price - b.price;
+        				    	  		  });
+        				    	  		$("#orderApart").text("desc");
+        				    	  		$("#hostApartments").empty();
+        				    	  		apartsToSort.forEach(drawHostApart);		
+        								$("#hostApartments").show();
+        				    	  	}else{
+        				    	  		apartsToSort.sort(function(a,b){
+        				    	  		    return b.price - a.price;
+        				    	  		  });
+        				    	  		$("#orderApart").text("asc");
+        				    	  		$("#hostApartments").empty();
+        				    	  		apartsToSort.forEach(drawHostApart);		
+        								$("#hostApartments").show();
+        				    	  	}
+        				    	});
+        				      $("#apartmentsToolbar").append(sort);
+        				      
+            		
+            		
             		}else {
             			var titleReserv = $(document.createElement('h4'));
-    					$(titleReserv).attr('class', 'card-title'); 
+    					$(titleReserv).attr('class', 'text-center'); 
     					$(titleReserv).text('You don\'t have any active apartments'); 
     					$("#hostApartments").append(titleReserv);
             		}
@@ -27,6 +133,7 @@ inactiveApartments= [];
             			inactiveApartments.forEach(drawHostApart);
                 		$("#hostApartmentsPart").show();
                 		$("#inactiveApartments").show();
+                		$("#titleinactive").show();
                 		}else {
                 			var titleReserv = $(document.createElement('h4'));
         					$(titleReserv).attr('class', 'card-title'); 
@@ -164,7 +271,7 @@ inactiveApartments= [];
 		
 		$(basbtn).click(function(){
 		  sessionStorage.apartForDetail = JSON.stringify(apartment);
-		  window.open("hostApartmentDetail.html","_blank");
+		  location.replace("hostApartmentDetail.html");
 		  return false;
 		  
 		});
@@ -193,4 +300,61 @@ inactiveApartments= [];
     				activeApartments.push(apartment);
     			}else inactiveApartments.push(apartment);
     }
+    
+    
+	function filterWholePlace(apartment){
+		if(apartment["type"].toUpperCase() != "WHOLE PLACE"){
+			
+			$('#apartment'+apartment["id"]).removeClass("pass-filter");
+			$('#apartment'+apartment["id"]).addClass("no-pass-filter");
+		}
+	}
+	
+	function filterRoom(apartment){
+		if(apartment["type"].toUpperCase() != "PRIVATE ROOM"){
+			
+			$('#apartment'+apartment["id"]).removeClass("pass-filter");
+			$('#apartment'+apartment["id"]).addClass("no-pass-filter");
+		}
+	}
+	
+	function returnDisplay(apartment){
+
+		$('#apartment'+apartment["id"]).removeClass("no-pass-filter");
+		$('#apartment'+apartment["id"]).addClass("pass-filter");
+			
+	}
+	
+	function filterByAmenities(amenitiesForFilter, apartment, index){
+		var passes = true;
+		var amnts = [];
+		for(var j=0; j<apartment["amenities"].length; j++){
+			amnts.push("amenity-"+apartment["amenities"][j]["id"]);
+		}
+
+		for(var i=0; i<amenitiesForFilter.length; i++){
+			if(!amnts.includes(""+amenitiesForFilter[i])){
+				passes=false;
+			}	
+		}
+		if(passes!=true){
+			$('#apartment'+apartment["id"]).removeClass("pass-filter");
+			$('#apartment'+apartment["id"]).addClass("no-pass-filter");
+		}	
+	}
+	
+	function fillSortAparts(){
+		var ids=[];
+		   $("div").find('.pass-filter').each(function(){
+			   apid=$(this).attr('id');
+			   apid=apid.slice(9);
+			   ids.push(apid);
+		   });
+		   apartsToSort = activeApartments.filter(function(apart){
+			 chS=""+apart["id"];
+			return ids.includes(chS); 
+		});
+		
+	}
+	
 });

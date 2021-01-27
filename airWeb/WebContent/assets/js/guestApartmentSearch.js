@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	var amenities= null;
+	var apartments=[];
+	var sortAparts=[];
 	//search utils
 	$("#searchButton").click(function(event){
 		  $("#searchResults").hide();
@@ -42,6 +44,8 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			success: function (response) {
 				//get amenities
+				apartments= response;
+				sortAparts= apartments;
 				if(amenities==null){
 					$.ajax({
 						url : "rest/apartments/getAmenities",
@@ -86,38 +90,38 @@ $(document).ready(function() {
 				      $(sort).append("<small id=\"order\">asc<small>");
 				      $(sort).click(function() {
 				    	  	if($("#order").text()=="asc"){
-				    	  		response.sort(function(a,b){
+				    	  		sortAparts.sort(function(a,b){
 				    	  		    return a.price - b.price;
 				    	  		  });
 				    	  		$("#order").text("desc");
 				    	  		$("#searchItems").empty();
-				    	  		response.forEach(drawResult);		
+				    	  		sortAparts.forEach(drawResult);		
 								$("#searchResults").show();
 				    	  	}else{
-				    	  		response.sort(function(a,b){
+				    	  		sortAparts.sort(function(a,b){
 				    	  		    return b.price - a.price;
 				    	  		  });
 				    	  		$("#order").text("asc");
 				    	  		$("#searchItems").empty();
-				    	  		response.forEach(drawResult);		
+				    	  		sortAparts.forEach(drawResult);		
 								$("#searchResults").show();
 				    	  	}
 				    	});
 				      $("#searchToolbar").append(sort);
 				      
 				      //draw everything
-				    response.forEach(drawResult);		
+				      apartments.forEach(drawResult);		
 				   $("#searchResults").show();
 				   
 				   //filter handle
 				   $("#applyFilterButton").click(function(event){
-					   response.forEach(returnDisplay);
+					   apartments.forEach(returnDisplay);
 					   if($("#room").is(':checked') && $("#place").is(':checked')){
 							//response.forEach(returnDisplay);							
 						}else if($("#room").is(':checked')){
-							response.forEach(filterRoom);							
+							apartments.forEach(filterRoom);							
 						}else if($("#place").is(':checked')){
-							response.forEach(filterWholePlace);							
+							apartments.forEach(filterWholePlace);							
 						}
 					   
 					   
@@ -132,12 +136,12 @@ $(document).ready(function() {
 						});
 					  
 					   if(amenitiesForFilter.length!=0){
-						   response.forEach(function (item, index) {
+						   apartments.forEach(function (item, index) {
 							    filterByAmenities(amenitiesForFilter, item, index)
 						   });
 						}
-					   
-					      
+					   alert("dodje");
+					     fillSortAparts();
 					});
 		    },
 		    error: function(data, textStatus, xhr) {
@@ -380,5 +384,20 @@ $(document).ready(function() {
 			$('#apartment'+apartment["id"]).removeClass("pass-filter");
 			$('#apartment'+apartment["id"]).addClass("no-pass-filter");
 		}	
-}
+	}
+	
+	function fillSortAparts(){
+		var ids=[];
+		   $("div").find('.pass-filter').each(function(){
+			   apid=$(this).attr('id');
+			   apid=apid.slice(9);
+			   ids.push(apid);
+		   });
+		sortAparts = apartments.filter(function(apart){
+			 chS=""+apart["id"];
+			return ids.includes(chS); 
+		});
+
+	}
+	
 });

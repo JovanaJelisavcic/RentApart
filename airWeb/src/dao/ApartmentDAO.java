@@ -337,6 +337,18 @@ public class ApartmentDAO {
 		return true;
 		else return false;
 	}
+	
+	public boolean hideComment(int commentId, int apartmentId) {
+		Apartment oldValue = apartments.get(apartmentId);
+		Apartment newValue = oldValue;
+		newValue.hideComment(commentId);
+		apartments.replace(oldValue.getId(), oldValue, newValue);
+		users.changeHostApartment(newValue);
+		if(saveApartments())
+		return true;
+		else return false;
+
+	}
 
 	public boolean saveApartments() {
  	   if(writeDown(convertReservations()))
@@ -456,6 +468,8 @@ public class ApartmentDAO {
 		
 		
 	}
+
+	
 
 	 	
 }

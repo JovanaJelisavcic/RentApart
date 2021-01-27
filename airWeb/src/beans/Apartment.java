@@ -371,6 +371,14 @@ public class Apartment implements Serializable{
 			
 		}
 
+		public void hideComment(int commentId) {
+			comments.forEach((comment) -> {
+				if(comment.getId()==commentId)
+					comment.setStatus(false);
+			});
+			
+		}
+
 
 		
 

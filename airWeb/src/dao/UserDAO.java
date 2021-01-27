@@ -232,6 +232,14 @@ public class UserDAO {
 		users.forEach((id,user) -> System.out.println("id"+" : "+id + "," +"apartments"+" : "+user.getApartments()));
 		
 	}
+
+	public void changeHostApartment(Apartment apartment) {
+		User oldValue = apartment.getHost();
+		User newValue = oldValue;
+		newValue.changeApartment(apartment);
+		users.replace(oldValue.getUsername(), oldValue, newValue);
+		
+	}
 	 	
 	
 }

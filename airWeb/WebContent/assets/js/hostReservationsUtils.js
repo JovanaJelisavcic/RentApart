@@ -38,7 +38,7 @@ $(document).ready(function() {
                     }
                 });
 
-                $("#reservationTools").append(sortReserv);
+                $("#reservationTools").prepend(sortReserv);
                 
                 reservations.forEach(drawReservation);
                 //search
@@ -48,7 +48,7 @@ $(document).ready(function() {
                 $(searchReserv).attr('margin', '10px 10px 10px 10px');
                 $(searchReserv).attr('type', 'text');
                 $(searchReserv).attr('placeholder', 'Search by guest username..');
-                $("#reservationTools").append(searchReserv);
+                $("#reservationTools").prepend(searchReserv);
 
                 $(searchReserv).keyup(function() {
                     var filter = $(this).val(),

@@ -238,7 +238,9 @@ public class ApartmentsService {
 			ArrayList<Reservation> reservs = new ArrayList<>();
 			if(user.getApartments()!=null){
 			for(Apartment apart : user.getApartments()){
+				if(apart.getReservations()!=null){
 					reservs.addAll(apart.getReservations());
+				}
 			}
 			}
 		    return Response.status(200).entity(reservs).build();
@@ -281,6 +283,8 @@ public class ApartmentsService {
 		    return Response.status(200).entity(user.getApartments()).build();
 			}
 		}
+		
+		
 		
 		@POST
 		@Path("giveUpOnReservation")
@@ -393,6 +397,38 @@ public class ApartmentsService {
 			
 		}
 		
+		@POST
+		@Path("hideComment")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response hideComment(@Context HttpServletRequest request) {
+			User user = (User) request.getSession().getAttribute("user");
+			if(!user.getRole().equals("host")){
+				return Response.status(403).build();
+			
+			}else {
+				String payloadRequest = null;
+				try {
+					payloadRequest = getBody(request);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				System.out.println("hide comment request: "+payloadRequest);
+				ArrayList<String> params = new ArrayList<>();
+				String[]  pairs=  payloadRequest.split("&");
+				for(int i=0; i<pairs.length ; i++){
+					String[] keys=pairs[i].split("=");
+					for(String st : keys){
+					params.add(st);
+					}
+					}
+				ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+				if(!apartmentDAO.hideComment(Integer.parseInt(params.get(1)), Integer.parseInt(params.get(3)))){
+					return Response.status(400).entity("Can't give up now. Check your connection").build();
+				}else
+				return Response.status(200).build();
+			}
+			
+		}
 		
 		//utils
 		private Reservation retreiveInfo(String payloadRequest) {

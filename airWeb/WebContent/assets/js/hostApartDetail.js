@@ -97,13 +97,15 @@ $(document).ready(function() {
 	//type and number of rooms
 	
 	$('#Apartmentype').text(apartment['type']);
-	$('#NumGuestsDetail').text(apartment['guestsCap']+" guests");
+	if(apartment['status']){
+		$('#statusDetail').text("active");
+	}else
+	$('#statusDetail').text("inactive");
 	
 	
 	//comments
 
 	for (i = 0; i < apartment['comments'].length; i++) {
-		if(apartment['comments'][i]['status']){
 		var commLi = $(document.createElement('li'));
 		$(commLi).attr('class', 'clearfix');
 		
@@ -140,20 +142,44 @@ $(document).ready(function() {
 		$(pDivLiText).text(apartment['comments'][i]['comment']);
 		$(commDiv).append(pDivLiText);
 		
+		var succesError = $(document.createElement('p'));
+		$(succesError).attr('id', 'succesError-'+apartment['comments'][i]['id']);
+		$(commDiv).append(succesError);
 		
 		var removeB = $(document.createElement('button'));
-		$(removeB).attr('class', 'btn btn-light');
+		$(removeB).attr('class', 'btn btn-light hideButton');
+		$(removeB).attr('id', 'hide-'+apartment['comments'][i]['id']);
 		(removeB).append('Hide');
 		$(commDiv).append(removeB);
 		
-		
-		
 		$(commLi).append(commDiv);
 		$("#messagesListDetail").append(commLi);
-		}
+		
 	}
 	
-
+	$(".hideButton").each(function (index, value) {
+		this.addEventListener('click', function() {
+		  var id = this.id;
+		  var commId = id.slice(5);
+		  var buttonn= this;
+			$.ajax({
+				url : "rest/apartments/hideComment",
+				type: "POST",
+				data : $.param({commentId: commId, apartmentId : apartment["id"]}),
+				contentType: 'application/json',
+				success: function (response) {
+					$("#succesError-"+commId).append("Successfully hid this comment");
+              	   $("#succesError-"+commId).css("color", "green");
+              	   buttonn.remove();
+			    },
+			    error: function (data, textStatus, xhr) {
+			    
+			    	 $("#succesError-"+commId).append("Couldn\'t hide this comment. Check your connection");
+              	   $("#succesError-"+commId).css("color", "red");
+			    }
+		});
+	  });
+	});
 	
 	//more details
 	
@@ -247,6 +273,8 @@ $(document).ready(function() {
 		location.replace("http://localhost:8080/airWeb/hostApp.html");
 	});
 	}
+	
+	//hide comment
 	
 	
 	
