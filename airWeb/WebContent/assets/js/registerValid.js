@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
   $("#registerForm").validate({  	
 	rules: {
 		firstName: "required",

@@ -240,6 +240,14 @@ public class UserDAO {
 		users.replace(oldValue.getUsername(), oldValue, newValue);
 		
 	}
+
+	public void addHostApartment(Apartment apartment) {
+		User oldValue = apartment.getHost();
+		User newValue = oldValue;
+		newValue.addApartment(apartment);
+		users.replace(oldValue.getUsername(), oldValue, newValue);
+		
+	}
 	 	
 	
 }

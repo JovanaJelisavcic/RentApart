@@ -144,6 +144,11 @@ public class User implements Serializable {
 		
 	}
 	
+	public void addApartment(Apartment apartment) {
+		apartments.add(apartment);
+		
+	}
+	
 
 	//in json format
 	@Override
@@ -166,6 +171,8 @@ public class User implements Serializable {
 		 String realfinal = finalString.append("}").toString();
 		 return realfinal;
 	}
+
+	
 
 	
 

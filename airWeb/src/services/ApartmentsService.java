@@ -168,24 +168,34 @@ public class ApartmentsService {
 			return Response.status(200).entity(amenityDAO.findAll()).build();
 					
 		}
-
-		private String validateRequest(HttpServletRequest request) {
-			if(!request.getParameter("location").toString().matches("^$|^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$"))
-				return "Destination can contain only letters";
-			if(!request.getParameter("guests").toString().matches("^$|^[1-9]\\d*$") || !request.getParameter("minRooms").toString().matches("^$|^[1-9]\\d*$")
-				||	!request.getParameter("maxRooms").toString().matches("^$|^[1-9]\\d*$"))
-				return "Numbers must be typed in as numeric values, greater than 0";
-		    int min = Integer.parseInt(request.getParameter("minRooms")+0);
-		    int max = Integer.parseInt(request.getParameter("maxRooms")+0);
-			if(min>max)
-				return "Please type in both minumum and maximum values for room number, while maximum must be greater or equal to minimum";
-			if(request.getParameter("check_in").equals("one"))
-				return "We need both check in and check out date";
-			if(request.getParameter("check_in").equals(""))
-				return null;
-			return null;
+	    
+	    
+	    @POST
+		@Path("postApartment")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response postApartment(@Context HttpServletRequest request) {
+	    	String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("add apartment request: "+payloadRequest);
+			User user = (User) request.getSession().getAttribute("user");
+			Apartment apartment = retreiveApartment(payloadRequest,user );
+			ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+			if(apartmentDao.addApartment(apartment)){
+	    	return Response.status(200).build();}
+			else {
+				return Response.status(400).entity("Saving apartment went wrong. Check your connection").build();
+			}
+					
 		}
+
 		
+
+	
 		
 		
 		@POST
@@ -496,5 +506,50 @@ public class ApartmentsService {
 		    body = stringBuilder.toString();
 		    return body;
 		}
+		
+		
+		
+		private Apartment retreiveApartment(String payloadRequest, User user) {
+			
+			ArrayList<String> params = new ArrayList<>();
+			//date=2021-01-29T23%3A00%3A00.000Z&numOfNights=1&username=snalica&apartmID=8&message=
+			String[]  pairs=  payloadRequest.split("&");
+			for(int i=0; i<pairs.length ; i++){
+			String[] keys=pairs[i].split("=");
+			for(String st : keys){
+			params.add(st);
+			}
+			}
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	    	Date   begin = null;
+	    	try {
+				   begin       = format.parse ( params.get(1) );
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+	    	/*int totalPrice = (int) (apartment.getPrice()*Integer.parseInt(params.get(3)));*/
+	    	//return new Apartment ();
+	    	
+			return null;
+			
+		}
+		
+		private String validateRequest(HttpServletRequest request) {
+			if(!request.getParameter("location").toString().matches("^$|^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$"))
+				return "Destination can contain only letters";
+			if(!request.getParameter("guests").toString().matches("^$|^[1-9]\\d*$") || !request.getParameter("minRooms").toString().matches("^$|^[1-9]\\d*$")
+				||	!request.getParameter("maxRooms").toString().matches("^$|^[1-9]\\d*$"))
+				return "Numbers must be typed in as numeric values, greater than 0";
+		    int min = Integer.parseInt(request.getParameter("minRooms")+0);
+		    int max = Integer.parseInt(request.getParameter("maxRooms")+0);
+			if(min>max)
+				return "Please type in both minumum and maximum values for room number, while maximum must be greater or equal to minimum";
+			if(request.getParameter("check_in").equals("one"))
+				return "We need both check in and check out date";
+			if(request.getParameter("check_in").equals(""))
+				return null;
+			return null;
+		}
+		
 	
 }

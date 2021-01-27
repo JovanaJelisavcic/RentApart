@@ -357,6 +357,14 @@ public class ApartmentDAO {
 
 	}
 	
+	public boolean addApartment(Apartment apartment) {
+		apartments.put(apartment.getId(), apartment);
+		users.addHostApartment(apartment);
+		if(saveApartments())
+			return true;
+			else return false;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	private boolean writeDown(JSONArray apartments){
@@ -468,6 +476,8 @@ public class ApartmentDAO {
 		
 		
 	}
+
+	
 
 	
 

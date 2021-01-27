@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<head>
+<!--font-family-->
+		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet" />
+
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
+<title>Add apartment</title>
+<!-- favicon img -->
+		<link rel="shortcut icon" type="image/icon" href="assets/logo/favicon.png"/>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+ <script src="http://malsup.github.com/jquery.form.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" ></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ></script>
+<!--font-awesome.min.css-->
+		<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+				<!--datepicker.css-->
+		<link rel="stylesheet"  href="assets/css/datepicker.css" >
+	
+		<!-- adition -->
+		<link rel="stylesheet" href="assets/css/addAppart.css"/>
+		
+		
+
+</head>
+<body>
+		<div class="container">
+			<form id="addApartForm" action="">
+				<div class="row">
+					<div class="col-lg-2 col-md-3 col-sm-4">
+							<div class="control-group">
+                                <div class="radio">
+                                    <label>
+                                        <input  value="private" name="form-field-radio" type="radio" checked="checked">
+                                        <span class="text">Private room </span>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input value="whole" name="form-field-radio" type="radio" class="inverted">
+                                        <span class="text">Whole place</span>
+                                    </label>
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                        <label for="roomCap">How many rooms is there?</label>
+                                        <input type="number" class="form-control" name="roomCap" id="roomCap" placeholder="1">
+                             </div>
+                             <div class="form-group">
+                                        <label for="guestCap">How many guests can there be?</label>
+                                        <input type="number" class="form-control" name="guestCap" id="guestCap" placeholder="4">
+                             </div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-4">
+							<h2 class="text-center">Location</h2>
+							<div class="form-group">
+                                        <label for="street">Street</label>
+                                        <input type="text" class="form-control" name="street" id="street" placeholder="Ruzveltova 31">
+                             </div>
+                             <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" class="form-control" name="city" id="city" placeholder="Belgrade">
+                             </div>
+                             <div class="form-group">
+                                        <label for="postalCode">Postal code</label>
+                                        <input type="text" class="form-control" name="postalCode" id="postalCode" placeholder="11000">
+                             </div>
+                             <div class="form-group">
+                                        <label for="state">State</label>
+                                        <input type="text" class="form-control" name="state" id="state" placeholder="Serbia">
+                             </div>		
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-4">
+							<div class="form-group">
+                                        <label for="price">Price in dollars</label>
+                                        <input type="number" class="form-control" name="price" id="price" placeholder="45">
+                             </div>
+                             <div class="form-group">
+                                        <label for="checkin">Check in time</label>
+                                        <input type="text" class="form-control" name="checkin" id="checkin" placeholder="10AM">
+                             </div>
+                             <div class="form-group">
+                                        <label for="checkout">Check out time</label>
+                                        <input type="text" class="form-control" name="checkout" id="checkout" placeholder="14PM">
+                             </div>  
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+							<h2>Free Dates</h2>
+							<div class="col-lg-2 col-md-3 col-sm-4">
+									<div class="single-tab-select-box">
+											<h5>Start of a free period </h5>
+													<div class="travel-check-icon">
+															
+															<input type="text" id="check_in1"  name="check_in1" class="form-control" data-toggle="datepicker" placeholder="01/01/2021 ">
+															
+													</div><!-- /.travel-check-icon -->
+									</div><!--/.single-tab-select-box-->
+							</div><!--/.col-->
+
+							<div class="col-lg-2 col-md-3 col-sm-4">
+									<div class="single-tab-select-box">
+											<h5>End of a free period</h5>
+														<div class="travel-check-icon">
+															
+																<input type="text" id="check_out1" name="check_out1" class="form-control"  data-toggle="datepicker" placeholder="02/01/2021 ">
+															
+														</div><!-- /.travel-check-icon -->
+									</div><!--/.single-tab-select-box-->
+							</div><!--/.col-->
+							<div id="periods"></div>
+							<button type="button" class="btn btn-primary" id="addPeriod">Add another period</button>
+							
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+							<h5>Add images</h5>
+                            <span class="file-input btn btn-azure btn-file">
+                                Browse <input id="images" type="file" accept="image/*" multiple>
+                            </span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
+							<h4>Pick your amenities:</h4>
+           					<div id="amenitiesAvailable">
+           					
+           					</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm pull-right">
+						<button type="button" id="goBackAdd" class="btn" onClick="location.href='hostApp.html'">Go Back</button>
+						<button type="submit" id="addFinally" class="btn btn-success" >Add</button>
+					</div>
+				</div>
+				</form>
+		</div>
+		
+        
+        <!--datepicker.js-->
+        <script  src="assets/js/datepicker.js"></script>
+        
+         <!--addApartment.js-->
+        <script  src="assets/js/addApartment.js"></script>
+		
+
+</body>
+</html>
