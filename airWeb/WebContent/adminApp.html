@@ -1,0 +1,367 @@
+<!doctype html>
+<html class="no-js"  lang="en">
+
+	<head>
+		<!-- META DATA -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+		<!--font-family-->
+		<link href="https://fonts.googleapis.com/css?family=Rufina:400,700" rel="stylesheet" />
+
+		<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
+
+		<!-- TITLE OF SITE -->
+		<title>APPartments</title>
+
+		<!-- favicon img -->
+		<link rel="shortcut icon" type="image/icon" href="assets/logo/favicon.png"/>
+
+		<!--font-awesome.min.css-->
+		<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+
+		<!--animate.css-->
+		<link rel="stylesheet" href="assets/css/animate.css" />
+
+		<!--hover.css-->
+		<link rel="stylesheet" href="assets/css/hover-min.css">
+
+		<!--datepicker.css-->
+		<link rel="stylesheet"  href="assets/css/datepicker.css" >
+
+		<!--owl.carousel.css-->
+        <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+		<link rel="stylesheet" href="assets/css/owl.theme.default.min.css"/>
+
+		<!-- range css-->
+        <link rel="stylesheet" href="assets/css/jquery-ui.min.css" />
+
+		<!--bootstrap.min.css-->
+		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+
+		<!-- bootsnav -->
+		<link rel="stylesheet" href="assets/css/bootsnav.css"/>
+
+		<!--style.css-->
+		<link rel="stylesheet" href="assets/css/style.css" />
+
+		<!--responsive.css-->
+		<link rel="stylesheet" href="assets/css/responsive.css" />
+
+	</head>
+
+	<body>
+		<!-- main-menu Start -->
+		<header class="top-area">
+			<div class="header-area">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="logo">
+								<a href="app.html">
+									APP<span>artments</span>
+								</a>
+							</div><!-- /.logo-->
+						</div><!-- /.col-->
+						<div class="col-sm-10">
+							<div class="main-menu">
+							
+								<!-- Brand and toggle get grouped for better mobile display -->
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+										<i class="fa fa-bars"></i>
+									</button><!-- / button-->
+								</div><!-- /.navbar-header-->
+								<div class="collapse navbar-collapse">		  
+									<ul class="nav navbar-nav navbar-right">
+										<li class="smooth-menu"><a href="#home">Home</a></li>
+										<li class="smooth-menu"><a href="#apartments">Apartments</a></li>
+										<li class="smooth-menu"><a href="#reservations">Reservations</a></li>
+										<li class="smooth-menu"><a href="#users">Guests</a></li>
+										<li>
+										 		<button class="book-btn" type="button" onClick="location.href='myprofile.html'" id="myprofile">My Profile</button>
+      											<button class="book-btn" type="button" id="logout">Logout</button>     
+										</li><!--/.project-btn--> 
+									</ul>
+								</div><!-- /.navbar-collapse -->
+							</div><!-- /.main-menu-->
+						</div><!-- /.col-->
+					</div><!-- /.row -->
+					<div class="home-border"></div><!-- /.home-border-->
+				</div><!-- /.container-->
+			</div><!-- /.header-area -->
+
+		</header><!-- /.top-area-->
+		<!-- main-menu End -->
+
+		
+		<!--about-us start -->
+		<section id="home" class="about-us">
+			<div class="container">
+				<div class="about-us-content">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="single-about-us">
+								<div class="about-us-txt">
+									<h2>
+										Take a walk around the neighbourhood! 
+
+									</h2>
+								</div><!--/.about-us-txt-->
+							</div><!--/.single-about-us-->
+						</div><!--/.col-->
+					</div><!--/.row-->
+				</div><!--/.about-us-content-->
+			</div><!--/.container-->
+
+		</section><!--/.about-us-->
+		<!--about-us end -->
+
+		<!--travel-box start-->
+		<section id="apartments" class="travel-box">
+
+			<div class="packages" id="adminApartmentsPart" style="display: none;">
+			<h4 class="text-center">Apartments</h4>
+				<div class="container packages" >
+					<div class="row" id="apartmentsToolbar">
+					</div>
+				   <div class="packages-content row">
+				   <!-- BEGIN FILTERS -->
+         		 <div class="col-md-3 pull-left">
+            		<h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
+            		<hr>
+            
+            		<!-- BEGIN FILTER BY TYPE -->
+            		<h4>By type:</h4>
+           		 <div class="checkbox">
+             		 <label><input type="checkbox" id="room" name="place" class="icheck"> Private room</label>
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" id="place" name="room" class="icheck"> Whole place</label>
+            </div>
+            <!-- BEGIN FILTER BY TYPE -->
+            		<h4>By status:</h4>
+           		 <div class="checkbox">
+             		 <label><input type="checkbox" id="active" name="active" class="icheck"> Active</label>
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" id="inactive" name="inactive" class="icheck"> Inactive</label>
+            </div>
+            <!-- BEGIN FILTER BY AMENITIES -->
+            		<h4>By amenities:</h4>
+           			<div id="amenitiesFilters">
+           			</div>
+           	<button id="applyFilterApartms" class="btn btn-success ml-auto"><span class="fa fa-filter"></span> &nbsp;&nbsp;Apply Filter</button>
+            </div>
+            <!-- END FILTERS -->
+					    <div class="row" style="display: none;" id="adminApartments">
+						</div><!--/.row-->
+				   </div><!--/.packages-content-->
+			    </div><!--/.container-->
+			</div><!-- / .packages -->
+			<!-- dovde reyultati -->
+			
+        </section><!--/.travel-box-->
+		<!--travel-box end-->
+		
+		<section id="reservations" style="margin-top:30px">
+			<div class="container" >
+			   			<h4 class="text-center">Reservations</h4>
+            			<div id="reservationTools" style="display:none;" class="card-heading clearfix border-bottom mb-4 pull-right">
+
+             			<!-- sort place -->
+             			<!-- BEGIN FILTERS -->
+             			<div class="row pull-left">
+         		 		<div class="col-md-3">
+            			<h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
+            			<hr>
+            
+            			<!-- BEGIN FILTER BY TYPE -->
+            			
+            			<h4>By type:</h4>
+           		 		<div class="checkbox">
+             		 		<label><input type="checkbox" id="created" name="statusRes" class="icheck"> created</label>
+            			</div>
+            			<div class="checkbox">
+              				<label><input type="checkbox" id="giveup" name="statusRes" class="icheck"> giveup</label>
+            			</div>     
+            			<div class="checkbox">
+             		 		<label><input type="checkbox" id="accepted" name="statusRes" class="icheck"> accepted</label>
+            			</div>
+            			<div class="checkbox">
+              				<label><input type="checkbox" id="refused" name="statusRes" class="icheck"> refused</label>
+            			</div>     
+            			<div class="checkbox">
+             		 		<label><input type="checkbox" id="done" name="statusRes" class="icheck"> done</label>
+            			</div>           			
+           				<button id="applyFilterRes" class="btn btn-success ml-auto"><span class="fa fa-filter"></span> &nbsp;&nbsp;Apply Filter</button>
+            			</div>
+            			</div>
+            			<!-- END FILTERS -->
+            			</div>
+            			<div class="card-body row">
+            			
+                			<ul class="list-unstyled" id="adminReservations">
+							</ul>
+						</div>
+					</div>
+		</section>
+		<!--reservations end-->
+		
+		
+		<section id="users" style="margin-top:30px">
+			<div class="container" id="adminUsersPart" style="display: none;">
+					<div class="row" id="usersToolbar">
+					
+						<h4 class="text-center">Guests</h4>
+						<!-- BEGIN FILTER BY TYPE -->
+						<div class="pull-right">
+            			<h4>By sex:</h4>
+           		 		<div class="form-check-inline">
+             		 		<label><input class="form-check-input" type="radio" id="male" name="sexFilter" > male</label>
+            			</div>
+            			<div class="form-check-inline">
+              				<label><input class="form-check-input" type="radio" id="female" name="sexFilter" > female</label>
+            			</div>        			
+           				<button id="resetSex" class="btn book-btn">Reset filter</button>
+            			<!-- END FILTERS -->
+            			</div>
+					</div>
+					<div class="row">
+						<div class="col-md-8">
+            					<div class="people-nearby" id="usersList">
+            					</div>
+            			</div>
+					</div>
+			</div>
+					
+    	
+    	</section>
+		<!--users end-->
+
+		<!-- footer-copyright start -->
+		<footer  class="footer-copyright">
+			<div class="container">
+				<div class="footer-content">
+					<div class="row">
+
+						<div class="col-sm-3">
+							<div class="single-footer-item">
+								<div class="footer-logo">
+									<a href="index.html">
+										APP<span>artments</span>
+									</a>
+									<p>
+										best travel agency
+									</p>
+								</div>
+							</div><!--/.single-footer-item-->
+						</div><!--/.col-->
+
+						<div class="col-sm-3">
+							<div class="single-footer-item">
+								<h2>link</h2>
+								<div class="single-footer-txt">
+									<p><a href="#home">home</a></p>
+									<p><a href="#search">search</a></p>
+									<p><a href="#about">about</a></p>
+								</div><!--/.single-footer-txt-->
+							</div><!--/.single-footer-item-->
+
+						</div><!--/.col-->
+
+						<div class="col-sm-3">
+							<div class="single-footer-item">
+								<h2>popular destinations</h2>
+								<div class="single-footer-txt">
+									<p>china</p>
+									<p>venezuela</p>
+									<p>brazil</p>
+									<p>australia</p>
+									<p>london</p>
+								</div><!--/.single-footer-txt-->
+							</div><!--/.single-footer-item-->
+						</div><!--/.col-->
+
+						<div class="col-sm-3">
+							<div class="single-footer-item text-center">
+								<h2 class="text-left">contacts</h2>
+								<div class="single-footer-txt text-left">
+									<p>+1 (300) 1234 6543</p>
+									<p class="foot-email">info@tnest.com</p>
+									<p>North Warnner Park 336/A</p>
+									<p>Newyork, USA</p>
+								</div><!--/.single-footer-txt-->
+							</div><!--/.single-footer-item-->
+						</div><!--/.col-->
+
+					</div><!--/.row-->
+
+				</div><!--/.footer-content-->
+				<hr>
+				<div id="scroll-Top">
+					<i class="fa fa-angle-double-up return-to-top" id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+				</div><!--/.scroll-Top-->
+			</div><!-- /.container-->
+
+		</footer><!-- /.footer-copyright-->
+		<!-- footer-copyright end -->
+
+
+
+
+		<script src="assets/js/jquery.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+
+		<!--modernizr.min.js-->
+		<script  src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+
+		<!--bootstrap.min.js-->
+		<script  src="assets/js/bootstrap.min.js"></script>
+		
+
+		<!-- bootsnav js -->
+		<script src="assets/js/bootsnav.js"></script>
+
+		<!-- jquery.filterizr.min.js -->
+		<script src="assets/js/jquery.filterizr.min.js"></script>
+
+		<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+		<!--jquery-ui.min.js-->
+        <script src="assets/js/jquery-ui.min.js"></script>
+
+        <!-- counter js -->
+		<script src="assets/js/jquery.counterup.min.js"></script>
+		<script src="assets/js/waypoints.min.js"></script>
+
+		<!--owl.carousel.js-->
+        <script  src="assets/js/owl.carousel.min.js"></script>
+
+        <!-- jquery.sticky.js -->
+		<script src="assets/js/jquery.sticky.js"></script>
+
+        <!--datepicker.js-->
+        <script  src="assets/js/datepicker.js"></script>
+
+		<!--Custom JS-->
+		<script src="assets/js/custom.js"></script>
+		
+		<!--logout JS-->
+		<script src="assets/js/logout.js"></script>
+		
+		<!--admin reserv utils JS-->
+		<script src="assets/js/adminReservationsUtils.js"></script>
+		
+		<!--adminUsersUtils JS-->
+		<script src="assets/js/adminUsersUtils.js"></script>
+
+		<!--hostApartmentsUtils JS-->
+		<script src="assets/js/adminApartmentsUtils.js"></script>
+
+	</body>
+
+</html>

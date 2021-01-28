@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -210,6 +211,11 @@ public class ReservationDAO {
 		return convertedReservations;
 		
 		
+	}
+
+	public Collection<Reservation> findAll() {
+		
+		return reservations.values();
 	}
 
 	

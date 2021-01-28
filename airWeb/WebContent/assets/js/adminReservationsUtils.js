@@ -3,14 +3,13 @@ $(document).ready(function() {
     var allResvrs = null;
     //fetch reservations
     $.ajax({
-        url: "rest/apartments/getHostReservations",
+        url: "rest/apartments/getReservations",
         type: "GET",
         contentType: 'application/json',
         success: function(response) {
             reservations = response;
             allResvrs = response;
             $("#reservationTools").show();
-            if (response.length != 0) {
                 
             	
             	//sort
@@ -26,14 +25,14 @@ $(document).ready(function() {
                             return a.totalPrice - b.totalPrice;
                         });
                         $("#orderReserv").text("desc");
-                        $("#hostReservations").empty();
+                        $("#adminReservations").empty();
                         reservations.forEach(drawReservation);
                     } else {
                         reservations.sort(function(a, b) {
                             return b.totalPrice - a.totalPrice;
                         });
                         $("#orderReserv").text("asc");
-                        $("#hostReservations").empty();
+                        $("#adminReservations").empty();
                         reservations.forEach(drawReservation);
                     }
                 });
@@ -55,7 +54,7 @@ $(document).ready(function() {
                         count = 0;
                     if (filter != "") {
                         nameGuest = null;
-                        $("#hostReservations").find("li").each(function() {
+                        $("#adminReservations").find("li").each(function() {
                             // If the list item does not contain the text phrase fade it out
                             if ($(this).find(".guest").text().search(new RegExp(filter, "i")) < 0) {
                                 $(this).hide();
@@ -71,7 +70,7 @@ $(document).ready(function() {
                         });
                     } else {
                         reservations = allResvrs;
-                        $("#hostReservations").empty();
+                        $("#adminReservations").empty();
                         reservations.forEach(drawReservation);
                     }
 
@@ -90,7 +89,6 @@ $(document).ready(function() {
 						}
 					   
 					   represent = $.merge(represent, helper);
-					   
 					   helper=[];
 					   if($("#accepted").is(':checked')){
 						   helper = reservations.filter(function(res) {
@@ -99,7 +97,6 @@ $(document).ready(function() {
 		                       						
 						}
 					   represent = $.merge(represent, helper);
-					   
 					   helper=[];
 					   if($("#refused").is(':checked')){
 						   helper = reservations.filter(function(res) {
@@ -108,7 +105,6 @@ $(document).ready(function() {
 		                       						
 						}
 					   represent = $.merge(represent, helper);
-					  
 					   helper=[];
 					   if($("#giveup").is(':checked')){
 						   helper = reservations.filter(function(res) {
@@ -117,7 +113,6 @@ $(document).ready(function() {
 		                       					
 						}
 					   represent = $.merge(represent, helper);
-					   
 					   helper=[];
 					   if($("#done").is(':checked')){
 						   helper = reservations.filter(function(res) {
@@ -125,10 +120,8 @@ $(document).ready(function() {
 	                           });
 					   }
 					   represent = $.merge(represent, helper);
-					  
 					   if(represent.length>0){
-						 
-						   $("#hostReservations").empty();
+						   $("#adminReservations").empty();
 						   var filtered = represent.filter(function (el) {
 							   return el!=null;
 							 });
@@ -136,26 +129,21 @@ $(document).ready(function() {
 						   filtered.forEach(drawReservation);
 						   reservations=filtered;
 					   }else{
-						   
-						   $("#hostReservations").empty();
+						   $("#adminReservations").empty();
 						   reservations=allResvrs;
 						   reservations.forEach(drawReservation);
 					   }
 						      					
 						   
 	                        
+	                        
+							   
+					      
 					});
                 
 
 
-            } else {
-                $("#reservationTools").empty();
-                var titleReserv = $(document.createElement('h4'));
-                $(titleReserv).attr('class', 'card-title');
-                $(titleReserv).text('Your apartments havn\'t been booked');
-                $("#reservationTools").append(titleReserv);
-                $("#reservationTools").show();
-            }
+            
         },
         error: function(data, textStatus, xhr) {
             alert(data.responseText);
@@ -196,117 +184,7 @@ $(document).ready(function() {
         var todaysDate = new Date();
         //3 DUGMETA
 
-        if (reservation["status"].toUpperCase() == "CREATED" || reservation["status"].toUpperCase() == "ACCEPTED") {
-
-            var errorComment = $(document.createElement('label'));
-            $(errorComment).css('display', 'none');
-            $(errorComment).css("color", "red");
-            $(buttons).append(errorComment);
-
-            var successLabReview = $(document.createElement('label'));
-            $(successLabReview).text('Successfully changed reservation status');
-            $(successLabReview).css("color", "green");
-            $(successLabReview).css('display', 'none');
-
-            //ACCEPT
-            if (reservation["status"].toUpperCase() == "CREATED") {
-                var wholeDiv = $(document.createElement('div'));
-                $(wholeDiv).attr('id', 'whole-' + reservation['reservationID']);
-                $(buttons).append(wholeDiv);
-
-                var accept = $(document.createElement('button'));
-                $(accept).attr('class', 'book-btn');
-                $(accept).attr('type', 'button');
-                $(accept).attr('id', 'accept-' + reservation['reservationID']);
-                $(accept).css('margin', '10px 10px 10px 10px');
-                $(accept).append("Accept");
-                $(wholeDiv).append(accept);
-                $(accept).click(function(event) {
-                    $(errorComment).css('display', 'none');
-                    $.ajax({
-                        url: "rest/apartments/acceptReservation",
-                        type: "POST",
-                        data: $.param({
-                            reservationID: reservation['reservationID']
-                        }),
-                        contentType: 'application/json',
-                        success: function(response) {
-                            reservation["status"] = "ACCEPTED";
-                            $("#status-" + reservation['reservationID']).text("ACCEPTED");
-                            $('#whole-' + reservation['reservationID']).css('display', 'none');
-                            $(successLabReview).css('display', 'block');
-                            $(buttons).append(successLabReview);
-                            if (todaysDate >= formattedEnd) {
-
-                                makeDoneButton(reservation, buttons, errorComment, successLabReview);
-                            }
-
-                        },
-                        error: function(data, textStatus, xhr) {
-                            $(errorComment).text('Something went wrong. Check your connection');
-                            $(errorComment).css('display', 'block');
-
-
-                        }
-
-                    });
-                });
-
-            }
-            //refuse
-            if (reservation["status"].toUpperCase() == "CREATED" || reservation["status"].toUpperCase() == "ACCEPTED") {
-                if (todaysDate < formattedDate) {
-                    var wholeDiv = $(document.createElement('div'));
-                    $(wholeDiv).attr('id', 'whole1-' + reservation['reservationID']);
-                    $(buttons).append(wholeDiv);
-
-                    var refuse = $(document.createElement('button'));
-                    $(refuse).attr('class', 'book-btn');
-                    $(refuse).attr('type', 'button');
-                    $(refuse).attr('id', 'refuse-' + reservation['reservationID']);
-                    $(refuse).css('margin', '10px 10px 10px 10px');
-                    $(refuse).append("Refuse");
-                    $(wholeDiv).append(refuse);
-                    $(refuse).click(function(event) {
-                        $(errorComment).css('display', 'none');
-                        $.ajax({
-                            url: "rest/apartments/refuseReservation",
-                            type: "POST",
-                            data: $.param({
-                                reservationID: reservation['reservationID']
-                            }),
-                            contentType: 'application/json',
-                            success: function(response) {
-                                $('#whole1-' + reservation['reservationID']).css('display', 'none');
-                                $('#whole-' + reservation['reservationID']).css('display', 'none');
-                                $("#status-" + reservation['reservationID']).text("REFUSED");
-                                reservation["status"] = "REFUSED";
-                                $(successLabReview).css('display', 'block');
-                                $(buttons).append(successLabReview);
-
-                            },
-                            error: function(data, textStatus, xhr) {
-                                $(errorComment).text('Something went wrong. Check your connection');
-                                $(errorComment).css('display', 'block');
-
-
-                            }
-
-                        });
-                    });
-                }
-            }
-
-            //DONE
-            if (reservation["status"].toUpperCase() == "ACCEPTED" && todaysDate >= formattedEnd) {
-
-                makeDoneButton(reservation, buttons, errorComment, successLabReview);
-            }
-
-        }
-
-
-
+        
 
         var media = $(document.createElement('div'));
         $(media).attr('class', 'media');
@@ -409,7 +287,7 @@ $(document).ready(function() {
 
 
 
-        $("#hostReservations").append(containerReserv);
+        $("#adminReservations").append(containerReserv);
         /*
 			  <li class="position-relative booking">
               <div class="media">
@@ -448,50 +326,5 @@ $(document).ready(function() {
 
     }
 
-    function makeDoneButton(reservation, buttons, errorComment, successLabReview) {
-
-        var wholeDiv2 = $(document.createElement('div'));
-        $(wholeDiv2).attr('id', 'whole2-' + reservation['reservationID']);
-        $(buttons).append(wholeDiv2);
-
-        var doneButton = $(document.createElement('button'));
-        $(doneButton).attr('class', 'book-btn');
-        $(doneButton).attr('type', 'button');
-        $(doneButton).attr('id', 'done-' + reservation['reservationID']);
-        $(doneButton).css('margin', '10px 10px 10px 10px');
-        $(doneButton).append("Done");
-        $(wholeDiv2).append(doneButton);
-        $(doneButton).click(function(event) {
-            $(errorComment).css('display', 'none');
-            $.ajax({
-                url: "rest/apartments/finishReservation",
-                type: "POST",
-                data: $.param({
-                    reservationID: reservation['reservationID']
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    $("#status-" + reservation['reservationID']).text("DONE");
-                    reservation["status"] = "DONE";
-                    $('#whole2-' + reservation['reservationID']).css('display', 'none');
-                    $('#whole1-' + reservation['reservationID']).css('display', 'none');
-                    $(successLabReview).css('display', 'block');
-                    $(buttons).append(successLabReview);
-
-                },
-                error: function(data, textStatus, xhr) {
-                    $(errorComment).text('Something went wrong. Check your connection');
-                    $(errorComment).css('display', 'block');
-
-
-                }
-
-            });
-        });
-
-    }
-
-
-
-
+    
 });

@@ -23,6 +23,9 @@ $(document).ready(function() {
 				}else if(response.role=="host"){
 					sessionStorage.user = username;
 					location.replace("http://localhost:8080/airWeb/hostApp.html");
+				}else if(response.role=="admin"){
+					sessionStorage.user = username;
+					location.replace("http://localhost:8080/airWeb/adminApp.html");
 				}
 		    },
 		    error: function (data, textStatus, xhr) {

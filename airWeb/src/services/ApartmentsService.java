@@ -180,42 +180,45 @@ public class ApartmentsService {
 					
 		}
 	    
+	    @GET
+		@Path("getAdminApartments")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getAdminApartments(@Context HttpServletRequest request) {
+	    	User user = (User) request.getSession().getAttribute("user");
+	    	if(user.getRole().equals("admin")){
+	    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+			return Response.status(200).entity(apartmentDAO.findAll()).build();
+	    	}else return Response.status(403).build();
+					
+		}
+	 
+	    
+	    @GET
+		@Path("getReservations")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getReservations(@Context HttpServletRequest request) {
+	    	User user = (User) request.getSession().getAttribute("user");
+	    	if(user.getRole().equals("admin")){
+	    	ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+			return Response.status(200).entity(reservationDAO.findAll()).build();
+	    	}else return Response.status(403).build();
+					
+		}
 	    
 	    @POST
 		@Path("postApartment")
 		public Response postApartment(@Context HttpServletRequest request) throws IOException, ServletException {
-			User user = (User) request.getSession().getAttribute("user");
-			String full = null; 
-			Object base64;
-			try {
-
-			        ServletFileUpload upload = new ServletFileUpload();
-			        FileItemIterator iterator = upload.getItemIterator(request);
-			        while(iterator.hasNext()){
-
-
-			            FileItemStream item = iterator.next();
-			            InputStream stream = item.openStream();
-			            if(item.isFormField()){
-			                if(item.getFieldName().equals("vFormName")){
-
-			                    byte[] str = new byte[stream.available()];
-			                    stream.read(str);
-			                    full = new String(str,"UTF8");
-			                }
-			            }else{
-			                byte[] data = new byte[stream.available()];
-			                stream.read(data);
-			                base64 = Base64.encodeBase64(data);
-			            }
-			        }
-
-			    } catch (FileUploadException e) {
-
-			        e.printStackTrace();
-			    }
-			System.out.println(full);
+			User user = (User) request.getSession().getAttribute("user");	
 			ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("add apartment request: "+payloadRequest);
 			if(apartmentDao.addApartment(null)){
 	    	return Response.status(200).build();}
 			else {
@@ -312,6 +315,23 @@ public class ApartmentsService {
 			
 		}
 		
+		
+		
+		@GET
+		@Path("getUsers")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getUsers(@Context HttpServletRequest request) {
+			User user = (User) request.getSession().getAttribute("user");
+			if(!user.getRole().equals("admin")){
+				return Response.status(403).build();
+			}else{
+				UserDAO users = (UserDAO)  ctx.getAttribute("userDAO");
+		    return Response.status(200).entity(users.findAll()).build();
+			}
+			
+		}
+		
 		@GET
 		@Path("getHostApartments")
 		@Consumes(MediaType.APPLICATION_JSON)
@@ -329,6 +349,10 @@ public class ApartmentsService {
 		@Path("deleteApartment")
 		@Consumes(MediaType.APPLICATION_JSON)
 		public Response deleteApartment(@Context HttpServletRequest request) {
+			User user = (User) request.getSession().getAttribute("user");
+			if(user.getRole().equals("guest")){
+				return Response.status(403).build();
+			}else{
 			String payloadRequest = null;
 			try {
 				payloadRequest = getBody(request);
@@ -342,8 +366,9 @@ public class ApartmentsService {
 				return Response.status(400).entity("Can't give up now. Check your connection").build();
 			}else
 			return Response.status(200).build();
-			
+			}
 		}
+		
 		
 		
 		@POST
