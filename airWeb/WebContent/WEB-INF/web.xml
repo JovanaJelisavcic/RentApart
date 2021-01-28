@@ -18,10 +18,17 @@
 			<param-value>services,org.codehaus.jackson.jaxrs</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<multipart-config>
+    		<location>/temp</location>
+    		<max-file-size>20848820</max-file-size>
+    		<max-request-size>418018841</max-request-size>
+   			 <file-size-threshold>1048576</file-size-threshold>
+		</multipart-config>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<!-- Bazna putanja do REST servisa. Može biti bilo šta (pa i prazan string) -->
 		<url-pattern>/rest/*</url-pattern>
+		
 	</servlet-mapping>
 </web-app>

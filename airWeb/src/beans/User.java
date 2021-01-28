@@ -172,6 +172,11 @@ public class User implements Serializable {
 		 return realfinal;
 	}
 
+	public void removeApartment(Apartment old) {
+		apartments.remove(old);
+		
+	}
+
 	
 
 	

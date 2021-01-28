@@ -2,7 +2,7 @@ $(document).ready(function() {
 
  var amenities=null;
  $('[data-toggle="datepicker"]').datepicker();
- 
+
  var k =1;
  
  $("#addPeriod").click(function(event){
@@ -156,14 +156,14 @@ $(document).ready(function() {
 
 		},
 	    submitHandler: function(form) {
+	    	 $("#validError").hide();
 	    		var j;
 	    		var checkins = [];
 	    	    var checkouts = [];
 	    	for (j = 1; j <= k; j++) {
-	    	 checkins.push(new Date($('input[name="check_in'+j+'"]').val()));
-	    	 checkouts.push(new Date($('input[name="check_out'+j+'"]').val()));
+	    	 checkins.push(($('input[name="check_in'+j+'"]').val()));
+	    	 checkouts.push(($('input[name="check_out'+j+'"]').val()));
 	    	}
-	    	alert(checkins);
 	    	var passes= true;
 	    	if(k!=1){
 	    		if(validatePeriods(checkins,checkouts)){
@@ -171,22 +171,53 @@ $(document).ready(function() {
 	    	} 
 	    	
 	    	if(passes){
-	    		alert("passed");
+	    	    var freeDates=[];
+	    	      for(var r=0; r<k; r++){
+	    	    	  freeDates.push({begin: checkins[r], end : checkouts[r]});
+	    	      }
+	    	    
+	    	      var amenities = [];
+				   $(".amenityClass:checkbox").each(function(){
+					    var $this = $(this);
+					    if($this.is(":checked")){
+					    	amenities.push($this.attr("id"));
+					    }
+					});
+	    	      var formData = new FormData();
+	    	      formData.append('state', $('input[name="state"]').val());
+	    	      formData.append('street', $('input[name="street"]').val());
+	    	      formData.append('place', $('input[name="city"]').val());
+	    	      formData.append('postalCode', $('input[name="postalCode"]').val());
+	    	      formData.append('checkout', $('input[name="checkout"]').val());
+	    	      formData.append('checkin', $('input[name="checkin"]').val());
+	    	      formData.append('price', $('input[name="price"]').val());
+	    	      formData.append('guestCap', $('input[name="guestCap"]').val());
+	    	      formData.append('roomCap', $('input[name="roomCap"]').val());
+	    	      formData.append('type', $('input[type=radio][name=form-field-radio]:checked').val());
+	    	      formData.append('place', $('input[name="city"]').val());
+	    	      formData.append('postalCode', $('input[name="postalCode"]').val());
+	    	      formData.append('images', $('#images').prop('files')); 
+	    	      formData.append('freeDates', freeDates);
+	    	      formData.append('amenities', amenities);
+	    	      
 	      $.ajax({
 	        url: "rest/apartments/postApartment",
 	        type: "POST",
-	        data: $.param({
-	      }),
-	        contentType: 'application/json',
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        cache: false,
 	        success: function(response) {
-	        	alert("woooo");
+	        	location.replace("http://localhost:8080/airWeb/hostApp.html");
 	        },
 	        error: function(data, textStatus, xhr) {
-	        	alert("boooo");
+	        	$("#validError").text("Saving was unsuccessfull");
+	    		$("#validError").show();
 	        }
 	      });
-	    	}else{//sta ako ne prodje valid
-	    		alert("passnot");
+	    	}else{
+	    		$("#validError").text("Dates have to be sequential in all periods");
+	    		$("#validError").show();
 	    	}
 	    }
 	  });
@@ -194,16 +225,25 @@ $(document).ready(function() {
  
  		function validatePeriods(checkins, checkouts){
 	   var m;
-	   
+	   var paz =true;
 	    for(m=1; m<k;m++){
 	    	var o =m+1;
-	    	alert("");
-	    	if(checkouts[o]<new Date (checkins[m])){
-	    		alert("comes");
-	    		return false;
-	    	}	
+	    	var mbsec = Date.parse(checkins[o]);
+	    	begsec =new Date(mbsec);
+	    	var mefs = Date.parse(checkouts[m]);
+	    	efs=new Date (mefs);
+	    	var mbfs = Date.parse(checkins[m]);
+	    	bfs=new Date (mbfs);
+	    	if(begsec > efs ){
+	    		paz=false;
+	    	}
+	    	if(bfs > efs ){
+	    		paz=false;
+	    	}
+	    	
+	    	
 	    }
-	    return true;
+	    return paz;
  		}
  
  

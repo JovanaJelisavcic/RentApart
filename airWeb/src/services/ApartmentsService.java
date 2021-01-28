@@ -14,11 +14,16 @@ import java.util.Collection;
 import java.util.Date;
 
 
+
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,6 +32,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.tomcat.util.http.fileupload.FileItemIterator;
+import org.apache.tomcat.util.http.fileupload.FileItemStream;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 import beans.Apartment;
 import beans.Comment;
@@ -172,20 +183,40 @@ public class ApartmentsService {
 	    
 	    @POST
 		@Path("postApartment")
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response postApartment(@Context HttpServletRequest request) {
-	    	String payloadRequest = null;
-			try {
-				payloadRequest = getBody(request);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			System.out.println("add apartment request: "+payloadRequest);
+		public Response postApartment(@Context HttpServletRequest request) throws IOException, ServletException {
 			User user = (User) request.getSession().getAttribute("user");
-			Apartment apartment = retreiveApartment(payloadRequest,user );
+			String full = null; 
+			Object base64;
+			try {
+
+			        ServletFileUpload upload = new ServletFileUpload();
+			        FileItemIterator iterator = upload.getItemIterator(request);
+			        while(iterator.hasNext()){
+
+
+			            FileItemStream item = iterator.next();
+			            InputStream stream = item.openStream();
+			            if(item.isFormField()){
+			                if(item.getFieldName().equals("vFormName")){
+
+			                    byte[] str = new byte[stream.available()];
+			                    stream.read(str);
+			                    full = new String(str,"UTF8");
+			                }
+			            }else{
+			                byte[] data = new byte[stream.available()];
+			                stream.read(data);
+			                base64 = Base64.encodeBase64(data);
+			            }
+			        }
+
+			    } catch (FileUploadException e) {
+
+			        e.printStackTrace();
+			    }
+			System.out.println(full);
 			ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-			if(apartmentDao.addApartment(apartment)){
+			if(apartmentDao.addApartment(null)){
 	    	return Response.status(200).build();}
 			else {
 				return Response.status(400).entity("Saving apartment went wrong. Check your connection").build();
@@ -294,6 +325,25 @@ public class ApartmentsService {
 			}
 		}
 		
+		@POST
+		@Path("deleteApartment")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response deleteApartment(@Context HttpServletRequest request) {
+			String payloadRequest = null;
+			try {
+				payloadRequest = getBody(request);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("delete apartment request: "+payloadRequest);
+			String[] keys=payloadRequest.split("=");
+			ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+			if(!apartmentDAO.deleteApartment(Integer.parseInt(keys[1]))){
+				return Response.status(400).entity("Can't give up now. Check your connection").build();
+			}else
+			return Response.status(200).build();
+			
+		}
 		
 		
 		@POST
@@ -509,30 +559,7 @@ public class ApartmentsService {
 		
 		
 		
-		private Apartment retreiveApartment(String payloadRequest, User user) {
-			
-			ArrayList<String> params = new ArrayList<>();
-			//date=2021-01-29T23%3A00%3A00.000Z&numOfNights=1&username=snalica&apartmID=8&message=
-			String[]  pairs=  payloadRequest.split("&");
-			for(int i=0; i<pairs.length ; i++){
-			String[] keys=pairs[i].split("=");
-			for(String st : keys){
-			params.add(st);
-			}
-			}
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-	    	Date   begin = null;
-	    	try {
-				   begin       = format.parse ( params.get(1) );
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}  
-	    	/*int totalPrice = (int) (apartment.getPrice()*Integer.parseInt(params.get(3)));*/
-	    	//return new Apartment ();
-	    	
-			return null;
-			
-		}
+		
 		
 		private String validateRequest(HttpServletRequest request) {
 			if(!request.getParameter("location").toString().matches("^$|^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$"))

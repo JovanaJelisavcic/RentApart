@@ -169,6 +169,12 @@ public class ApartmentDAO {
 	        if (status.equals("active")) 
 	        	statusB=true;
 	        else statusB=false;
+	        //deleted
+	        String deleted = (String) apartmentObject.get("status");
+	        boolean deletedB;
+	        if (deleted.equals("true")) 
+	        	deletedB=true;
+	        else deletedB=false;
 	        //location 
 	        JSONObject locationObject = (JSONObject) apartmentObject.get("location");
 	        Location location = parseLocationObject(locationObject);
@@ -221,11 +227,13 @@ public class ApartmentDAO {
 	        		}
 	        }
 	      
-	        
-	        apartments.put(id, new Apartment(id, type, roomCap, guestCap, location, periods,
-	    			hostObject, comments,
-	    			images, pricePerNight, checkin, checkout,
-	    			 statusB, amenities, null));
+	        if(!deletedB){
+		        apartments.put(id, new Apartment(id, type, roomCap, guestCap, location, periods,
+		    			hostObject, comments,
+		    			images, pricePerNight, checkin, checkout,
+		    			 statusB, amenities, null));
+	        }
+
 	    }
 
 	private TPeriod parseFreePeriod(JSONObject object) {
@@ -365,6 +373,20 @@ public class ApartmentDAO {
 			else return false;
 	}
 	
+	public boolean deleteApartment(int id) {
+		boolean success = true;
+		Apartment apartment = apartments.get(id);
+		Apartment old= apartment;
+		apartment.setDeleted(true);
+		apartments.replace(id, old, apartment );
+		if(!saveApartments())
+			success=false;
+		if(success){
+		apartments.remove(apartment);
+		users.removeApartment(id, old);
+		}
+		return success;
+	}
 	
 	@SuppressWarnings("unchecked")
 	private boolean writeDown(JSONArray apartments){
@@ -408,6 +430,7 @@ public class ApartmentDAO {
 	        apartOb.put("pricePerNight", apartment.getPrice());
 	        apartOb.put("checkin", apartment.getCheckin());
 	        apartOb.put("checkout", apartment.getCheckout());
+	        apartOb.put("deleted", apartment.isDeleted());
 	        if(apartment.isStatus())
 	        apartOb.put("status", "active");
 	        else apartOb.put("status", "inactive");
@@ -476,6 +499,8 @@ public class ApartmentDAO {
 		
 		
 	}
+
+	
 
 	
 

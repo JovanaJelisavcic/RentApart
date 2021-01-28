@@ -248,6 +248,14 @@ public class UserDAO {
 		users.replace(oldValue.getUsername(), oldValue, newValue);
 		
 	}
+
+	public void removeApartment(int id, Apartment old) {
+		User oldValue = old.getHost();
+		User newValue = oldValue;
+		newValue.removeApartment(old);
+		users.replace(oldValue.getUsername(), oldValue, newValue);
+		
+	}
 	 	
 	
 }

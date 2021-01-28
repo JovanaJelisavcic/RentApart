@@ -42,6 +42,7 @@ public class Apartment implements Serializable{
 	private ArrayList<Amenity> amenities;
 	@JsonBackReference
 	private ArrayList<Reservation> reservations;
+	private boolean deleted;
 	
 	
 	
@@ -71,6 +72,36 @@ public class Apartment implements Serializable{
 		this.unavailability = setUpUnavailability();
 		sortDates(unavailability);
 		this.availability = this.freeDates;
+		this.deleted=false;
+	}
+	
+	public Apartment(int id, String type, int roomCap, int guestsCap,
+			Location location, ArrayList<TPeriod> freeDates,
+		    User host, ArrayList<Comment> comments,
+			ArrayList<String> images, int price, String checkin, String checkout,
+			boolean status, ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted) {
+		super();
+		this.id = id;
+		this.type = type;
+		this.roomCap = roomCap;
+		this.guestsCap = guestsCap;
+		this.location = location;
+		this.freeDates = freeDates;
+		sortDates(freeDates);
+		this.host = host;
+		this.comments = comments;
+		this.images = images;
+		this.price = price;
+		this.checkin = checkin;
+		this.checkout = checkout;
+		this.status = status;
+		this.amenities = amenities;
+		this.reservations = reservations;
+		this.stars = countStars();
+		this.unavailability = setUpUnavailability();
+		sortDates(unavailability);
+		this.availability = this.freeDates;
+		this.setDeleted(deleted);
 	}
 	
 	/*var unavailableDates = [
@@ -377,6 +408,14 @@ public class Apartment implements Serializable{
 					comment.setStatus(false);
 			});
 			
+		}
+
+		public boolean isDeleted() {
+			return deleted;
+		}
+
+		public void setDeleted(boolean deleted) {
+			this.deleted = deleted;
 		}
 
 

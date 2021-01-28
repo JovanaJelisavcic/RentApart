@@ -120,7 +120,7 @@ amenities=null;
         				    	});
         				      $("#apartmentsToolbar").append(sort);
         				      
-            		
+        				     
             		
             		}else {
             			var titleReserv = $(document.createElement('h4'));
@@ -285,6 +285,27 @@ amenities=null;
 		  
 		});
 		$(morebtn).append(changeBtn);
+		
+		var deleteBtn = $(document.createElement('button'));
+		$(deleteBtn).attr('class', 'about-view packages-btn delete-btn'); 
+		$(deleteBtn).attr('id', 'delete-'+apartment["id"]); 
+		$(deleteBtn).append("delete");
+		 $(deleteBtn).click(function(){
+	    	  $.ajax({
+					url : "rest/apartments/deleteApartment",
+					type: "POST",
+					data: $.param({apartmentId :apartment["id"] }),
+					contentType: 'application/json',
+					success: function (response) {
+						
+					},
+					error: function (response) {
+						alert("There's been a mistake, check your connection");
+					}
+				});
+			});
+		
+		$(morebtn).append(deleteBtn);
 		
 		if(apartment["status"]){
 			$("#hostApartments").append(container);
